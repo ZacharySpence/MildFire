@@ -4100,7 +4100,7 @@ GameObject:
   - component: {fileID: 2821790397671302436}
   - component: {fileID: 4743252357212325652}
   m_Layer: 0
-  m_Name: PlayerUnitCard
+  m_Name: BasePlayerCard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

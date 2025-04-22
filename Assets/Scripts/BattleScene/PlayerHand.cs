@@ -12,10 +12,13 @@ public class PlayerHand : MonoBehaviour
     [SerializeField] List<CardBase> cardPool = new List<CardBase>(); //cards should only be in card pool IF been discarded and haven't yet been drawn again
     [SerializeField] List<CardBase> discard = new List<CardBase>();
     [SerializeField] int cardDrawAmount;
+
+    [SerializeField] CardBase baseUnitCard, baseUseCard, baseUseOffCard;
     //Instantiate cards in hand panel in UI
     //cards have tags
 
     [SerializeField] float spacing = 2.1f;
+    bool setupComplete = false;
     private void Awake()
     {
         if(Instance == null)
@@ -32,31 +35,66 @@ public class PlayerHand : MonoBehaviour
         Setup();
     }
 
+
     void Setup()
     {
-      
-
-        //add them to a deck
-        deck = new Queue<CardBase>(IDLookupTable.instance.playerDeck);
-        //Make starting hand by grabbing all crown cards/the leader
-        foreach (var card in deck)
+        List<CardBase> tempDeck = new List<CardBase>();
+        foreach (var cardData in IDLookupTable.instance.playerDeck)
         {
+            
+            switch (cardData.cardType)
+            {
+                case "UnitCard":
+                    var card = Instantiate(baseUnitCard,transform);
+                    card.SetupUsingCardSaveData(cardData);
+                    tempDeck.Add(card);
+                    break;
+                case "UseCard":
+                    card = Instantiate(baseUseCard,transform);
+                    card.SetupUsingCardSaveData(cardData);
+                    tempDeck.Add(card);
+                    break;
+                case "UseOffCard":
+                    card = Instantiate(baseUseOffCard, transform);
+                    card.SetupUsingCardSaveData(cardData);
+                    tempDeck.Add(card);
+                    break;
+            }
+           
+        }
+
+        //Make starting hand by grabbing all crown cards/the leader or discarding rest of cards
+        for (int i = tempDeck.Count - 1; i >= 0; i--)
+        {
+            var card = tempDeck[i];
             if (card is UnitCard unitCard)
             {
                 if (unitCard.hasCrown || unitCard.isBoss)
                 {
-                    AddCardToHand(unitCard);
+                    tempDeck.RemoveAt(i); // Safely remove from the list
+                }
+                else
+                {
+                    AddToDiscard(card, true);
                 }
             }
+            else
+            {
+                AddToDiscard(card, true);
+            }
         }
+        //add the rest to a deck
+        deck = new Queue<CardBase>(tempDeck);
         LayoutChildren();
+        setupComplete = true;
     }
     void OnHandSizeChanged()
     {
+        if (!setupComplete) { return; }
         LayoutChildren();
         if (!GameManager.Instance.isGameStarted && hand.Count == 0)
         {
-            GameManager.Instance.isGameStarted = true;
+            GameManager.Instance.StartGame();
         }
     }
     //INSTEAD -> I want to make a scriptable of each card (using ID) then on start instantiate each card. that way can make cards easier!
@@ -132,7 +170,7 @@ public class PlayerHand : MonoBehaviour
             cardPool.RemoveAt(possIndex);
             //Add logically to hand
             hand.Add(card);
-
+            card.transform.parent = transform;
         }
         //else create card
         else
@@ -140,6 +178,7 @@ public class PlayerHand : MonoBehaviour
             CardBase newCard = Instantiate(card, physicalHand); //will assume each card has it's own ID's (even copies -> when making in world deck add to their ID so it's always different!)
     
             hand.Add(newCard);
+            newCard.transform.parent = transform;
         }
         
         

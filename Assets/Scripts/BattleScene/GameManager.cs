@@ -121,11 +121,13 @@ public class GameManager : MonoBehaviour
 
 
     public void StartGame()
-    { 
+    {
+        Debug.Log("starting game!");
         //Called automatically when playerHand is empty at start!
         isGameStarted = true;
-        waveTimerText.gameObject.SetActive(true);
-        redrawBellText.gameObject.SetActive(true);
+        waveTimerText.transform.parent.gameObject.SetActive(true);
+        redrawBellText.transform.parent.gameObject.SetActive(true);
+        playerHand.PressBell();
     }
     //Auto-Game
     public IEnumerator EndPlayerTurn() //called by pressing button (refresh bell) OR after playing a card

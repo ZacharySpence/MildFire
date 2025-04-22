@@ -31,15 +31,23 @@ public abstract class CardBase : MonoBehaviour
     [SerializeField] protected bool hasBarrage, hasBuffAttack, hasSmackback; //special ability flags
 
 
-    public abstract CardBase Clone();
+    public abstract CardSaveData CreateCardSaveData();
+
+    public virtual void SetupUsingCardSaveData(CardSaveData cardSaveData)
+    {
+        this.ID = cardSaveData.baseID;  // Set base ID -> or make it runtimeID to make it unique?
+        this.fieldIndex = cardSaveData.fieldIndex;
+        this.presetTag = cardSaveData.presetTag;
+        this.nameText = cardSaveData.nameText;
+        this.picture = cardSaveData.picture;
+        this.border = cardSaveData.border;
+        this.background = cardSaveData.background;
+        cardDescription.text = CreateCardDescription();
+    }
     protected virtual void Awake()
     {
-        cardPicture.sprite = picture;
-        cardBackground.sprite = background;
-        cardBorder.sprite = border;
-        cardName.text = nameText;
-
-        cardDescription.text = CreateCardDescription();
+        if(ID == -1) { return; }
+        
     }
     public virtual string CreateCardDescription()
     {

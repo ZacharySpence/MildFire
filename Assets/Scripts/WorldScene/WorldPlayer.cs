@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class WorldPlayer : MonoBehaviour
 {
@@ -9,25 +10,17 @@ public class WorldPlayer : MonoBehaviour
     private void Start()
     {
         CreateNewDeck(100);
+        SceneManager.LoadScene(1);
     }
     void AddToPlayerDeck(int id)
     {
         Debug.Log(id);
-        //1. get card by id
-      var card =  IDLookupTable.instance.GetCardByID(id);
-        //2. make it the next static ID
-        if(card != null)
-        {
-            Debug.Log(card.name);
-        }
-        else
-        {
-            Debug.Log("for some reason we're still returning null?");
-        }
-        card.ID = nextID;
-        nextID++;
-        
-        IDLookupTable.instance.playerDeck.Add(card);
+       
+      var card =  IDLookupTable.instance.GetCardByID(id); //get template of card (reference it)
+
+        var saveData = card.CreateCardSaveData();
+
+        IDLookupTable.instance.playerDeck.Add(saveData);
     }
 
     void CreateNewDeck(int leaderID)

@@ -10,42 +10,60 @@ public class UseCard : CardBase
         tag = presetTag; //set it's tag!
         
     }
-    public override CardBase Clone()
+    public override CardSaveData CreateCardSaveData()
     {
-        // Instantiate the GameObject (this will clone the whole GameObject)
-        GameObject clonedGameObject = Instantiate(this.gameObject);
+        return new CardSaveData
+        {
+            baseID = ID,
+            //runtimeID = CardI
+            cardType = "UseCard",
+            //cardbase fields
+            fieldIndex = fieldIndex,
+            presetTag = presetTag,
+            nameText = this.nameText,
+            picture = this.picture,
+            border = this.border,
+            background = this.background,
 
-        // Get the UnitCard component from the cloned GameObject
-        UseCard clonedCard = clonedGameObject.GetComponent<UseCard>();
+            attackGive = this.attackGive,
+            healthGive = this.healthGive,
+            timerGive = this.timerGive,
+            shieldGive = this.shieldGive,
+            snowGive = this.snowGive,
+            fireGive = this.fireGive,
+            crystalGive = this.crystalGive,
+            poisonGive = this.poisonGive,
+            pepperGive = this.pepperGive,
+            curseGive = this.curseGive,
+            reflectGive = this.reflectGive,
+            hazeGive = this.hazeGive,
+            bombGive = this.bombGive,
+            inkGive = this.inkGive,
+            demonizeGive = this.demonizeGive,
+            numOfAttacksGive = this.numOfAttacksGive,
+        };
+    }
 
-        //cardbase specific
-        clonedCard.fieldIndex = this.fieldIndex;
-        clonedCard.ID = this.ID;
-        clonedCard.presetTag = this.presetTag;
-        clonedCard.nameText = this.nameText;
-        clonedCard.picture = this.picture;
-        clonedCard.border = this.border;
-        clonedCard.background = this.background;
-        clonedCard.numOfAttacksGive = this.numOfAttacksGive;
-        clonedCard.attackGive = this.attackGive;
-        clonedCard.healthGive = this.healthGive;
-        clonedCard.timerGive = this.timerGive;
-        clonedCard.shieldGive = this.shieldGive;
-        clonedCard.snowGive = this.snowGive;
-        clonedCard.fireGive = this.fireGive;
-        clonedCard.crystalGive = this.crystalGive;
-        clonedCard.poisonGive = this.poisonGive;
-        clonedCard.pepperGive = this.pepperGive;
-        clonedCard.curseGive = this.curseGive;
-        clonedCard.reflectGive = this.reflectGive;
-        clonedCard.hazeGive = this.hazeGive;
-        clonedCard.bombGive = this.bombGive;
-        clonedCard.inkGive = this.inkGive;
-        clonedCard.demonizeGive = this.demonizeGive;
+    public override void SetupUsingCardSaveData(CardSaveData cardSaveData)
+    {// Set all the fields from the save data back to the card
 
-        //use card specific
-
-        return clonedCard;
+        base.SetupUsingCardSaveData(cardSaveData);
+        this.attackGive = cardSaveData.attackGive;
+        this.healthGive = cardSaveData.healthGive;
+        this.timerGive = cardSaveData.timerGive;
+        this.shieldGive = cardSaveData.shieldGive;
+        this.snowGive = cardSaveData.snowGive;
+        this.fireGive = cardSaveData.fireGive;
+        this.crystalGive = cardSaveData.crystalGive;
+        this.poisonGive = cardSaveData.poisonGive;
+        this.pepperGive = cardSaveData.pepperGive;
+        this.curseGive = cardSaveData.curseGive;
+        this.reflectGive = cardSaveData.reflectGive;
+        this.hazeGive = cardSaveData.hazeGive;
+        this.bombGive = cardSaveData.bombGive;
+        this.inkGive = cardSaveData.inkGive;
+        this.demonizeGive = cardSaveData.demonizeGive;
+        this.numOfAttacksGive = cardSaveData.numOfAttacksGive;
 
     }
     public override bool TryUse(UnitCard cardToUseOn)

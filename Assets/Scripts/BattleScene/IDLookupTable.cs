@@ -7,10 +7,10 @@ public class IDLookupTable : MonoBehaviour
 {
     public static IDLookupTable instance;
 
-    [SerializeField] List<CardBase> unitCards;//100-199
+    [SerializeField] List<CardBase> unitCards;//100-199 
     [SerializeField] List<CardBase> useCards; //200-299
     [SerializeField] List<CardBase> enemyCards; //300-399
-     public List<CardBase> playerDeck = new List<CardBase>(); //random numbers 400+ -> this is the players deck!
+     public List<CardSaveData> playerDeck = new List<CardSaveData>(); //random numbers 400+ -> this is the players deck!
     Dictionary<int, CardBase> cardLookup;
     private void Awake()
     {
@@ -36,10 +36,7 @@ public class IDLookupTable : MonoBehaviour
     }
 
 
-    public CardBase GetPlayerCardsByID(int ID)
-    {
-       return playerDeck.FirstOrDefault(card => card.ID == ID)?.Clone();
-    }
+   
    /* public CardBase GetCardByID(int ID)
     {
 
@@ -53,32 +50,23 @@ public class IDLookupTable : MonoBehaviour
     */
     public CardBase GetCardByID(int ID)
     {
-        foreach (var card in unitCards)
-        {
-            Debug.Log($"Card in unitCards: ID={card.ID}, Name={card.name}");
-        }
         if (ID < 200)
         {
-            var card = unitCards.FirstOrDefault(card => card.ID == ID);
-            if(card != null)
-            {
-                Debug.Log(card.name + ":" + card.ID);
-            }
-            return card.Clone();
+            return unitCards.FirstOrDefault(card => card.ID == ID);
         }
-        else if(ID < 300)
+        else if (ID < 300)
         {
-            return useCards.FirstOrDefault(card => card.ID == ID)?.Clone();
+            return useCards.FirstOrDefault(card => card.ID == ID);
         }
         else if (ID < 400)
         {
-            return enemyCards.FirstOrDefault(card => card.ID == ID)?.Clone();
+            return enemyCards.FirstOrDefault(card => card.ID == ID);
         }
-        else
-        {
-            return null;
-        }
-       
+
+        // IDs 400+ are runtime instances — not stored as templates
+        Debug.LogWarning($"No template card found for ID: {ID}");
+        return null;
+
     }
     
 }
