@@ -4135,7 +4135,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fieldIndex: -1
-  ID: 2
+  ID: 151
   isStartCard: 0
   presetTag: playerCard
   nameText: Snoof
@@ -4170,6 +4170,7 @@ MonoBehaviour:
   parentTransform: {fileID: 0}
   isDead: 0
   isBoss: 0
+  hasCrown: 0
   currentAtkTimer: 0
   currentHealth: 0
   maxAtkTimer: 2

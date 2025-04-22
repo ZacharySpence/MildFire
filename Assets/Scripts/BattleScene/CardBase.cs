@@ -8,7 +8,7 @@ public abstract class CardBase : MonoBehaviour
 {
     private bool _isAlreadyOnField;
     public int fieldIndex;
-    public int ID;
+    
     
     public bool isAlreadyOnField
     {
@@ -16,11 +16,11 @@ public abstract class CardBase : MonoBehaviour
         set { _isAlreadyOnField = value; PlayerHand.Instance.RemoveCardFromHand(this); }
     } //when setting on field first time logically remove from hand!
 
-    public bool isStartCard;
+    public int ID;
     [SerializeField] protected string presetTag;
     [Header("Card Details")]
-    [SerializeField] string nameText;
-    [SerializeField] Sprite picture,background,border;
+    [SerializeField] protected string nameText;
+    [SerializeField] protected Sprite picture,background,border;
     [SerializeField] TextMeshProUGUI cardName,cardDescription;
     [SerializeField] Image cardPicture, cardBackground, cardBorder;
 
@@ -30,7 +30,8 @@ public abstract class CardBase : MonoBehaviour
     [SerializeField] protected int shieldGive, snowGive, fireGive, crystalGive, poisonGive, pepperGive, curseGive, reflectGive, hazeGive, bombGive, inkGive, demonizeGive;
     [SerializeField] protected bool hasBarrage, hasBuffAttack, hasSmackback; //special ability flags
 
-    
+
+    public abstract CardBase Clone();
     protected virtual void Awake()
     {
         cardPicture.sprite = picture;

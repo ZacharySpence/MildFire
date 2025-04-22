@@ -3,41 +3,43 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UnitCard :CardBase
 {
-    //NEED TO MAKE CHILDREN CLASSES SO CAN HAVE UNIT CARDS AND NON-UNIT CARDS!
     [SerializeField] OffensiveStats offStats;
+    public StatsData statsData;
     [SerializeField] Transform parentTransform; //so is it in hand or on field somewhere
     
 
 
 
 
-    public bool isDead, isBoss;
+    public bool isDead, isBoss,hasCrown;
    
     [Header("Stats")]
     public int currentAtkTimer, currentHealth;
     [SerializeField] int maxAtkTimer, maxHealth;
+    //possible add in 'start' with so has start values separate to On which is in-game!
     [SerializeField] StatusEffect shieldOn,snowOn, fireOn, crystalOn, poisonOn, pepperOn, curseOn,reflectOn, hazeOn,bombOn,inkOn,demonizeOn;
-                                                                                                            //extras!
+                                                                                                           
    
     [Header("Stat visuals")]
     [SerializeField] TextMeshProUGUI cAttackTimerText;
     [SerializeField] TextMeshProUGUI cHealthText;
     [SerializeField] Slider currentHealthSlider;
     //shield = ice (block dmg/fire damage, snow = stop enemy timer (reduced by globalFireLvl) , fire = damage/turn, crystal = total atk block , poison = damage/turn ignoring shield, pepper = bonus atk/turn, curse = -ve bonus atk/turn
-    private void Awake()
+    protected override void Awake()
     {
-        offStats = GetComponent<OffensiveStats>();
+        base.Awake();
         tag = presetTag; //set it's tag!
         if (ID == -1) { return; } //don't set anything else if it's empty!
         currentAtkTimer = maxAtkTimer;
         currentHealth = maxHealth;
         currentHealthSlider.maxValue = maxHealth;
-        offStats.Setup();
+       
 
         ChangeStatus();
         cAttackTimerText.text = $"{currentAtkTimer}x{offStats.currentNumOfAttacks}";
@@ -45,7 +47,68 @@ public class UnitCard :CardBase
       
 
     }
-    
+    private void Start()
+    {
+        offStats = GetComponent<OffensiveStats>();
+        offStats.Setup(statsData);
+    }
+
+    public override CardBase Clone()
+    {  // Instantiate the GameObject (this will clone the whole GameObject)
+        GameObject clonedGameObject = Instantiate(this.gameObject);
+
+        // Get the UnitCard component from the cloned GameObject
+        UnitCard clonedCard = clonedGameObject.GetComponent<UnitCard>();
+
+
+        //cardbase specific
+        clonedCard.fieldIndex = this.fieldIndex;
+        clonedCard.ID = this.ID;
+        clonedCard.presetTag = this.presetTag;
+        clonedCard.nameText = this.nameText;
+        clonedCard.picture = this.picture;
+        clonedCard.border = this.border;
+        clonedCard.background = this.background;
+        clonedCard.numOfAttacksGive = this.numOfAttacksGive;
+        clonedCard.attackGive = this.attackGive;
+        clonedCard.healthGive = this.healthGive;
+        clonedCard.timerGive = this.timerGive;
+        clonedCard.shieldGive = this.shieldGive;
+        clonedCard.snowGive = this.snowGive;
+        clonedCard.fireGive = this.fireGive;
+        clonedCard.crystalGive = this.crystalGive;
+        clonedCard.poisonGive = this.poisonGive;
+        clonedCard.pepperGive = this.pepperGive;
+        clonedCard.curseGive = this.curseGive;
+        clonedCard.reflectGive = this.reflectGive;
+        clonedCard.hazeGive = this.hazeGive;
+        clonedCard.bombGive = this.bombGive;
+        clonedCard.inkGive = this.inkGive;
+        clonedCard.demonizeGive = this.demonizeGive;
+
+        //unit card specific
+
+        //offStats specific
+        clonedCard.statsData = new StatsData
+        {
+            attack = this.statsData.attack,
+            numOfAttacks = this.statsData.numOfAttacks
+        };
+
+        clonedCard.maxAtkTimer = this.maxAtkTimer;
+        clonedCard.maxHealth = this.maxHealth;
+        clonedCard.isBoss = this.isBoss;
+        clonedCard.hasCrown = this.hasCrown;
+
+        clonedCard.shieldOn = this.shieldOn;
+        clonedCard.crystalOn = this.crystalOn;
+        clonedCard.pepperOn = this.pepperOn;
+            
+
+         
+        return clonedCard;
+
+    }
     //Card Auto logic methods
     public void ReduceTimer()
     {
@@ -154,9 +217,7 @@ public class UnitCard :CardBase
         reflectOn.Add(reflectAdded);
         pepperOn.Add(pepperAdded);
         crystalOn.Add(crystalAdded);
-        currentHealth = Mathf.Clamp(healthAdded + currentHealth, 0, maxHealth);
-        currentHealthSlider.value = currentHealth;
-        cHealthText.text = $"{currentHealth}";
+        Heal(healthAdded);
         //offenseStatSpecific
         offStats.ChangeOffStats(curseOn.value,attackAdded,numAttksAdded);
         currentAtkTimer += timerAdded;
@@ -216,13 +277,28 @@ public class UnitCard :CardBase
             pepperAdded,crystalAdded);
     }
 
+    void Heal(int healthAdded)
+    {
+        currentHealth = Mathf.Clamp(healthAdded + currentHealth, 0, maxHealth);
+        currentHealthSlider.value = currentHealth;
+        cHealthText.text = $"{currentHealth}";
+    }
     void Die()
     {
         Debug.Log($"{name} died");
         isDead = true;
         GameManager.Instance.EmptyOutField(fieldIndex, fieldIndex < 6);
+        //For animation: give it a rigidbody (now has gravity), impulse force a little up
+        GetComponent<Collider2D>().enabled = false;
+        var rb = gameObject.AddComponent<Rigidbody2D>();
+        rb.AddForce(new Vector2(0.25f, 1f), ForceMode2D.Impulse);
+        
+    }
+    void OnBecameInvisible()
+    {
         gameObject.SetActive(false);
     }
+
     UnitCard FindNearestEnemy(int row,bool isPlayer)
     {
         //if it's player += 2 until hit max in enemyField, else in playerfield
@@ -307,12 +383,30 @@ public class UnitCard :CardBase
 
     public override bool TryDiscard()
     {
+        if (isBoss) { return false; } //so can't discard leader
         //HAVE IT PLACED INTO DISCARD
         PlayerHand.Instance.AddToDiscard(this, false); //got to change this so can't just discard any card
         GameManager.Instance.selectedCard = null;//just remove it since it should become missing
+        Heal(5);// heal it and remove all status effects
+        ClearAllNegativeStatusEffects();
         return true;
     }
    
+    void ClearAllNegativeStatusEffects()
+    {
+
+
+        snowOn.Add(-snowOn.value);
+        fireOn.Add(-fireOn.value);
+        poisonOn.Add(-poisonOn.value);
+        curseOn.Add(-curseOn.value);
+        hazeOn.Add(-hazeOn.value);
+        inkOn.Add(-inkOn.value);
+        demonizeOn.Add(-demonizeOn.value);
+        bombOn.Add(-bombOn.value);
+        
+
+    }
 
 }
 

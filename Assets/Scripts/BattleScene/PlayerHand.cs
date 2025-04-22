@@ -9,7 +9,7 @@ public class PlayerHand : MonoBehaviour
     public List<CardBase> hand;
     [SerializeField] Transform physicalHand;
     Queue<CardBase> deck;
-    List<CardBase> cardPool = new List<CardBase>(); //cards should only be in card pool IF been discarded and haven't yet been drawn again
+    [SerializeField] List<CardBase> cardPool = new List<CardBase>(); //cards should only be in card pool IF been discarded and haven't yet been drawn again
     [SerializeField] List<CardBase> discard = new List<CardBase>();
     [SerializeField] int cardDrawAmount;
     //Instantiate cards in hand panel in UI
@@ -29,10 +29,36 @@ public class PlayerHand : MonoBehaviour
     }
     private void Start()
     {
-        deck =new Queue<CardBase>( GameManager.Instance.playerDeck);
-        LayoutChildren();
+        Setup();
     }
 
+    void Setup()
+    {
+      
+
+        //add them to a deck
+        deck = new Queue<CardBase>(IDLookupTable.instance.playerDeck);
+        //Make starting hand by grabbing all crown cards/the leader
+        foreach (var card in deck)
+        {
+            if (card is UnitCard unitCard)
+            {
+                if (unitCard.hasCrown || unitCard.isBoss)
+                {
+                    AddCardToHand(unitCard);
+                }
+            }
+        }
+        LayoutChildren();
+    }
+    void OnHandSizeChanged()
+    {
+        LayoutChildren();
+        if (!GameManager.Instance.isGameStarted && hand.Count == 0)
+        {
+            GameManager.Instance.isGameStarted = true;
+        }
+    }
     //INSTEAD -> I want to make a scriptable of each card (using ID) then on start instantiate each card. that way can make cards easier!
     public void ViewDeck()
     {
@@ -89,10 +115,11 @@ public class PlayerHand : MonoBehaviour
      
     public void RemoveCardFromHand(CardBase card)
     {
-       
+        
         hand.Remove(card);
         card.transform.parent = null; //so isn't laid out
-        LayoutChildren();
+        
+        OnHandSizeChanged(); 
     }
     void AddCardToHand(CardBase card)
     {

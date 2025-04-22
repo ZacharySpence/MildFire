@@ -10,15 +10,14 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    [SerializeField] bool isBusy, isGameStarted; //just ot test
+    [SerializeField] bool isBusy; //just ot test
+    public bool isGameStarted;
 
     [Header("OnField")]
     public UnitCard[] playerField = new UnitCard[6]; //always 6 items! //actually goes down in COLUMNS!
     public UnitCard[] enemyField= new UnitCard[6]; //always 6 items!
     public List<Transform> fields = new List<Transform>(); //first 6 is player, second 6 is enemy
-    [Header("Decks")]
-    public List<CardBase> playerDeck = new List<CardBase>();
-
+    
     [Header("EnemySpecifics")]
     [SerializeField] List<EnemyCards> enemyDeck = new List<EnemyCards>(); //because dont just take x amount, try take whole list, remaining goes to next list
     [SerializeField] int waveTimer, currentWaveTimer;
@@ -121,10 +120,12 @@ public class GameManager : MonoBehaviour
     }
 
 
-    void StartGame()
+    public void StartGame()
     { 
         //Called automatically when playerHand is empty at start!
         isGameStarted = true;
+        waveTimerText.gameObject.SetActive(true);
+        redrawBellText.gameObject.SetActive(true);
     }
     //Auto-Game
     public IEnumerator EndPlayerTurn() //called by pressing button (refresh bell) OR after playing a card
@@ -223,7 +224,7 @@ public class GameManager : MonoBehaviour
             if (enemiesToAdd.cards.Count == 0) { return; }
             if (enemyField[i].ID == -1 ) //so if it's empty
             {
-                PlaceEnemyCardOnEmptyField(i, enemiesToAdd.cards[0]);
+                PlaceEnemyCardOnEmptyField(i, IDLookupTable.instance.GetCardByID(enemiesToAdd.cards[0]) as UnitCard);
                 enemiesToAdd.cards.RemoveAt(0); //pop the card
             }
         }
@@ -365,7 +366,7 @@ public class GameManager : MonoBehaviour
                 Debug.Log("try place card on enemy (shouldnt work!)");
                 break;
             case "discard":
-                selectedCard.TryDiscard();
+                selectedCard.TryDiscard();               
                 Debug.Log("move card back into discard (only for unitCards");
                 break;
             case "emptyCard":
@@ -403,9 +404,7 @@ public class GameManager : MonoBehaviour
                 hasPlayed = selectedCard.TryUse(cursorOn.GetComponent<UnitCard>());
                 if (hasPlayed)
                 {
-                    selectedCard.TryDiscard();
-                    hasPlayed = false;
-                    //After using it discard it!
+                    selectedCard.TryDiscard();//After using it discard it!
                 }
                 //if already on field just moving it (so don't end turn!)
                 break;
@@ -414,9 +413,7 @@ public class GameManager : MonoBehaviour
                 hasPlayed = selectedCard.TryUse(cursorOn.GetComponent<UnitCard>());
                 if (hasPlayed)
                 {
-                    selectedCard.TryDiscard();
-                    hasPlayed = false;
-                    //After using it discard it!
+                    selectedCard.TryDiscard(); //After using it discard it!
                 }
 
                 break;
@@ -432,8 +429,11 @@ public class GameManager : MonoBehaviour
         }
         if (hasPlayed && isGameStarted)
         {
-
-            OnDeselect();
+            if (selectedCard != null)
+            {
+                OnDeselect();
+            }
+            
             StartCoroutine(EndPlayerTurn());
         }
     }
@@ -506,6 +506,6 @@ public class GameManager : MonoBehaviour
 [Serializable]
 public class EnemyCards
 {
-    public List<UnitCard> cards;
+    public List<int> cards;
     
 }
