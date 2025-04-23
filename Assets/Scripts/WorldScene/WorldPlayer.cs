@@ -10,7 +10,7 @@ public class WorldPlayer : MonoBehaviour
     private void Start()
     {
         CreateNewDeck(100);
-        SceneManager.LoadScene(1);
+        
     }
     void AddToPlayerDeck(int id)
     {

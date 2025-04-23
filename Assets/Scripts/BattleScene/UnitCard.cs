@@ -320,7 +320,7 @@ public class UnitCard :CardBase
     {
         Debug.Log($"{name} died");
         isDead = true;
-        GameManager.Instance.EmptyOutField(fieldIndex, fieldIndex < 6);
+        BattleManager.Instance.EmptyOutField(fieldIndex, fieldIndex < 6);
         //For animation: give it a rigidbody (now has gravity), impulse force a little up
         GetComponent<Collider2D>().enabled = false;
         var rb = gameObject.AddComponent<Rigidbody2D>();
@@ -335,7 +335,7 @@ public class UnitCard :CardBase
     UnitCard FindNearestEnemy(int row,bool isPlayer)
     {
         //if it's player += 2 until hit max in enemyField, else in playerfield
-        UnitCard[] fieldToSearch = isPlayer ? GameManager.Instance.enemyField : GameManager.Instance.playerField;
+        UnitCard[] fieldToSearch = isPlayer ? BattleManager.Instance.enemyField : BattleManager.Instance.playerField;
         for(int i = row; i < 6; i += 2) //go through own row
         {
             if (fieldToSearch[i].ID != -1) //card in there
@@ -390,9 +390,9 @@ public class UnitCard :CardBase
             else
             {
                 //Debug.Log($"Trying to place next card in row at index {newIndex}");
-                if (cardAlreadyThere.TryPlaceOnField(newIndex,isPlayerCard,GameManager.Instance.playerField[newIndex]))
+                if (cardAlreadyThere.TryPlaceOnField(newIndex,isPlayerCard,BattleManager.Instance.playerField[newIndex]))
                 {
-                    GameManager.Instance.PlayerPlaceCardOnFullField(atIndex, this);
+                    BattleManager.Instance.PlayerPlaceCardOnFullField(atIndex, this);
                     return true;
                 }
                 return false;
@@ -404,7 +404,7 @@ public class UnitCard :CardBase
             if (isPlayerCard && atIndex <= 5 || !isPlayerCard && atIndex >= 6)
             {
                
-                GameManager.Instance.PlayerPlaceCardOnEmptyField(atIndex, this);
+                BattleManager.Instance.PlayerPlaceCardOnEmptyField(atIndex, this);
                 return true;
             }
             return false;
@@ -419,7 +419,7 @@ public class UnitCard :CardBase
         if (isBoss) { return false; } //so can't discard leader
         //HAVE IT PLACED INTO DISCARD
         PlayerHand.Instance.AddToDiscard(this, false); //got to change this so can't just discard any card
-        GameManager.Instance.selectedCard = null;//just remove it since it should become missing
+        BattleManager.Instance.selectedCard = null;//just remove it since it should become missing
         Heal(5);// heal it and remove all status effects
         ClearAllNegativeStatusEffects();
         return true;

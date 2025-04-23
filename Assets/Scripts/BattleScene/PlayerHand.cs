@@ -92,9 +92,9 @@ public class PlayerHand : MonoBehaviour
     {
         if (!setupComplete) { return; }
         LayoutChildren();
-        if (!GameManager.Instance.isGameStarted && hand.Count == 0)
+        if (!BattleManager.Instance.isGameStarted && hand.Count == 0)
         {
-            GameManager.Instance.StartGame();
+            BattleManager.Instance.StartGame();
         }
     }
     //INSTEAD -> I want to make a scriptable of each card (using ID) then on start instantiate each card. that way can make cards easier!
@@ -146,7 +146,7 @@ public class PlayerHand : MonoBehaviour
             
         }
         Debug.Log($"Drew {cardDrawAmount} cards");
-        GameManager.Instance.RestartBellTimer();
+        BattleManager.Instance.RestartBellTimer();
         LayoutChildren();
 
     }

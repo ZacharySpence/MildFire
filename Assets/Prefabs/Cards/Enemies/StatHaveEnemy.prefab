@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 62658012984666088, guid: 2fafd344cc9f51444803cbef016491cc, type: 3}
       propertyPath: ID
-      value: 16
+      value: 302
       objectReference: {fileID: 0}
     - target: {fileID: 62658012984666088, guid: 2fafd344cc9f51444803cbef016491cc, type: 3}
       propertyPath: attack

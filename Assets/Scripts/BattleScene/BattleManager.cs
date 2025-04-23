@@ -6,9 +6,9 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class BattleManager : MonoBehaviour
 {
-    public static GameManager Instance;
+    public static BattleManager Instance;
 
     [SerializeField] bool isBusy; //just ot test
     public bool isGameStarted;
@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     public List<Transform> fields = new List<Transform>(); //first 6 is player, second 6 is enemy
     
     [Header("EnemySpecifics")]
-    [SerializeField] List<EnemyCards> enemyDeck = new List<EnemyCards>(); //because dont just take x amount, try take whole list, remaining goes to next list
+    [SerializeField] public List<EnemyCards> enemyDeck = new List<EnemyCards>(); //because dont just take x amount, try take whole list, remaining goes to next list
     [SerializeField] int waveTimer, currentWaveTimer;
     bool bossHasSpawned;
 
@@ -45,18 +45,22 @@ public class GameManager : MonoBehaviour
             Destroy(this);
         }
 
-        //fill up enemy and player field with 'empty' card prefab
-        for (int i = 0; i < playerField.Length; i++)
-        {
-            UnitCard emptyP = Instantiate(emptyCard, fields[i]);
-            emptyP.fieldIndex = i;
-            playerField[i] = emptyP;
-            UnitCard emptyE = Instantiate(emptyCard, fields[i+6]);
-            emptyE.fieldIndex = i + 6;
-            enemyField[i] = emptyE; 
-        }
+       
     }
 
+    private void OnLevelWasLoaded(int level)
+    {
+        if(level == 1)
+        {
+            Setup();
+
+        }
+        else
+        {
+            isBusy = true;
+        }
+        
+    }
     private void Update()
     {
         if (isBusy)
@@ -107,6 +111,24 @@ public class GameManager : MonoBehaviour
        
     }
    
+    void Setup()
+    {
+      
+        //fill up enemy and player field with 'empty' card prefab
+        for (int i = 0; i < playerField.Length; i++)
+        {
+            UnitCard emptyP = Instantiate(emptyCard, fields[i]);
+            emptyP.fieldIndex = i;
+            playerField[i] = emptyP;
+            UnitCard emptyE = Instantiate(emptyCard, fields[i + 6]);
+            emptyE.fieldIndex = i + 6;
+            enemyField[i] = emptyE;
+        }
+        enemyDeck = DeckHolder.enemyDeck;
+        AddInNewEnemies();
+        isBusy = false;
+
+    }
     void SelectedCardFollowCursor()
     {
         // Get the mouse position in world space
@@ -128,6 +150,7 @@ public class GameManager : MonoBehaviour
         waveTimerText.transform.parent.gameObject.SetActive(true);
         redrawBellText.transform.parent.gameObject.SetActive(true);
         playerHand.PressBell();
+        
     }
     //Auto-Game
     public IEnumerator EndPlayerTurn() //called by pressing button (refresh bell) OR after playing a card

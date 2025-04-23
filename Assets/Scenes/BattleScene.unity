@@ -1549,7 +1549,7 @@ GameObject:
   - component: {fileID: 839242370}
   - component: {fileID: 839242371}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: BattleManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1579,10 +1579,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 839242369}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 933cb185667b9ba4dbd0cc527893a5ec, type: 3}
+  m_Script: {fileID: 11500000, guid: a807a5e685ec0ad4bb7bbad33f816939, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isBusy: 0
+  isBusy: 1
   isGameStarted: 0
   playerField:
   - {fileID: 0}
@@ -1611,10 +1611,7 @@ MonoBehaviour:
   - {fileID: 94028909}
   - {fileID: 1772326625}
   - {fileID: 515815963}
-  enemyDeck:
-  - cards: 000000000000000000000000
-  - cards: 0000000000000000
-  - cards: 00000000000000000000000000000000
+  enemyDeck: []
   waveTimer: 4
   currentWaveTimer: 4
   selectedCard: {fileID: 0}

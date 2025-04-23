@@ -97,7 +97,7 @@ public class UseOffCard : CardBase
     {
         //HAVE IT PLACED INTO DISCARD
         PlayerHand.Instance.AddToDiscard(this, false); //got to change this so can't just discard any card
-        GameManager.Instance.selectedCard = null;//just remove it since it should become missing
+        BattleManager.Instance.selectedCard = null;//just remove it since it should become missing
         return true;
     }
 }
