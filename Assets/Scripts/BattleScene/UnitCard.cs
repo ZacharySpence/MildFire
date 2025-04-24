@@ -364,11 +364,21 @@ public class UnitCard :CardBase
 
     public void ReturnToPosition()
     {
-
+        
     }
     public override void View()
     {
         //Place in viewing spot in UI
+        GameObject viewPanel = BattleManager.Instance.viewPanel;
+        viewPanel.SetActive(true);
+
+        UnitCard uCard =  Instantiate(this);
+         BattleManager.Instance.uiViewCard = uCard;
+        // uCard.transform.parent = viewPanel.transform;
+        uCard.transform.position = Vector2.zero;
+        uCard.GetComponentInChildren<Canvas>().sortingOrder = 5;
+        uCard.transform.localScale *= 2f;
+        
     }
 
 
@@ -421,6 +431,7 @@ public class UnitCard :CardBase
         PlayerHand.Instance.AddToDiscard(this, false); //got to change this so can't just discard any card
         BattleManager.Instance.selectedCard = null;//just remove it since it should become missing
         Heal(5);// heal it and remove all status effects
+        
         ClearAllNegativeStatusEffects();
         return true;
     }

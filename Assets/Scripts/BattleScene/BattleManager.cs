@@ -27,6 +27,7 @@ public class BattleManager : MonoBehaviour
     public CardBase selectedCard;
     public GameObject cursorOn;
     [SerializeField] int bellTimer, currentBellTimer;
+    public bool willStartGame;
    
     [Header("References")]
     [SerializeField]PlayerHand playerHand;
@@ -34,6 +35,12 @@ public class BattleManager : MonoBehaviour
 
     [Header("Hud Visuals")]
     [SerializeField] TextMeshPro waveTimerText, redrawBellText;
+
+    [Header("UI Visuals")]
+   public bool discardViewing, deckViewing;
+    public GameObject viewPanel;
+    public UnitCard viewCard, uiViewCard;
+
     private void Awake()
     {
         if(Instance == null)
@@ -75,6 +82,26 @@ public class BattleManager : MonoBehaviour
         //on left click select, or use, on right click deselect
         if (Input.GetMouseButtonDown(0))
         {
+            //if viewing and left click then go back
+            if (viewPanel.activeSelf)
+            {
+                viewPanel.SetActive(false);
+                if (deckViewing)
+                {
+                    deckViewing = false;
+                    playerHand.StopViewingDraw();
+                }
+                else if (discardViewing)
+                {
+                    discardViewing = false;
+                    playerHand.StopViewingDiscard();
+                }
+                else
+                {
+                    OnDeselect(true);
+                }
+                return;
+            }
             Debug.Log("Lclick");
             // Get the mouse position in screen space
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -146,10 +173,12 @@ public class BattleManager : MonoBehaviour
     {
         Debug.Log("starting game!");
         //Called automatically when playerHand is empty at start!
-        isGameStarted = true;
+        playerHand.PressBell();
         waveTimerText.transform.parent.gameObject.SetActive(true);
         redrawBellText.transform.parent.gameObject.SetActive(true);
-        playerHand.PressBell();
+        isGameStarted = true;
+        
+       
         
     }
     //Auto-Game
@@ -191,7 +220,7 @@ public class BattleManager : MonoBehaviour
     }
     public void RestartBellTimer()
     {
-        if(currentBellTimer > 0)
+        if(currentBellTimer > 0 && isGameStarted)
         {
             StartCoroutine(EndPlayerTurn());
         }
@@ -417,6 +446,11 @@ public class BattleManager : MonoBehaviour
             OnDeselect();
             StartCoroutine(EndPlayerTurn());
         }
+        else if (!isGameStarted && willStartGame)
+        {
+            OnDeselect();
+            StartGame();
+        }
     }
     public void UseUseSelectedCard()
     {
@@ -472,8 +506,9 @@ public class BattleManager : MonoBehaviour
                 Debug.Log("CARD selected. could be Unit or Use card");
                 break;
             case "enemyCard":
-                selectedCard = cursorOn.GetComponent<UnitCard>();
-                selectedCard.View();
+                //don't select the card!
+                viewCard = cursorOn.GetComponent<UnitCard>();
+                viewCard.View();
                 Debug.Log("Enemy unit card selected to view");
                 break;
             case "bell":
@@ -500,6 +535,12 @@ public class BattleManager : MonoBehaviour
     //when deselecting the card (so can only do this when have a card selected!)
     public void OnDeselect(bool returnToPosition = false)
     {
+       
+        if(viewCard != null)
+        {
+            selectedCard = viewCard;
+            viewCard = null;
+        }
         selectedCard.GetComponent<Collider2D>().enabled =true;
         if (returnToPosition)
         {
@@ -509,7 +550,8 @@ public class BattleManager : MonoBehaviour
                     if(selectedCard.fieldIndex != -1)
                     {
                         Debug.Log("Place back on field");
-                        PlayerPlaceCardOnEmptyField(selectedCard.fieldIndex, selectedCard as UnitCard);
+                        selectedCard.transform.position = fields[selectedCard.fieldIndex].position; //physically place card
+                        //PlayerPlaceCardOnEmptyField(selectedCard.fieldIndex, selectedCard as UnitCard);
                     }
                     else
                     {
@@ -520,6 +562,9 @@ public class BattleManager : MonoBehaviour
                     break;
                 case "enemyCard":
                     Debug.Log("de-view enemy card");
+                    selectedCard.transform.parent = null;
+                    selectedCard.transform.position = fields[selectedCard.fieldIndex].position; //physically place card
+                    Destroy(uiViewCard.gameObject); //feels ineffective 
                     break;
             }
         }

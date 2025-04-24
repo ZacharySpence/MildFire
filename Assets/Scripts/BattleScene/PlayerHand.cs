@@ -18,6 +18,8 @@ public class PlayerHand : MonoBehaviour
     //cards have tags
 
     [SerializeField] float spacing = 2.1f;
+    [Header("Flags")]
+    
     bool setupComplete = false;
     private void Awake()
     {
@@ -94,24 +96,60 @@ public class PlayerHand : MonoBehaviour
         LayoutChildren();
         if (!BattleManager.Instance.isGameStarted && hand.Count == 0)
         {
-            BattleManager.Instance.StartGame();
+            BattleManager.Instance.willStartGame = true;
         }
     }
     //INSTEAD -> I want to make a scriptable of each card (using ID) then on start instantiate each card. that way can make cards easier!
     public void ViewDeck()
     {
+        BattleManager.Instance.deckViewing = true;
         //Shuffle and view deck
         Debug.Log("View Deck");
+        GameObject viewPanel = BattleManager.Instance.viewPanel;
+        viewPanel.SetActive(true);
+        //need to add a shuffle!
+        foreach (var card in deck)
+        {
+            card.gameObject.SetActive(true);
+            card.transform.parent = viewPanel.transform;
+        }
+        viewPanel.GetComponent<LayoutHelper>().LayoutCards();
+    }
+    public void StopViewingDraw()
+    {
+        foreach (var card in deck)
+        {
+            card.gameObject.SetActive(false);
+            card.transform.parent = null;
+        }
     }
     public void ViewDiscard()
     {
+        BattleManager.Instance.discardViewing = true;
         //Just view discard (order doesn't matter)
         Debug.Log("View Discard");
+        GameObject viewPanel = BattleManager.Instance.viewPanel;
+        viewPanel.SetActive(true);
+        foreach(var card in discard)
+        {
+            card.gameObject.SetActive(true);
+            card.transform.parent = viewPanel.transform;
+        }
+        viewPanel.GetComponent<LayoutHelper>().LayoutCards();
+    }
+    public void StopViewingDiscard()
+    {
+        foreach (var card in discard)
+        {
+            card.gameObject.SetActive(false);
+            card.transform.parent = null;
+        }
+       
     }
 
     public void AddToDiscard(CardBase card, bool inHand) //only things that aren't destroyed get to discard
     {
-      
+        card.GetComponent<Collider2D>().enabled = true; //re-enable the collider!
         cardPool.Add(card); //add to card pool
         discard.Add(card); //add also to discard
         //For later -> if(isUnitCard) -> healToMax(); (so heal unit cards when placed in discard!
