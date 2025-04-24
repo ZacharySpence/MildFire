@@ -33,18 +33,18 @@ public class DeckHolder : MonoBehaviour
         {
             EnemyCards enemyCards = new EnemyCards();
             enemyCards.cards = intList.values;
-            Debug.Log(enemyCards.cards.Count + ": count");
+           // Debug.Log(enemyCards.cards.Count + ": count");
             enemyDeck.Add(enemyCards);
         }
-        //Testing
+        /*//Testing
         foreach(var cards in enemyDeck)
         {
-            Debug.Log("EDeck:");
+           // Debug.Log("EDeck:");
             foreach(var card in cards.cards)
             {
                 Debug.Log(card);
             }
-        }
+        }*/
 
 
     }

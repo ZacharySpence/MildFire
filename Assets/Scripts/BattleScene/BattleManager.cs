@@ -102,7 +102,7 @@ public class BattleManager : MonoBehaviour
                 }
                 return;
             }
-            Debug.Log("Lclick");
+          
             // Get the mouse position in screen space
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
@@ -332,7 +332,8 @@ public class BattleManager : MonoBehaviour
     void PlaceEnemyCardOnEmptyField(int index, UnitCard cardToPlace)
     {
         UnitCard card = Instantiate(cardToPlace, fields[index+6].transform); //actually have to instantiate the card!
-        Debug.Log($"placing {card.name} at index: {index+6}");
+        card.SetupUsingCardSaveData(card.CreateCardSaveData()); //set it up using its own data
+      //  Debug.Log($"placing {card.name} at index: {index+6}");
         enemyField[index].gameObject.SetActive(false); //hide the empty card (so can just re-enable it later
         enemyField[index] = card; //logically place card
         card.fieldIndex = index+6;
@@ -342,7 +343,7 @@ public class BattleManager : MonoBehaviour
     }
     public void EmptyOutField(int index, bool isPlayerCard)
     {
-        Debug.Log($"Index is {index} for {isPlayerCard}");
+      //  Debug.Log($"Index is {index} for {isPlayerCard}");
         fields[index].GetChild(0).gameObject.SetActive(true);
         if (isPlayerCard)
         {
@@ -356,7 +357,7 @@ public class BattleManager : MonoBehaviour
     }
     public void PlayerPlaceCardOnEmptyField(int index, UnitCard cardToPlace)
     {
-        Debug.Log($"placing {cardToPlace.name} at index: {index}");
+       // Debug.Log($"placing {cardToPlace.name} at index: {index}");
         if (playerField[index].GetComponent<CardBase>().ID == -1)
         {
             playerField[index].gameObject.SetActive(false); //hide the empty card (so can just re-enable it later
@@ -368,7 +369,7 @@ public class BattleManager : MonoBehaviour
     }
     public void PlayerPlaceCardOnFullField(int index, UnitCard cardToPlace)
     {
-        Debug.Log($"placing {cardToPlace.name} at index: {index}");
+       // Debug.Log($"placing {cardToPlace.name} at index: {index}");
         playerField[index] = cardToPlace; //overwrite and logically place card
         cardToPlace.fieldIndex = index;
         cardToPlace.transform.position = fields[index].position; //physically place card
@@ -417,23 +418,23 @@ public class BattleManager : MonoBehaviour
                 } //if already on field just moving it (so don't end turn!)
                 break;
             case "enemyCard":                    
-                Debug.Log("try place card on enemy (shouldnt work!)");
+                //Debug.Log("try place card on enemy (shouldnt work!)");
                 break;
             case "discard":
                 selectedCard.TryDiscard();               
-                Debug.Log("move card back into discard (only for unitCards");
+                //Debug.Log("move card back into discard (only for unitCards");
                 break;
             case "emptyCard":
                 //Debug.Log("place card in empty spot");
                 hasPlayed = selectedCard.TryPlaceOnField(cursorOn.GetComponent<UnitCard>().GetFieldIndex(),true);
                 if (hasPlayed && !selectedCard.isAlreadyOnField) 
                 {
-                    Debug.Log("Placing on field first time");
+                   // Debug.Log("Placing on field first time");
                     selectedCard.isAlreadyOnField = true;
                 }
                 else 
                 {
-                    Debug.Log("Card already on field!");
+                    //Debug.Log("Card already on field!");
                     hasPlayed = false;
                     OnDeselect();
                 } //if already on field just moving it (so don't end turn!)
@@ -459,7 +460,7 @@ public class BattleManager : MonoBehaviour
         switch (cursorOn.tag)
         {
             case "playerCard":
-                Debug.Log("try use card on player card");
+                //Debug.Log("try use card on player card");
                 hasPlayed = selectedCard.TryUse(cursorOn.GetComponent<UnitCard>());
                 if (hasPlayed)
                 {
@@ -468,7 +469,7 @@ public class BattleManager : MonoBehaviour
                 //if already on field just moving it (so don't end turn!)
                 break;
             case "enemyCard":
-                Debug.Log("try use card on enemy");
+                //Debug.Log("try use card on enemy");
                 hasPlayed = selectedCard.TryUse(cursorOn.GetComponent<UnitCard>());
                 if (hasPlayed)
                 {
@@ -478,10 +479,10 @@ public class BattleManager : MonoBehaviour
                 break;
             case "discard":
                 selectedCard.TryDiscard();
-                Debug.Log("move card back into discard (only for unitCards");
+               // Debug.Log("move card back into discard (only for unitCards");
                 break;
             case "emptyCard":
-                Debug.Log("try using card in empty spot (shouldn't work!");
+                //Debug.Log("try using card in empty spot (shouldn't work!");
                
                 break;
 
@@ -503,29 +504,29 @@ public class BattleManager : MonoBehaviour
         {
             case "playerCard":
                SelectCard(cursorOn.GetComponent<CardBase>());
-                Debug.Log("CARD selected. could be Unit or Use card");
+               // Debug.Log("CARD selected. could be Unit or Use card");
                 break;
             case "enemyCard":
                 //don't select the card!
                 viewCard = cursorOn.GetComponent<UnitCard>();
                 viewCard.View();
-                Debug.Log("Enemy unit card selected to view");
+               // Debug.Log("Enemy unit card selected to view");
                 break;
             case "bell":
                 playerHand.PressBell();
-                Debug.Log("playerHand bell");
+               // Debug.Log("playerHand bell");
                 break;
             case "waveTimer":
                 CallInEnemiesEarly(); //dont forget to make waveTimer disappear once no more enemies to add!
-                Debug.Log("waveTimer");
+              //  Debug.Log("waveTimer");
                 break;
             case "deck":
                 playerHand.ViewDeck();
-                Debug.Log("playerHand deck");
+               // Debug.Log("playerHand deck");
                 break;
             case "discard":
                 playerHand.ViewDiscard();
-                Debug.Log("playerHand discard");
+               // Debug.Log("playerHand discard");
                 break;
             
         }

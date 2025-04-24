@@ -64,6 +64,7 @@ public class UseCard : CardBase
         this.inkGive = cardSaveData.inkGive;
         this.demonizeGive = cardSaveData.demonizeGive;
         this.numOfAttacksGive = cardSaveData.numOfAttacksGive;
+        CreateCardDescription();
 
     }
     public override bool TryUse(UnitCard cardToUseOn)

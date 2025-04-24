@@ -1,0 +1,536 @@
+fileFormatVersion: 2
+guid: bb08faa2cd2b59f40be42f040162cf3b
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Reflect
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 450
+        width: 136
+        height: 149
+      alignment: 9
+      pivot: {x: 0, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 44647ddc3edb0264895fd7adefa73138
+      internalID: 1965121641
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow
+      rect:
+        serializedVersion: 2
+        x: 153
+        y: 450
+        width: 136
+        height: 142
+      alignment: 9
+      pivot: {x: 0, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d6a1b82adb61ac84b80a0764cfeb4575
+      internalID: -650989153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shield
+      rect:
+        serializedVersion: 2
+        x: 303
+        y: 442
+        width: 111
+        height: 147
+      alignment: 9
+      pivot: {x: 0, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2c73a997a0c56694d91fdb53018b4f06
+      internalID: -952062919
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ResistSnow
+      rect:
+        serializedVersion: 2
+        x: 428
+        y: 437
+        width: 137
+        height: 146
+      alignment: 9
+      pivot: {x: 0, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 96ed99043b5730549b5cd5a306562133
+      internalID: 2035544395
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Poison
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 452
+        width: 119
+        height: 135
+      alignment: 9
+      pivot: {x: 0, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 13c190c4ef832054da84cf262f45059f
+      internalID: -1583577488
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pepper
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 297
+        width: 122
+        height: 144
+      alignment: 9
+      pivot: {x: 0, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ddb9281c42138d498b52308247abb6f
+      internalID: 2113744380
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ink
+      rect:
+        serializedVersion: 2
+        x: 165
+        y: 299
+        width: 110
+        height: 138
+      alignment: 9
+      pivot: {x: 0, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 96a9419373b4a0541ae5d018bd27dbea
+      internalID: 1778492484
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Health
+      rect:
+        serializedVersion: 2
+        x: 292
+        y: 292
+        width: 130
+        height: 129
+      alignment: 9
+      pivot: {x: 0, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d245c437d25cf8d41a471873c3cddfab
+      internalID: 1124031245
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Haze
+      rect:
+        serializedVersion: 2
+        x: 425
+        y: 287
+        width: 137
+        height: 141
+      alignment: 9
+      pivot: {x: 0, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0bdafd931b2099040a37b7c9fe0b10d7
+      internalID: 1957194214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fire
+      rect:
+        serializedVersion: 2
+        x: 580
+        y: 294
+        width: 117
+        height: 146
+      alignment: 9
+      pivot: {x: 0, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c0fb62e631fba514c8abadbb449e3cb5
+      internalID: 705118919
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Demonize
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 144
+        width: 142
+        height: 132
+      alignment: 9
+      pivot: {x: 0, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f983f3edbbf36b2488348a6f27d0a6e7
+      internalID: -1168567310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Curse
+      rect:
+        serializedVersion: 2
+        x: 161
+        y: 134
+        width: 123
+        height: 145
+      alignment: 9
+      pivot: {x: 0, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1cfe06e34b13ca4ab7e5a0d4d614613
+      internalID: 2030212779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Crystal
+      rect:
+        serializedVersion: 2
+        x: 297
+        y: 148
+        width: 118
+        height: 134
+      alignment: 9
+      pivot: {x: 0, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9d9a546029a204841bf3ba533a6115c3
+      internalID: -1540129807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bomb
+      rect:
+        serializedVersion: 2
+        x: 427
+        y: 131
+        width: 129
+        height: 148
+      alignment: 9
+      pivot: {x: 0, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c74e82a4bb014054ea2fe0ada86f3c0f
+      internalID: 1719368299
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Attack
+      rect:
+        serializedVersion: 2
+        x: 572
+        y: 139
+        width: 130
+        height: 136
+      alignment: 9
+      pivot: {x: 0, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d8206940c7a9a6943aedfd440a2c5f60
+      internalID: -1363714070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AtkTimer
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 4
+        width: 135
+        height: 142
+      alignment: 9
+      pivot: {x: 0, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 006c734d47a058441a8705979679c17b
+      internalID: 479947112
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WildFrostStatusEffects_16
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 141
+        width: 5
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b0d2ca71878922a4a8fcdffbc6bd7e68
+      internalID: 501899745
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WildFrostStatusEffects_17
+      rect:
+        serializedVersion: 2
+        x: 13
+        y: 19
+        width: 4
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 53cb9cb363281c741a35a3602e95c21f
+      internalID: -1340831792
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      AtkTimer: 479947112
+      Attack: -1363714070
+      Bomb: 1719368299
+      Crystal: -1540129807
+      Curse: 2030212779
+      Demonize: -1168567310
+      Fire: 705118919
+      Haze: 1957194214
+      Health: 1124031245
+      Ink: 1778492484
+      Pepper: 2113744380
+      Poison: -1583577488
+      Reflect: 1965121641
+      ResistSnow: 2035544395
+      Shield: -952062919
+      Snow: -650989153
+      WildFrostStatusEffects_16: 501899745
+      WildFrostStatusEffects_17: -1340831792
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

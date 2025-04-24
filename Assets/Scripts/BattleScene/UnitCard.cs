@@ -39,15 +39,9 @@ public class UnitCard :CardBase
         currentAtkTimer = maxAtkTimer;
         currentHealth = maxHealth;
         currentHealthSlider.maxValue = maxHealth;
-       
-
         ChangeStatus();
-       
-      
-
     }
-  
-
+ //--SETUP--
     public override CardSaveData CreateCardSaveData()
     {
         return new CardSaveData
@@ -138,10 +132,13 @@ public class UnitCard :CardBase
         currentHealth = maxHealth;
         currentHealthSlider.maxValue = maxHealth;
         ChangeStatus();
-        
+        CreateCardDescription();
+
 
 
     }
+
+
     //Card Auto logic methods
     public void ReduceTimer()
     {

@@ -14,7 +14,7 @@ public class WorldPlayer : MonoBehaviour
     }
     void AddToPlayerDeck(int id)
     {
-        Debug.Log(id);
+       // Debug.Log(id);
        
       var card =  IDLookupTable.instance.GetCardByID(id); //get template of card (reference it)
 

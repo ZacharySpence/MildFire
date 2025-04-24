@@ -81,6 +81,7 @@ public class UseOffCard : CardBase
         //Setup rest
         offStats = GetComponent<OffensiveStats>();
         offStats.Setup(statsData);
+        CreateCardDescription();
     }
     public override bool TryUse(UnitCard cardToUseOn)
     {

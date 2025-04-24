@@ -86,7 +86,7 @@ public class PlayerHand : MonoBehaviour
             }
         }
         //add the rest to a deck
-        deck = new Queue<CardBase>(tempDeck);
+        Reshuffle();
         LayoutChildren();
         setupComplete = true;
     }
@@ -107,18 +107,35 @@ public class PlayerHand : MonoBehaviour
         Debug.Log("View Deck");
         GameObject viewPanel = BattleManager.Instance.viewPanel;
         viewPanel.SetActive(true);
-        //need to add a shuffle!
+        // Deep copy each item 
+        List<CardBase> copy = new List<CardBase>();
         foreach (var card in deck)
         {
+            copy.Add(card);
+        }
+        // Shuffle using Fisher-Yates
+        for (int i = copy.Count - 1; i > 0; i--)
+        {
+            int j = Random.Range(0, i + 1);
+            var temp = copy[i];
+            copy[i] = copy[j];
+            copy[j] = temp;
+        }
+
+        foreach (var card in copy)
+        {
+          
             card.gameObject.SetActive(true);
             card.transform.parent = viewPanel.transform;
         }
         viewPanel.GetComponent<LayoutHelper>().LayoutCards();
+
     }
     public void StopViewingDraw()
     {
         foreach (var card in deck)
         {
+            
             card.gameObject.SetActive(false);
             card.transform.parent = null;
         }
@@ -132,6 +149,7 @@ public class PlayerHand : MonoBehaviour
         viewPanel.SetActive(true);
         foreach(var card in discard)
         {
+            
             card.gameObject.SetActive(true);
             card.transform.parent = viewPanel.transform;
         }
@@ -141,6 +159,7 @@ public class PlayerHand : MonoBehaviour
     {
         foreach (var card in discard)
         {
+           
             card.gameObject.SetActive(false);
             card.transform.parent = null;
         }
@@ -200,7 +219,7 @@ public class PlayerHand : MonoBehaviour
     void AddCardToHand(CardBase card)
     {
         
-        //if card was already made before, then grab from pool
+        //if card was already made before, then grab from pool (which it should!)
         int possIndex = cardPool.IndexOf(card);
         if (possIndex != -1)
         {
@@ -211,12 +230,14 @@ public class PlayerHand : MonoBehaviour
             card.transform.parent = transform;
         }
         //else create card
-        else
+       else
         {
+            Debug.Log("Card not found in card pool!!!");
+            /*
             CardBase newCard = Instantiate(card, physicalHand); //will assume each card has it's own ID's (even copies -> when making in world deck add to their ID so it's always different!)
     
             hand.Add(newCard);
-            newCard.transform.parent = transform;
+            newCard.transform.parent = transform;*/
         }
         
         
@@ -241,8 +262,8 @@ public class PlayerHand : MonoBehaviour
 
     void Reshuffle()
     {
-        Debug.Log("Put all discard into deck and reshuffle into new deck queue");
-        deck = new Queue<CardBase>(discard); //curently just place back on top ADD IN A SHUFFLE!
+        //Debug.Log("Put all discard into deck and reshuffle into new deck queue");
+        deck = new Queue<CardBase>(discard); //currently just place back on top ADD IN A SHUFFLE!
         discard.Clear();
     }
 }
