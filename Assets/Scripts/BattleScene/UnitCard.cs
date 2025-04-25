@@ -6,6 +6,9 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
+using UnityEditor.Experimental.GraphView;
+using static UnityEngine.Rendering.DebugUI.Table;
 
 public class UnitCard :CardBase
 {
@@ -86,7 +89,11 @@ public class UnitCard :CardBase
             crystalOn = this.crystalOn.value,
             pepperOn = this.pepperOn.value,
 
-        };
+            //specialAbilities
+            hasLifesteal = this.hasLifesteal,
+            hasSpawnOnDeath = this.hasSpawnOnDeath,
+            spawnsOnDeath = this.spawnsOnDeath,
+    };
 
 
     }
@@ -124,7 +131,12 @@ public class UnitCard :CardBase
         this.crystalOn.Add(cardSaveData.crystalOn);
         this.pepperOn.Add(cardSaveData.pepperOn);
 
+        //Apply special effects
+        this.hasLifesteal = cardSaveData.hasLifesteal;
+        this.hasSpawnOnDeath = cardSaveData.hasSpawnOnDeath;
+        this.spawnsOnDeath = cardSaveData.spawnsOnDeath;
         //Setup rest
+        
         offStats = GetComponent<OffensiveStats>();
         offStats.Setup(statsData);
         cAttackTimerText.text = $"{currentAtkTimer}x{offStats.currentNumOfAttacks}";
@@ -138,6 +150,18 @@ public class UnitCard :CardBase
 
     }
 
+    public override void CreateCardDescription()
+    {
+        base.CreateCardDescription();
+        //special effects
+        if (hasLifesteal)
+        {
+           text.Add($"Heal {offStats.currentAttack} health on hit"); }
+
+        cardDescription.text = string.Join(" ", text);
+        var textList = cardDescription.text.Split(" ").ToList();
+        cardDescription.text = desc.CreateDescription(textList);
+    }
 
     //Card Auto logic methods
     public void ReduceTimer()
@@ -162,7 +186,7 @@ public class UnitCard :CardBase
         {
             for (int i = 0; i < offStats.currentNumOfAttacks; i++)
             {
-                Attack();
+                TryAttack();
             }
 
             currentAtkTimer = maxAtkTimer;
@@ -195,33 +219,58 @@ public class UnitCard :CardBase
             offStats.ChangeOffStats(curseOn.value);
         }
     }
-    //--COMBAT--
+    #region Combat
     //Just basic attack row enemy
-    void Attack()
+    void TryAttack()
     {
       
         
         bool isPlayer = fieldIndex < 6;
         //Get whether it's player, then find row and closest enemy in row
-       
-         var enemy =  FindNearestEnemy(fieldIndex % 2,isPlayer); //top row if it's 0, bottom if it's 1
-        if(enemy != null)
-        {
-            int reflectValue = enemy.reflectOn.value;
-            Debug.Log($"{name} attacked {enemy.name} for {offStats.currentAttack+pepperOn.value-curseOn.value} damage");
-            enemy.TakeDamage(offStats.currentAttack+pepperOn.value-curseOn.value,false,false, 
-                healthGive,attackGive,numOfAttacksGive,timerGive,
-                snowGive,poisonGive,fireGive,curseGive,shieldGive,
-                reflectGive, hazeGive,inkGive,bombGive,demonizeGive);
+        int row = fieldIndex % 2;
 
-            curseOn.Add(-curseOn.value); //remove all curse after using it!
-            if (reflectValue > 0) //take reflected damage even if kill enemy
+        if (hasBarrage)
+        {
+            foreach(var enemy in Barrage(row,isPlayer))
             {
-                TakeDamage(reflectValue);
+                DoAttack(enemy);
             }
         }
+        else
+        {
+            var enemy = FindNearestEnemy(row, isPlayer); //top row if it's 0, bottom if it's 1
+            if (enemy != null)
+            {
+                DoAttack(enemy);
+            }
+        }
+        
        
         
+    }
+
+    void DoAttack(UnitCard enemy)
+    {
+        int reflectValue = enemy.reflectOn.value;
+        Debug.Log($"{name} attacked {enemy.name} for {offStats.currentAttack + pepperOn.value - curseOn.value} damage");
+        enemy.TakeDamage(offStats.currentAttack + pepperOn.value - curseOn.value, false, false,
+            healthGive, attackGive, numOfAttacksGive, timerGive,
+            snowGive, poisonGive, fireGive, curseGive, shieldGive,
+            reflectGive, hazeGive, inkGive, bombGive, demonizeGive);
+
+        curseOn.Add(-curseOn.value); //remove all curse after using it!
+
+        //special effects
+        if (hasLifesteal)
+        {
+            Heal(offStats.currentAttack);
+        }
+
+        //
+        if (reflectValue > 0) //take reflected damage even if kill enemy
+        {
+            TakeDamage(reflectValue);
+        }
     }
 
     //Maybe put buff/dmg together so can have like heal that adds pepper? (got to play around with this!)
@@ -317,18 +366,56 @@ public class UnitCard :CardBase
     {
         Debug.Log($"{name} died");
         isDead = true;
-        BattleManager.Instance.EmptyOutField(fieldIndex, fieldIndex < 6);
+        bool isPlayer = fieldIndex < 6;
+       
+        BattleManager.Instance.EmptyOutField(fieldIndex,isPlayer);
         //For animation: give it a rigidbody (now has gravity), impulse force a little up
         GetComponent<Collider2D>().enabled = false;
         var rb = gameObject.AddComponent<Rigidbody2D>();
         rb.AddForce(new Vector2(0.25f, 1f), ForceMode2D.Impulse);
-        
+
+        //special abilities
+        if (hasSpawnOnDeath)
+        {
+            BattleManager.Instance.AddInNewSpawns(spawnsOnDeath, isPlayer); //if it's fieldIndex is less than 6 it's a player card!
+        }
+
     }
+    #endregion
     void OnBecameInvisible()
     {
         gameObject.SetActive(false);
     }
 
+
+    //--SPECIAL ABILITY SPECIFICS
+    List<UnitCard> Barrage(int row,bool isPlayer)
+    {
+        List<UnitCard> allUnitsToAttack = new List<UnitCard>();
+        //if it's player += 2 until hit max in enemyField, else in playerfield
+        UnitCard[] fieldToSearch = isPlayer ? BattleManager.Instance.enemyField : BattleManager.Instance.playerField;
+        for (int i = row; i < 6; i += 2) //go through own row
+        {
+            if (fieldToSearch[i].ID != -1) //card in there
+            {
+                allUnitsToAttack.Add(fieldToSearch[i]);
+            }
+        }
+        if(allUnitsToAttack.Count <= 0) //only if found none in a row then search next row
+        {
+            row ^= 1;
+            for (int i = row; i < 6; i += 2) //go through other row
+            {
+                if (fieldToSearch[i].ID != -1) //card in there
+                {
+                    allUnitsToAttack.Add(fieldToSearch[i]);
+                }
+            }
+        }
+        return allUnitsToAttack;
+       
+    }
+    //--
     UnitCard FindNearestEnemy(int row,bool isPlayer)
     {
         //if it's player += 2 until hit max in enemyField, else in playerfield
@@ -341,7 +428,7 @@ public class UnitCard :CardBase
             }
         }
         row ^= 1;
-        for (int i = row; i < 6; i += 2) //go through own row
+        for (int i = row; i < 6; i += 2) //go through other row
         {
             if (fieldToSearch[i].ID != -1) //card in there
             {
@@ -363,7 +450,7 @@ public class UnitCard :CardBase
     {
         
     }
-    public override void View()
+    public override void SelectedView()
     {
         //Place in viewing spot in UI
         GameObject viewPanel = BattleManager.Instance.viewPanel;
@@ -375,8 +462,19 @@ public class UnitCard :CardBase
         uCard.transform.position = Vector2.zero;
         uCard.GetComponentInChildren<Canvas>().sortingOrder = 5;
         uCard.transform.localScale *= 2f;
+        uCard.EnableTooltips();
+
         
     }
+    //--ON HOVER FEATURES (Move to separate script?)
+    public void ViewOnHover()
+    {
+        EnableTooltips();
+        transform.localScale *= 2f;
+    }
+    //
+
+    
 
 
     //Good enough for now -> needs to be done via hovering insted of on-click
@@ -457,7 +555,7 @@ public class StatusEffect
 
     public int value;
     public TextMeshProUGUI textObject;
-
+    
     public void Add(int amount)
     {
         value += amount;

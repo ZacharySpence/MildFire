@@ -104,7 +104,7 @@ public class PlayerHand : MonoBehaviour
     {
         BattleManager.Instance.deckViewing = true;
         //Shuffle and view deck
-        Debug.Log("View Deck");
+        Debug.Log("SelectedView Deck");
         GameObject viewPanel = BattleManager.Instance.viewPanel;
         viewPanel.SetActive(true);
         // Deep copy each item 
@@ -144,7 +144,7 @@ public class PlayerHand : MonoBehaviour
     {
         BattleManager.Instance.discardViewing = true;
         //Just view discard (order doesn't matter)
-        Debug.Log("View Discard");
+        Debug.Log("SelectedView Discard");
         GameObject viewPanel = BattleManager.Instance.viewPanel;
         viewPanel.SetActive(true);
         foreach(var card in discard)

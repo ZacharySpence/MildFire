@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class UseCard : CardBase
@@ -67,6 +68,15 @@ public class UseCard : CardBase
         CreateCardDescription();
 
     }
+
+    public override void CreateCardDescription()
+    {
+        base.CreateCardDescription();
+
+        cardDescription.text = string.Join(" ", text);
+        var textList = cardDescription.text.Split(" ").ToList();
+        cardDescription.text = desc.CreateDescription(textList);
+    }
     public override bool TryUse(UnitCard cardToUseOn)
     {
       
@@ -81,7 +91,7 @@ public class UseCard : CardBase
     public override bool TryDiscard()
     {
         //HAVE IT PLACED INTO DISCARD
-        PlayerHand.Instance.AddToDiscard(this, false); //got to change this so can't just discard any card
+        PlayerHand.Instance.AddToDiscard(this, true); //got to change this so can't just discard any card
         BattleManager.Instance.selectedCard = null;//just remove it since it should become missing
         return true;
     }

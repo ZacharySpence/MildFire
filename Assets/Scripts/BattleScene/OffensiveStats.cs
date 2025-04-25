@@ -18,7 +18,6 @@ public class OffensiveStats : MonoBehaviour
         numOfAttacks = data.numOfAttacks;
         
         currentAttack = attack;
-        Debug.Log("setting current attack for--" + gameObject.name);
         cAttackText.text = $"{currentAttack}";
         currentNumOfAttacks = numOfAttacks;
         cAttackAmountText.text = $"{currentNumOfAttacks}";

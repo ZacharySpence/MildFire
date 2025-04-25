@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class UseOffCard : CardBase
@@ -83,6 +84,19 @@ public class UseOffCard : CardBase
         offStats.Setup(statsData);
         CreateCardDescription();
     }
+
+    public override void CreateCardDescription()
+    {
+        base.CreateCardDescription();
+        //special effects
+        if (hasLifesteal)
+        {
+            text.Add($"Heal {offStats.currentAttack} health on hit");
+        }
+        cardDescription.text = string.Join(" ", text);
+        var textList = cardDescription.text.Split(" ").ToList();
+        cardDescription.text = desc.CreateDescription(textList);
+    }
     public override bool TryUse(UnitCard cardToUseOn)
     {
 
@@ -97,8 +111,10 @@ public class UseOffCard : CardBase
     public override bool TryDiscard()
     {
         //HAVE IT PLACED INTO DISCARD
-        PlayerHand.Instance.AddToDiscard(this, false); //got to change this so can't just discard any card
+        PlayerHand.Instance.AddToDiscard(this, true); //got to change this so can't just discard any card
         BattleManager.Instance.selectedCard = null;//just remove it since it should become missing
         return true;
     }
+
+    
 }

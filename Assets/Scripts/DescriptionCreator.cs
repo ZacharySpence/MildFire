@@ -28,7 +28,7 @@ public class DescriptionCreator : MonoBehaviour
     {
         for (int i=0;i<textList.Count;i++)
         {
-            Debug.Log(textList[i]);
+           
             if (keywords.Contains(textList[i]))
             {
                 textList[i] = $"<sprite name=\"{textList[i]}\">";
@@ -36,6 +36,11 @@ public class DescriptionCreator : MonoBehaviour
         }
         return  string.Join(" ", textList);
    
+    }
+    public string RewriteSentence(string text)
+    {
+        List<string> textList = text.Split(" ").ToList();
+        return CreateDescription(textList);
     }
 
 

@@ -238,6 +238,7 @@ GameObject:
   - component: {fileID: 524745453}
   - component: {fileID: 524745452}
   - component: {fileID: 524745451}
+  - component: {fileID: 524745454}
   m_Layer: 5
   m_Name: Battle2
   m_TagString: Untagged
@@ -286,7 +287,7 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_NormalColor: {r: 0.04285979, g: 0.038127426, b: 0.16981131, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -308,7 +309,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 524745452}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 524745454}
+        m_TargetAssemblyTypeName: BattleStartButton, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &524745452
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -347,6 +360,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 524745449}
   m_CullTransparentMesh: 1
+--- !u!114 &524745454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 524745449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d21dfc571dcffdb41bb3e6f071479b65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyDeckName: Inkdras
 --- !u!1 &609089622
 GameObject:
   m_ObjectHideFlags: 0
@@ -562,6 +588,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c24d8aac62f4a4b418c14227d2d07c9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  keywords: []
+  listy: []
 --- !u!1 &1079338742
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,9 +647,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Battle2
-
-'
+  m_text: Inkdras
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -630,8 +656,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -755,9 +781,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Battle1
-
-'
+  m_text: Berry Bunch
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -766,8 +790,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4294572537
+  m_fontColor: {r: 0.97735846, g: 0.97735846, b: 0.97735846, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -886,7 +910,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d21dfc571dcffdb41bb3e6f071479b65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyDeckName: BerryBros
+  enemyDeckName: BerryBunch
 --- !u!114 &1695043114
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -908,7 +932,7 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_NormalColor: {r: 0.645283, g: 0.1302741, b: 0.3921277, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -1124,11 +1148,12 @@ MonoBehaviour:
   - {fileID: 8629209325369446563, guid: 48d72ecdf45338f46b9d5ad52448c11a, type: 3}
   - {fileID: 1049397440650188361, guid: 5e20dc932e39e6c4daf957fc337b4257, type: 3}
   enemyCards:
-  - {fileID: 62658012984666088, guid: 2fafd344cc9f51444803cbef016491cc, type: 3}
-  - {fileID: 6473148399910200852, guid: d007c814e8fd3a64f9395511f0e4390b, type: 3}
-  - {fileID: 6473148399910200852, guid: 4fe2b9b2cb4181446bc80d08ad2ca756, type: 3}
-  - {fileID: 6473148399910200852, guid: b5795db3a34483940a17b9d4d4d7af41, type: 3}
-  - {fileID: 6473148399910200852, guid: 936237a7a1fd5c84ba73805b6906e642, type: 3}
+  - {fileID: 891776198116206175, guid: ca4fdb34509c5ac42a9761600f855d5d, type: 3}
+  - {fileID: 891776198116206175, guid: 6c39f1b51bee0e34f85716405e01b275, type: 3}
+  - {fileID: 891776198116206175, guid: 1867670fb020bd543b0936e4439da4e5, type: 3}
+  - {fileID: 8858037200905666529, guid: 10755d9a9ebcd954fb2bd63bd5242e1e, type: 3}
+  - {fileID: 772759497930617427, guid: 2873e3aa2da19ee44a9aa8e13b4cde50, type: 3}
+  - {fileID: 4157353339907992583, guid: c1384aa2b4d500d43943535e06e5d500, type: 3}
   playerDeck: []
 --- !u!4 &2914901940526083302
 Transform:

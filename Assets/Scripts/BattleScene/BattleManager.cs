@@ -306,7 +306,31 @@ public class BattleManager : MonoBehaviour
 
 
     }
-    
+
+    public void AddInNewSpawns(List<int> spawnsToAdd, bool isPlayer)
+    {      
+        //add in new enemies (in rows? top row then btm row where can unless has given spot)
+        for (int i = 0; i < 6; i++)
+        {
+            if (spawnsToAdd.Count == 0) { return; }
+            if (isPlayer) //so if it's empty
+            {
+               if(playerField[i].ID == -1)
+                {
+                    PlayerPlaceCardOnEmptyField(i, IDLookupTable.instance.GetCardByID(spawnsToAdd[0]) as UnitCard);
+                    spawnsToAdd.RemoveAt(0); //pop the card
+                }              
+            }
+            else
+            {
+                if (enemyField[i].ID == -1)
+                {
+                    PlaceEnemyCardOnEmptyField(i, IDLookupTable.instance.GetCardByID(spawnsToAdd[0]) as UnitCard);
+                    spawnsToAdd.RemoveAt(0); //pop the card
+                }               
+            }
+        }
+    }
     bool CheckVictory()
     {
         //check if there is at least 1 card left that is a boss!
@@ -347,7 +371,7 @@ public class BattleManager : MonoBehaviour
         fields[index].GetChild(0).gameObject.SetActive(true);
         if (isPlayerCard)
         {
-            if (fields[index].GetComponent<UnitCard>().isBoss) { Defeat(); } //so if the unit at that field that dies is the player boss (leader, then defeat)
+            if (playerField[index].isBoss) { Defeat(); return; } //so if the unit at that field that dies is the player boss (leader, then defeat)
             playerField[index] = fields[index].GetChild(0).GetComponent<UnitCard>();
         }
         else
@@ -478,8 +502,8 @@ public class BattleManager : MonoBehaviour
 
                 break;
             case "discard":
-                selectedCard.TryDiscard();
-               // Debug.Log("move card back into discard (only for unitCards");
+               // selectedCard.TryDiscard();
+               Debug.Log("can't move use card back into discard (only for unitCards)");
                 break;
             case "emptyCard":
                 //Debug.Log("try using card in empty spot (shouldn't work!");
@@ -509,7 +533,7 @@ public class BattleManager : MonoBehaviour
             case "enemyCard":
                 //don't select the card!
                 viewCard = cursorOn.GetComponent<UnitCard>();
-                viewCard.View();
+                viewCard.SelectedView();
                // Debug.Log("Enemy unit card selected to view");
                 break;
             case "bell":

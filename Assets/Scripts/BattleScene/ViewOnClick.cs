@@ -18,7 +18,7 @@ public class ViewOnClick : MonoBehaviour
         else
         {
             //is just random card
-            GetComponent<UnitCard>().View();
+            GetComponent<UnitCard>().SelectedView();
         }
     }
     

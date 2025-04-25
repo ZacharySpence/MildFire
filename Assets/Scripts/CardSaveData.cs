@@ -51,4 +51,9 @@ public class CardSaveData
     // ---Off stats ---
     public int attack;
     public int numOfAttacks;
+
+    //---Specials--
+    public bool hasLifesteal;
+    public bool hasSpawnOnDeath;
+    public List<int> spawnsOnDeath;
 }
