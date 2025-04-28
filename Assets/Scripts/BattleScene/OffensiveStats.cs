@@ -6,14 +6,14 @@ using UnityEngine;
 public class OffensiveStats : MonoBehaviour
 {
     [Header("OffensiveStats")]
-    [HideInInspector] public int currentNumOfAttacks, currentAttack;
-    [SerializeField] public int  attack,numOfAttacks;
+    public int currentNumOfAttacks, currentAttack;
+    [HideInInspector] public int  attack,numOfAttacks;
     [Header("OffensiveStatVisual")]
     [SerializeField] protected TextMeshProUGUI cAttackText,cAttackAmountText;
 
     public void Setup(StatsData data)
     {
-
+        Debug.Log("Doing offensive setup!");
         attack = data.attack;
         numOfAttacks = data.numOfAttacks;
         
@@ -26,10 +26,10 @@ public class OffensiveStats : MonoBehaviour
     public void ChangeOffStats(int curseOn=0,int attackAdded=0,int numAttksAdded=0)
     {
         //curse specific
-        currentAttack = attack - curseOn;
+        currentAttack = currentAttack - curseOn + attackAdded; 
         cAttackText.text = $"{currentAttack}";
-        currentAttack += attackAdded;
-        currentNumOfAttacks += numAttksAdded;
+        currentNumOfAttacks += numAttksAdded;       
+        cAttackAmountText.text = $"{currentNumOfAttacks}";
     }
   
 }

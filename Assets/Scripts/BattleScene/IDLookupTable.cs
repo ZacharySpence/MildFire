@@ -50,20 +50,17 @@ public class IDLookupTable : MonoBehaviour
     */
     public CardBase GetCardByID(int ID)
     {
-        if (ID < 200)
+        if (ID < 200 || (ID >= 200 && (ID / 100) % 2 == 0))
         {
-            return unitCards.FirstOrDefault(card => card.ID == ID);
+            // Unit/Use cards
+            return unitCards.FirstOrDefault(card => card.ID == ID) ?? useCards.FirstOrDefault(c => c.ID == ID);
         }
-        else if (ID < 300)
+        else if (ID >= 300 && (ID / 100) % 2 == 1)
         {
-            return useCards.FirstOrDefault(card => card.ID == ID);
-        }
-        else if (ID < 400)
-        {
+            // Enemy cards
             return enemyCards.FirstOrDefault(card => card.ID == ID);
         }
 
-        // IDs 400+ are runtime instances — not stored as templates
         Debug.LogWarning($"No template card found for ID: {ID}");
         return null;
 

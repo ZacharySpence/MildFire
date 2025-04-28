@@ -88,11 +88,13 @@ public class UseOffCard : CardBase
     public override void CreateCardDescription()
     {
         base.CreateCardDescription();
-        //special effects
+
+        //special effects (specific to offensive only
         if (hasLifesteal)
         {
             text.Add($"Heal {offStats.currentAttack} health on hit");
         }
+
         cardDescription.text = string.Join(" ", text);
         var textList = cardDescription.text.Split(" ").ToList();
         cardDescription.text = desc.CreateDescription(textList);
@@ -106,6 +108,11 @@ public class UseOffCard : CardBase
         snowGive, poisonGive, fireGive, curseGive, shieldGive,
         reflectGive, hazeGive, inkGive, bombGive, demonizeGive,
         pepperGive,crystalGive);
+
+        if (hasLifesteal)
+        {
+            LifeSteal(offStats.currentAttack,cardToUseOn);
+        }
         return true;
     }
     public override bool TryDiscard()
@@ -114,6 +121,15 @@ public class UseOffCard : CardBase
         PlayerHand.Instance.AddToDiscard(this, true); //got to change this so can't just discard any card
         BattleManager.Instance.selectedCard = null;//just remove it since it should become missing
         return true;
+    }
+
+    //Special Ability Specific
+    void LifeSteal(int healAmount, UnitCard enemyCard)
+    {
+        var nearestAllyOnRow = enemyCard.FindNearestEnemy(enemyCard.fieldIndex % 2, false);
+        nearestAllyOnRow.Heal(healAmount);
+        //1. Find leftmostunit in row (if not then check next row)
+        //2. heal it by heal amount
     }
 
     

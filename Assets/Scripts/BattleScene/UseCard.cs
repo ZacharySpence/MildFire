@@ -79,13 +79,32 @@ public class UseCard : CardBase
     }
     public override bool TryUse(UnitCard cardToUseOn)
     {
-      
-        cardToUseOn.ChangeStatus(healthGive,attackGive,numOfAttacksGive,timerGive, 
-        snowGive, poisonGive, fireGive, curseGive, shieldGive, 
-        reflectGive, hazeGive, inkGive, bombGive, demonizeGive,
-        pepperGive,crystalGive);
-        
-       
+        if (hasBarrage)
+        {
+           int row =  cardToUseOn.fieldIndex % 2;
+            for (int i = row; i < 6; i += 2) //starts at 0 or 1 then adds 2
+            {
+                UnitCard card = BattleManager.Instance.playerField[i];
+                Debug.Log(card.name);
+                if(card != null)
+                {
+                    card.ChangeStatus(healthGive, attackGive, numOfAttacksGive, timerGive,
+                                    snowGive, poisonGive, fireGive, curseGive, shieldGive,
+                                    reflectGive, hazeGive, inkGive, bombGive, demonizeGive,
+                                    pepperGive, crystalGive);
+                }
+            }
+        }
+        else
+        {
+            cardToUseOn.ChangeStatus(healthGive, attackGive, numOfAttacksGive, timerGive,
+                                           snowGive, poisonGive, fireGive, curseGive, shieldGive,
+                                           reflectGive, hazeGive, inkGive, bombGive, demonizeGive,
+                                           pepperGive, crystalGive);
+
+
+        }
+
         return true;
     }
     public override bool TryDiscard()

@@ -129,7 +129,7 @@ public class UnitCard :CardBase
         // Apply positive effects
         this.shieldOn.Add(cardSaveData.shieldOn);  // Assuming `shieldOn` is some kind of reference to a bool or value
         this.crystalOn.Add(cardSaveData.crystalOn);
-        this.pepperOn.Add(cardSaveData.pepperOn);
+        //this.pepperOn.Add(cardSaveData.pepperOn); //Do i need to apply it? maybe not actually?
 
         //Apply special effects
         this.hasLifesteal = cardSaveData.hasLifesteal;
@@ -154,9 +154,7 @@ public class UnitCard :CardBase
     {
         base.CreateCardDescription();
         //special effects
-        if (hasLifesteal)
-        {
-           text.Add($"Heal {offStats.currentAttack} health on hit"); }
+        if (hasLifesteal){ text.Add($"Heal {offStats.currentAttack} health on hit"); }
 
         cardDescription.text = string.Join(" ", text);
         var textList = cardDescription.text.Split(" ").ToList();
@@ -258,8 +256,9 @@ public class UnitCard :CardBase
             snowGive, poisonGive, fireGive, curseGive, shieldGive,
             reflectGive, hazeGive, inkGive, bombGive, demonizeGive);
 
+        
+        offStats.ChangeOffStats(-curseOn.value); //increase attack by what curse was (- - it)
         curseOn.Add(-curseOn.value); //remove all curse after using it!
-
         //special effects
         if (hasLifesteal)
         {
@@ -356,7 +355,7 @@ public class UnitCard :CardBase
             pepperAdded,crystalAdded);
     }
 
-    void Heal(int healthAdded)
+    public void Heal(int healthAdded)
     {
         currentHealth = Mathf.Clamp(healthAdded + currentHealth, 0, maxHealth);
         currentHealthSlider.value = currentHealth;
@@ -416,7 +415,7 @@ public class UnitCard :CardBase
        
     }
     //--
-    UnitCard FindNearestEnemy(int row,bool isPlayer)
+    public UnitCard FindNearestEnemy(int row,bool isPlayer)
     {
         //if it's player += 2 until hit max in enemyField, else in playerfield
         UnitCard[] fieldToSearch = isPlayer ? BattleManager.Instance.enemyField : BattleManager.Instance.playerField;

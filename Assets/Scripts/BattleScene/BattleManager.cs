@@ -5,6 +5,7 @@ using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BattleManager : MonoBehaviour
 {
@@ -350,6 +351,8 @@ public class BattleManager : MonoBehaviour
     void Victory()
     {
         Debug.Log("YOU WON!");
+        SceneManager.LoadScene(0);//back to travel scene!
+        
     }
     
     //Placement Logic

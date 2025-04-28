@@ -186,7 +186,10 @@ public abstract class CardBase : MonoBehaviour
        
         if (attackGive > 0) { text.Add($"Increase attack by {attackGive}"); }
         if (healthGive > 0) { text.Add($"Heal {healthGive} health"); }
-        if (timerGive < 0) { text.Add($"Reduce timer by {timerGive}"); }
+        if (timerGive < 0) { text.Add($"Reduce timer by {timerGive}"); } //Specifically make timer negative!
+
+        //Special Abilities
+        if (hasBarrage) { text.Add($"<color=yellow>Barrage</color>"); }
     }
     public virtual bool TryUse(UnitCard unitToUseOn)
     {

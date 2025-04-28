@@ -8,13 +8,40 @@ public class DeckHolder : MonoBehaviour
 {
     //Stores all decks in JSON
     public static List<EnemyCards> enemyDeck = new List<EnemyCards>();
+    public static List<int> reserveRewardCards = new List<int>();
+    public static List<int> itemRewardCards = new List<int>();
+    public static List<int> companionRewardCards = new List<int>();
     public static List<int> LoadDeck(string name, int id)
     {
         string json = File.ReadAllText(Application.persistentDataPath + $"/{name}{id}.json");
         IntListWrapper wrapper = JsonUtility.FromJson<IntListWrapper>(json);
         List<int> loadedInts = wrapper.values;
+        foreach( var num in loadedInts)
+        {
+            Debug.Log(num + ": for start card");
+        }
+
+       
+
         return loadedInts;
         
+    }
+    public static void CreateReserves(string name = "Leader")
+    {
+        string json = "";
+        string filePath = Application.persistentDataPath + $"/{name}Group.json";
+        if (File.Exists(filePath))
+        {
+            json = File.ReadAllText(filePath);
+           
+        }
+        else
+        {
+            json = File.ReadAllText(Application.persistentDataPath + $"/LeaderGroup.json");
+        }
+        GroupListWrapper reserves = JsonUtility.FromJson<GroupListWrapper>(json);
+        reserveRewardCards = reserves.items;
+        reserveRewardCards.AddRange(reserves.companions);
     }
     public static void LoadEnemyDeck(string name)
     {
@@ -36,18 +63,18 @@ public class DeckHolder : MonoBehaviour
            // Debug.Log(enemyCards.cards.Count + ": count");
             enemyDeck.Add(enemyCards);
         }
-        /*//Testing
-        foreach(var cards in enemyDeck)
-        {
-           // Debug.Log("EDeck:");
-            foreach(var card in cards.cards)
-            {
-                Debug.Log(card);
-            }
-        }*/
-
+        CreateRewardDecks(name);
+    }
+    public static  void CreateRewardDecks(string name)
+    {
+        Debug.Log("making reward decks");
+        string json = File.ReadAllText(Application.persistentDataPath + $"/{name}Group.json");
+        GroupListWrapper wrapper = JsonUtility.FromJson<GroupListWrapper>(json);
+        itemRewardCards = wrapper.items;
+        companionRewardCards = wrapper.companions;
 
     }
+
 }
 [System.Serializable]
 public class IntListWrapper
@@ -68,6 +95,19 @@ public class IntListListWrapper
     public IntListListWrapper(List<IntListWrapper> values)
     {
         this.values = values;
+    }
+}
+
+[Serializable]
+public class GroupListWrapper
+{
+    public List<int> items;
+    public List<int> companions;
+
+    public GroupListWrapper(List<int> items, List<int> companions)
+    {
+        this.items = items;
+        this.companions = companions;
     }
 }
 
