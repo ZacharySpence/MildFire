@@ -53,6 +53,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 62658012984666088, guid: 2fafd344cc9f51444803cbef016491cc, type: 3}
+      propertyPath: hasSpawnOnDeath
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 62658012984666088, guid: 2fafd344cc9f51444803cbef016491cc, type: 3}
       propertyPath: statsData.attack
       value: 3
       objectReference: {fileID: 0}
@@ -62,15 +66,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 62658012984666088, guid: 2fafd344cc9f51444803cbef016491cc, type: 3}
       propertyPath: spawnsOnDeath.Array.data[0]
-      value: 323
+      value: 342
       objectReference: {fileID: 0}
     - target: {fileID: 62658012984666088, guid: 2fafd344cc9f51444803cbef016491cc, type: 3}
       propertyPath: spawnsOnDeath.Array.data[1]
-      value: 323
+      value: 342
       objectReference: {fileID: 0}
     - target: {fileID: 62658012984666088, guid: 2fafd344cc9f51444803cbef016491cc, type: 3}
       propertyPath: spawnsOnDeath.Array.data[2]
-      value: 323
+      value: 342
       objectReference: {fileID: 0}
     - target: {fileID: 115087209824498994, guid: 2fafd344cc9f51444803cbef016491cc, type: 3}
       propertyPath: m_AnchorMax.y

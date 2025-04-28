@@ -17,12 +17,20 @@ PrefabInstance:
       value: 102
       objectReference: {fileID: 0}
     - target: {fileID: 3295105033796367900, guid: 55fde3f9a724c374e8b9729e63932cce, type: 3}
+      propertyPath: picture
+      value: 
+      objectReference: {fileID: 21300000, guid: 9a6a54d806d66cc4585a07b1a1e0b801, type: 3}
+    - target: {fileID: 3295105033796367900, guid: 55fde3f9a724c374e8b9729e63932cce, type: 3}
       propertyPath: nameText
       value: Dagger
       objectReference: {fileID: 0}
     - target: {fileID: 3295105033796367900, guid: 55fde3f9a724c374e8b9729e63932cce, type: 3}
+      propertyPath: hasBarrage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3295105033796367900, guid: 55fde3f9a724c374e8b9729e63932cce, type: 3}
       propertyPath: statsData.attack
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3295105033796367900, guid: 55fde3f9a724c374e8b9729e63932cce, type: 3}
       propertyPath: statsData.numOfAttacks

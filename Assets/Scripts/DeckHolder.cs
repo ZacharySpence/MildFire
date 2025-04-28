@@ -20,7 +20,7 @@ public class DeckHolder : MonoBehaviour
         {
             Debug.Log(num + ": for start card");
         }
-
+        CreateReserves(name);
        
 
         return loadedInts;
@@ -65,7 +65,7 @@ public class DeckHolder : MonoBehaviour
         }
         CreateRewardDecks(name);
     }
-    public static  void CreateRewardDecks(string name)
+    public static void CreateRewardDecks(string name)
     {
         Debug.Log("making reward decks");
         string json = File.ReadAllText(Application.persistentDataPath + $"/{name}Group.json");

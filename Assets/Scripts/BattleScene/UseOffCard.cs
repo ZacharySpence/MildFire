@@ -51,6 +51,10 @@ public class UseOffCard : CardBase
 
             attack = this.statsData.attack,
             numOfAttacks = this.statsData.numOfAttacks,
+
+            //special Abilities
+            hasLifesteal = this.hasLifesteal,
+            hasSelfTargetPosEffects = this.hasSelfTargetPosEffects,
         };
 
 
@@ -79,10 +83,16 @@ public class UseOffCard : CardBase
 
         this.statsData.attack = cardSaveData.attack;
         this.statsData.numOfAttacks = cardSaveData.numOfAttacks;
+        //setup specials
+        this.hasLifesteal = cardSaveData.hasLifesteal;
+        this.hasSelfTargetPosEffects = cardSaveData.hasSelfTargetPosEffects;
         //Setup rest
+        name = nameText;
         offStats = GetComponent<OffensiveStats>();
         offStats.Setup(statsData);
+        
         CreateCardDescription();
+        
     }
 
     public override void CreateCardDescription()
@@ -101,20 +111,48 @@ public class UseOffCard : CardBase
     }
     public override bool TryUse(UnitCard cardToUseOn)
     {
-
-        //have unit take damage (and get effects of use card)
-        cardToUseOn.TakeDamage(offStats.currentAttack, false, false, 
-            healthGive, attackGive, numOfAttacksGive, timerGive,
-        snowGive, poisonGive, fireGive, curseGive, shieldGive,
-        reflectGive, hazeGive, inkGive, bombGive, demonizeGive,
-        pepperGive,crystalGive);
-
-        if (hasLifesteal)
+        if (hasBarrage)
         {
-            LifeSteal(offStats.currentAttack,cardToUseOn);
+            int row = cardToUseOn.fieldIndex % 2;
+            for (int i = row; i < 6; i += 2) //starts at 0 or 1 then adds 2
+            {
+                UnitCard card = BattleManager.Instance.playerField[i];
+                Debug.Log(card.name);
+                if (card != null)
+                {
+                    Use(card);
+                }
+            }
         }
+        else
+        {
+            Use(cardToUseOn);
+        }
+
+       
         return true;
     }
+
+    private void Use(UnitCard cardToUseOn)
+    {
+        if(offStats.currentAttack > 0)
+        {
+            cardToUseOn.TakeDamage(offStats.currentAttack, false, false, healthGive, attackGive, numOfAttacksGive, timerGive,
+                        snowGive, poisonGive, fireGive, curseGive, shieldGive,
+                        reflectGive, hazeGive, inkGive, bombGive, demonizeGive,
+                        pepperGive, crystalGive);
+        }
+        if (hasLifesteal)
+        {
+            LifeSteal(offStats.currentAttack, cardToUseOn);
+        }
+        if (hasSelfTargetPosEffects)
+        {
+            offStats.ChangeOffStats(curseGive, attackGive, numOfAttacksGive); //for offensive stats
+
+        }
+    }
+
     public override bool TryDiscard()
     {
         //HAVE IT PLACED INTO DISCARD

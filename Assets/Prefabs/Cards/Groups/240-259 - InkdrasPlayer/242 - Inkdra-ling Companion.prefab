@@ -47,7 +47,7 @@ PrefabInstance:
     - target: {fileID: 62658012984666088, guid: 2fafd344cc9f51444803cbef016491cc, type: 3}
       propertyPath: background
       value: 
-      objectReference: {fileID: 21300000, guid: a8a452be56487bb44a80f2d2ff39cb67, type: 3}
+      objectReference: {fileID: 21300000, guid: ce0ae6bb3275d964fb78c6111b0214a3, type: 3}
     - target: {fileID: 62658012984666088, guid: 2fafd344cc9f51444803cbef016491cc, type: 3}
       propertyPath: hasBarrage
       value: 0

@@ -65,6 +65,8 @@ public class UseCard : CardBase
         this.inkGive = cardSaveData.inkGive;
         this.demonizeGive = cardSaveData.demonizeGive;
         this.numOfAttacksGive = cardSaveData.numOfAttacksGive;
+
+        name = nameText;
         CreateCardDescription();
 
     }
@@ -88,24 +90,24 @@ public class UseCard : CardBase
                 Debug.Log(card.name);
                 if(card != null)
                 {
-                    card.ChangeStatus(healthGive, attackGive, numOfAttacksGive, timerGive,
-                                    snowGive, poisonGive, fireGive, curseGive, shieldGive,
-                                    reflectGive, hazeGive, inkGive, bombGive, demonizeGive,
-                                    pepperGive, crystalGive);
+                    Use(card);
                 }
             }
         }
         else
         {
-            cardToUseOn.ChangeStatus(healthGive, attackGive, numOfAttacksGive, timerGive,
-                                           snowGive, poisonGive, fireGive, curseGive, shieldGive,
-                                           reflectGive, hazeGive, inkGive, bombGive, demonizeGive,
-                                           pepperGive, crystalGive);
-
-
+            Use(cardToUseOn);
         }
 
         return true;
+    }
+
+    void Use(UnitCard cardToUseOn)
+    {
+        cardToUseOn.ChangeStatus(healthGive, attackGive, numOfAttacksGive, timerGive,
+                                    snowGive, poisonGive, fireGive, curseGive, shieldGive,
+                                    reflectGive, hazeGive, inkGive, bombGive, demonizeGive,
+                                    pepperGive, crystalGive);
     }
     public override bool TryDiscard()
     {

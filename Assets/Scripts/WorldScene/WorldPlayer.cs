@@ -74,12 +74,16 @@ public class WorldPlayer : MonoBehaviour
 
     void CreateRewardChoice()
     {
+        Debug.Log("reserves");
         CreateReward(DeckHolder.reserveRewardCards);
+        Debug.Log("items");
         CreateReward(DeckHolder.itemRewardCards);
+        Debug.Log("companions");
         CreateReward(DeckHolder.companionRewardCards);  
     }
     void CreateReward(List<int> rewardList)
     {
+        
         int reward = rewardList[Random.Range(0, rewardList.Count)];
         GameObject button = Instantiate(startingButtonPrefab, startingPanel);
         CardBase card = Instantiate(IDLookupTable.instance.GetCardByID(reward), button.transform);

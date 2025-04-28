@@ -93,6 +93,7 @@ public class UnitCard :CardBase
             hasLifesteal = this.hasLifesteal,
             hasSpawnOnDeath = this.hasSpawnOnDeath,
             spawnsOnDeath = this.spawnsOnDeath,
+            hasSelfTargetPosEffects = this.hasSelfTargetPosEffects,
     };
 
 
@@ -133,10 +134,11 @@ public class UnitCard :CardBase
 
         //Apply special effects
         this.hasLifesteal = cardSaveData.hasLifesteal;
+        this.hasSelfTargetPosEffects = cardSaveData.hasSelfTargetPosEffects;
         this.hasSpawnOnDeath = cardSaveData.hasSpawnOnDeath;
         this.spawnsOnDeath = cardSaveData.spawnsOnDeath;
         //Setup rest
-        
+        name = nameText;
         offStats = GetComponent<OffensiveStats>();
         offStats.Setup(statsData);
         cAttackTimerText.text = $"{currentAtkTimer}x{offStats.currentNumOfAttacks}";

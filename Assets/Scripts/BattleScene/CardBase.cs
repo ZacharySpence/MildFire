@@ -31,7 +31,7 @@ public abstract class CardBase : MonoBehaviour
     [SerializeField] protected int shieldGive, snowGive, fireGive, crystalGive, poisonGive, pepperGive, curseGive, reflectGive, 
         hazeGive, bombGive, inkGive, demonizeGive;
     [Header("Specials")]
-    [SerializeField] protected bool hasBarrage, hasBuffAttack, hasSmackback, hasLifesteal, hasSpawnOnDeath; //special ability flags
+    [SerializeField] protected bool hasBarrage, hasBuffAttack, hasSmackback, hasLifesteal, hasSpawnOnDeath, hasSelfTargetPosEffects; //special ability flags
     [SerializeField] protected List<int> spawnsOnDeath = new List<int>();
 
 

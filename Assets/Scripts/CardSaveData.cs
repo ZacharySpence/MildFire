@@ -56,4 +56,5 @@ public class CardSaveData
     public bool hasLifesteal;
     public bool hasSpawnOnDeath;
     public List<int> spawnsOnDeath;
+    public bool hasSelfTargetPosEffects;
 }
