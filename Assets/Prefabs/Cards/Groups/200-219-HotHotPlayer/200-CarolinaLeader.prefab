@@ -201,6 +201,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6229215848705942096, guid: 98e1fe0a7e51421409a9f16c52b58341, type: 3}
+      propertyPath: maxAtkTimer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6229215848705942096, guid: 98e1fe0a7e51421409a9f16c52b58341, type: 3}
       propertyPath: pepperOn.value
       value: 3
       objectReference: {fileID: 0}

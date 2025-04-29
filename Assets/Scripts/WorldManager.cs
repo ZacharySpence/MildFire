@@ -9,6 +9,7 @@ public class WorldManager : MonoBehaviour
     static List<Node> nodeList = new List<Node>(); //needs to be a linked list (1 directional) of nodes connected to
     public static Node currentNode; //have this set at start
     public Node startNode;
+    static string nodeName;
     public Sprite bSprite, rSprite, cSprite, eSprite;
     public static Sprite battleSprite, randomSprite, campSprite, eliteSprite;
     public NodeVisualConnectorDrawer nConnector;
@@ -37,10 +38,18 @@ public class WorldManager : MonoBehaviour
         if (!WorldPlayer.gameHasStarted)
         {
             currentNode = startNode;
+            nodeName = currentNode.name;
             currentNode.button.interactable = true;
-            UpdateNodes();
+           
+        }
+        else
+        {
+            currentNode = GameObject.Find(nodeName).GetComponent<Node>();
+            playerToken.transform.position = currentNode.transform.position;
         }
         
+        UpdateNodes();
+
     }
     public static void UpdateNodes()
     {
@@ -63,6 +72,7 @@ public class WorldManager : MonoBehaviour
         }
         currentNode = nodeToMoveTo; //make this the current node
         UpdateNodes();
+        nodeName = currentNode.name;
         playerToken.transform.position = currentNode.transform.position;
         //2. Move the 'figure' to the current node
     }
@@ -71,6 +81,7 @@ public class WorldManager : MonoBehaviour
     {
 
     }
+
 
     
 }

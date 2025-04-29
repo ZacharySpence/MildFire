@@ -36,14 +36,6 @@ public class Node : MonoBehaviour
         {
             Debug.Log("made a linker with" + node.name);
            var nodeConnector = Instantiate(WorldManager.nodeConnector, WorldManager.connectorBoss);
-            if (node.GetComponent<RectTransform>() == null)
-            {
-                Debug.LogWarning($"{name} does not have a RectTransform!");
-            }
-            else
-            {
-                Debug.Log("RectTransform found!");
-            }
             nodeConnector.Setup(GetComponent<RectTransform>(), node.GetComponent<RectTransform>());
         }
     }

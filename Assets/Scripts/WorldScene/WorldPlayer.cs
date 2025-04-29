@@ -51,9 +51,9 @@ public class WorldPlayer : MonoBehaviour
         {
             AddToPlayerDeck(cardID);
         }
-        startingPanel.gameObject.SetActive(false);
+       // startingPanel.gameObject.SetActive(false); don't need to since going straight into battle!
         gameHasStarted = true;
-        playerBackpack.CreatePlayerVisualDeck();
+       
         WorldManager.currentNode.OnBattleClick(); //forcibly start 1st battle!
     }
 
