@@ -10,15 +10,19 @@ using Random = UnityEngine.Random;
 
 public class WorldPlayer : MonoBehaviour
 {
-    static bool gameHasStarted; //persistent across scenes ->> need to save this to then load if loading game
+    public static bool gameHasStarted; //persistent across scenes ->> need to save this to then load if loading game
     [SerializeField] Transform startingPanel;
     [SerializeField] GameObject startingButtonPrefab;
     [SerializeField] List<int> allLeaderID = new List<int>();
+    [SerializeField] PlayerBackpack playerBackpack; 
+    
+    //gotta change to save my data separate to a prefab!
     private void Start()
     {
         if (gameHasStarted)
         {
             CreateRewardChoice();
+            
         }
         else
         {
@@ -40,6 +44,7 @@ public class WorldPlayer : MonoBehaviour
 
     public void CreateNewDeck(int leaderID)
     {
+        IDLookupTable.instance.playerDeck.Clear(); //empty it out when making a new deck!
         //use DeckHolder to find a deck called 'Leader+num' (i.e Leader33) then load that
         var deck = DeckHolder.LoadDeck("Leader", leaderID);
         foreach(var cardID in deck)
@@ -48,6 +53,8 @@ public class WorldPlayer : MonoBehaviour
         }
         startingPanel.gameObject.SetActive(false);
         gameHasStarted = true;
+        playerBackpack.CreatePlayerVisualDeck();
+        WorldManager.currentNode.OnBattleClick(); //forcibly start 1st battle!
     }
 
     
@@ -72,6 +79,7 @@ public class WorldPlayer : MonoBehaviour
         }
     }
 
+    
     void CreateRewardChoice()
     {
         Debug.Log("reserves");
@@ -98,5 +106,6 @@ public class WorldPlayer : MonoBehaviour
         AddToPlayerDeck(id);
         startingPanel.gameObject.SetActive(false);
         //+enable next options on board!
+        WorldManager.UpdateNodes();
     }
 }

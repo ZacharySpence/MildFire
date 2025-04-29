@@ -351,6 +351,7 @@ public class BattleManager : MonoBehaviour
     void Victory()
     {
         Debug.Log("YOU WON!");
+        
         SceneManager.LoadScene(0);//back to travel scene!
         
     }
