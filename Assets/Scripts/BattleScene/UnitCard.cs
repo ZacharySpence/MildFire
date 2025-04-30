@@ -7,8 +7,10 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
-using UnityEditor.Experimental.GraphView;
-using static UnityEngine.Rendering.DebugUI.Table;
+using UnityEditor.Animations;
+using static UnityEngine.GraphicsBuffer;
+using static UnityEngine.EventSystems.EventTrigger;
+
 
 public class UnitCard :CardBase
 {
@@ -20,7 +22,7 @@ public class UnitCard :CardBase
 
 
 
-    public bool isDead, isBoss,hasCrown;
+    public bool isDead, isBoss,hasCrown, hasDoneTimer;
    
     [Header("Stats")]
     public int currentAtkTimer, currentHealth;
@@ -34,6 +36,11 @@ public class UnitCard :CardBase
     [SerializeField] TextMeshProUGUI cHealthText;
     [SerializeField] Slider currentHealthSlider;
     //shield = ice (block dmg/fire damage, snow = stop enemy timer (reduced by globalFireLvl) , fire = damage/turn, crystal = total atk block , poison = damage/turn ignoring shield, pepper = bonus atk/turn, curse = -ve bonus atk/turn
+
+    [Header("Animators")]
+    [SerializeField] Animator timerAnimator;
+    [SerializeField] AnimatorController timerController;
+    
     protected override void Awake()
     {
         base.Awake();
@@ -43,6 +50,10 @@ public class UnitCard :CardBase
         currentHealth = maxHealth;
         currentHealthSlider.maxValue = maxHealth;
         ChangeStatus();
+        if(timerAnimator.runtimeAnimatorController == null)
+        {
+            timerAnimator.runtimeAnimatorController = timerController;
+        }
     }
  //--SETUP--
     public override CardSaveData CreateCardSaveData()
@@ -164,8 +175,9 @@ public class UnitCard :CardBase
     }
 
     //Card Auto logic methods
-    public void ReduceTimer()
+    public IEnumerator ReduceTimer()
     {
+        hasDoneTimer = false;
         //ANIMATIONS HERE!
         if(snowOn.value > 0)
         {
@@ -173,28 +185,46 @@ public class UnitCard :CardBase
         }
         else
         {
+            timerAnimator.Play("countdown");
+            //Animate here!
             currentAtkTimer--;
             
         }
-        CheckAtkTimerAtZero();
+        yield return StartCoroutine(CheckTimerAtZeroCoroutine());
         
         DoStatusEffects();
     }
-    void CheckAtkTimerAtZero()
+    IEnumerator CheckTimerAtZeroCoroutine()
     {
+        timerAnimator.SetBool("atOne", false);
         if (currentAtkTimer <= 0)
         {
             for (int i = 0; i < offStats.currentNumOfAttacks; i++)
             {
-                TryAttack();
+                yield return StartCoroutine(TryAttack());
             }
 
-            currentAtkTimer = maxAtkTimer;
+            currentAtkTimer += maxAtkTimer;
+            cAttackTimerText.transform.parent.GetComponent<Image>().color = Color.white;
+            yield return StartCoroutine(CheckTimerAtZeroCoroutine()); //so if i decrease it enough to have it do 2 attacks! (o
+            
+        }
+        else if(currentAtkTimer == 1)
+        {
+            //colour it red
+            cAttackTimerText.transform.parent.GetComponent<Image>().color = Color.red;
+            timerAnimator.SetBool("atOne", true);
+            BattleManager.Instance.cardFullyFinished = true;
+        }
+        else
+        {
+            BattleManager.Instance.cardFullyFinished = true; //always gets to here or the == 1 thanks to the recursive the top!
         }
         cAttackTimerText.text = $"{currentAtkTimer}x{offStats.currentNumOfAttacks}";
         //Have certain status effects change here (the ones that update after attacking if there is)
     }
-    
+  
+
     void DoStatusEffects()
     {
         //End turn status change
@@ -221,7 +251,8 @@ public class UnitCard :CardBase
     }
     #region Combat
     //Just basic attack row enemy
-    void TryAttack()
+
+    IEnumerator TryAttack()
     {
       
         
@@ -231,9 +262,13 @@ public class UnitCard :CardBase
 
         if (hasBarrage)
         {
-            foreach(var enemy in Barrage(row,isPlayer))
+            DoBarrageAnim();
+            foreach (var enemy in Barrage(row,isPlayer))
             {
-                DoAttack(enemy);
+                
+                DoAttack(enemy); //do a different coroutine for this one! (maybe barrage attack specific
+                
+                yield return null;
             }
         }
         else
@@ -241,16 +276,54 @@ public class UnitCard :CardBase
             var enemy = FindNearestEnemy(row, isPlayer); //top row if it's 0, bottom if it's 1
             if (enemy != null)
             {
-                DoAttack(enemy);
+
+                yield return StartCoroutine(DoAttackAnim(enemy));
             }
         }
         
        
         
     }
+    void DoBarrageAnim()
+    {
+        Debug.Log("doing barrage Animation");
+    }
+    IEnumerator DoAttackAnim(UnitCard enemy)
+    {
+        Debug.Log("doing attack anim");
+        Transform target = enemy.transform;
+        // Store original position
+        Vector3 origin = transform.position;
+        float moveDuration = 0.2f;  // Duration for quick move towards and back
+        // Calculate the distance to target and speed for quick movement
+        float journeyLength = Vector3.Distance(origin, target.position);
+        float moveSpeed = journeyLength / moveDuration;
+        float distanceCovered = 0f;
+
+        // Move towards the target (stop 10% before target)
+        while (distanceCovered < journeyLength * 0.75f)
+        {
+            distanceCovered += moveSpeed * Time.deltaTime;
+            transform.position = Vector3.MoveTowards(transform.position, target.position, moveSpeed * Time.deltaTime);
+            yield return null;
+        }
+
+        DoAttack(enemy);
+        // Move back to the original position (stop 10% before origin)
+        distanceCovered = 0f;
+        while (distanceCovered < journeyLength * 0.9f)
+        {
+            distanceCovered += moveSpeed * Time.deltaTime;
+            transform.position = Vector3.MoveTowards(transform.position, origin, moveSpeed * Time.deltaTime);
+            yield return null;
+        }
+        
+
+    }
 
     void DoAttack(UnitCard enemy)
     {
+        
         int reflectValue = enemy.reflectOn.value;
         Debug.Log($"{name} attacked {enemy.name} for {offStats.currentAttack + pepperOn.value - curseOn.value} damage");
         enemy.TakeDamage(offStats.currentAttack + pepperOn.value - curseOn.value, false, false,
@@ -301,7 +374,11 @@ public class UnitCard :CardBase
         //offenseStatSpecific
         offStats.ChangeOffStats(curseOn.value,attackAdded,numAttksAdded);
         currentAtkTimer += timerAdded;
-        CheckAtkTimerAtZero();
+        if(timerAdded < 0)
+        {
+            StartCoroutine(CheckTimerAtZeroCoroutine());
+        }
+       
     }
     public void TakeDamage(int damage=0,bool ignoreShield = false,bool ignoreCrystal = false, 
         int healthAdded = 0, int attackAdded = 0, int numAttksAdded = 0, int timerAdded = 0,

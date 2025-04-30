@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -12,7 +13,7 @@ public class BattleManager : MonoBehaviour
     public static BattleManager Instance;
 
     [SerializeField] bool isBusy; //just ot test
-    public bool isGameStarted;
+    public bool isGameStarted, cardFullyFinished;
 
     [Header("OnField")]
     public UnitCard[] playerField = new UnitCard[6]; //always 6 items! //actually goes down in COLUMNS!
@@ -182,10 +183,34 @@ public class BattleManager : MonoBehaviour
        
         
     }
+    public IEnumerator WaitForConditionWithTimeout()
+    {
+        float startTime = Time.time;  // Track the start time
+
+        // Wait until 'isReady' becomes true or timeout occurs
+        while (!cardFullyFinished)
+        {
+            // Check if the timeout has passed
+            if (Time.time - startTime > 5f)
+            {
+                Debug.Log("Timeout reached. Condition not met.");
+                yield break;  // Stop the coroutine if timeout is reached
+            }
+
+            yield return null;  // Wait for the next frame
+        }
+        yield return new WaitForSeconds(0.5f); //to give some time BEFORE next animation!
+        cardFullyFinished = false; //reset it for next time!
+
+        // Continue once 'isReady' is true
+        Debug.Log("Condition is met, continuing...");
+    }
+
     //Auto-Game
     public IEnumerator EndPlayerTurn() //called by pressing button (refresh bell) OR after playing a card
     {
-
+        yield return StartCoroutine(WaitForConditionWithTimeout());
+        
         isBusy = true; //stop player pressing stuff
         UnitCard[] merged = enemyField.Concat(playerField).ToArray();
        
@@ -194,8 +219,8 @@ public class BattleManager : MonoBehaviour
         {
             if(card.ID == -1) { continue; } //ignore blanks
             if (card.isDead) { Destroy(card); continue; } //if it doesn't work is cause destroy is removing from list too early!
-            card.ReduceTimer(); //Do combat one by one
-            yield return new WaitForSeconds(.1f);
+            yield return StartCoroutine(card.ReduceTimer()); //Do combat one by one
+            
         }
 
         //do bell timer /new enemies arriving

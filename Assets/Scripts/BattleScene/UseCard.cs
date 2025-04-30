@@ -90,7 +90,7 @@ public class UseCard : CardBase
                 Debug.Log(card.name);
                 if(card != null)
                 {
-                    Use(card);
+                     Use(card);
                 }
             }
         }
@@ -104,10 +104,14 @@ public class UseCard : CardBase
 
     void Use(UnitCard cardToUseOn)
     {
-        cardToUseOn.ChangeStatus(healthGive, attackGive, numOfAttacksGive, timerGive,
+       cardToUseOn.ChangeStatus(healthGive, attackGive, numOfAttacksGive, timerGive,
                                     snowGive, poisonGive, fireGive, curseGive, shieldGive,
                                     reflectGive, hazeGive, inkGive, bombGive, demonizeGive,
                                     pepperGive, crystalGive);
+        if(timerGive >= 0) //so not finishing after timer
+        {
+            BattleManager.Instance.cardFullyFinished = true;
+        }
     }
     public override bool TryDiscard()
     {

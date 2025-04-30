@@ -2356,6 +2356,7 @@ GameObject:
   - component: {fileID: 7631873196208288990}
   - component: {fileID: 8362213705953863583}
   - component: {fileID: 2370937903482221744}
+  - component: {fileID: 450961857950852730}
   m_Layer: 5
   m_Name: AttackTimer
   m_TagString: Untagged
@@ -2421,6 +2422,27 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!95 &450961857950852730
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3880396180016419794}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 089c97d2594c1da48a516d8c317f2035, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4055025451746059460
 GameObject:
   m_ObjectHideFlags: 0
@@ -4167,12 +4189,15 @@ MonoBehaviour:
   hasBarrage: 0
   hasBuffAttack: 0
   hasSmackback: 0
+  hasLifesteal: 0
+  hasSpawnOnDeath: 0
+  hasSelfTargetPosEffects: 0
+  spawnsOnDeath: 
   tooltipPrefab: {fileID: 7499865843149525041, guid: 197e8c4e10e9c7345b38184cb1a8e47c, type: 3}
   rightTooltips: []
   leftTooltips: []
   rightTooltipPos: {fileID: 2354776215262208622}
   leftTooltipPos: {fileID: 4706452221053669710}
-  text: []
   offStats: {fileID: 8506061138994745486}
   statsData:
     attack: 5
@@ -4224,6 +4249,8 @@ MonoBehaviour:
   cAttackTimerText: {fileID: 8185514831177742204}
   cHealthText: {fileID: 4310907264923066947}
   currentHealthSlider: {fileID: 5424991692750027453}
+  timerAnimator: {fileID: 450961857950852730}
+  timerController: {fileID: 9100000, guid: 089c97d2594c1da48a516d8c317f2035, type: 2}
 --- !u!61 &4743252357212325652
 BoxCollider2D:
   m_ObjectHideFlags: 0

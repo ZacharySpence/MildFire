@@ -151,6 +151,7 @@ public class UseOffCard : CardBase
             offStats.ChangeOffStats(curseGive, attackGive, numOfAttacksGive); //for offensive stats
 
         }
+        BattleManager.Instance.cardFullyFinished = true;
     }
 
     public override bool TryDiscard()
