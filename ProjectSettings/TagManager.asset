@@ -11,6 +11,9 @@ TagManager:
   - deck
   - bell
   - waveTimer
+  - NodeConnectorBoss
+  - Node
+  - PlayerToken
   layers:
   - Default
   - TransparentFX

@@ -372,6 +372,10 @@ public class BattleManager : MonoBehaviour
     void Defeat()
     {
         Debug.Log("YOU LOST");
+        //do global flag resets!?
+        WorldPlayer.gameHasStarted = false;
+        
+        SceneManager.LoadScene(0);//back to travelScene
     }
     void Victory()
     {

@@ -10,33 +10,32 @@ using Random = UnityEngine.Random;
 
 public class WorldPlayer : MonoBehaviour
 {
+    public static WorldPlayer Instance;
     public static bool gameHasStarted; //persistent across scenes ->> need to save this to then load if loading game
     [SerializeField] Transform startingPanel;
     [SerializeField] GameObject startingButtonPrefab;
     [SerializeField] List<int> allLeaderID = new List<int>();
-    [SerializeField] PlayerBackpack playerBackpack; 
-    
-    //gotta change to save my data separate to a prefab!
-    private void Start()
+    [SerializeField] PlayerBackpack playerBackpack;
+
+    private void Awake()
     {
-        if (gameHasStarted)
+        if(Instance == null)
         {
-            CreateRewardChoice();
-            
+            Instance = this;
         }
         else
         {
-            CreateLeaderChoice();
+            Destroy(this);
         }
-        
-        
     }
+    //gotta change to save my data separate to a prefab!
+
     void AddToPlayerDeck(int id)
     {
        
        
         var card =  IDLookupTable.instance.GetCardByID(id); //get template of card (reference it)
-        Debug.Log(card.name);
+        
         var saveData = card.CreateCardSaveData();
 
         IDLookupTable.instance.playerDeck.Add(saveData);
@@ -54,11 +53,11 @@ public class WorldPlayer : MonoBehaviour
        // startingPanel.gameObject.SetActive(false); don't need to since going straight into battle!
         gameHasStarted = true;
        
-        WorldManager.currentNode.OnBattleClick(); //forcibly start 1st battle!
+        WorldManager.Instance. currentNode.OnBattleClick(); //forcibly start 1st battle!
     }
 
     
-    void CreateLeaderChoice()
+    public void CreateLeaderChoice()
     {
         List<int> copyList = new List<int>(allLeaderID);
         int amount = Math.Min(3, copyList.Count);              
@@ -67,7 +66,7 @@ public class WorldPlayer : MonoBehaviour
             GameObject button = Instantiate(startingButtonPrefab, startingPanel);
             int randomId = copyList[Random.Range(0, copyList.Count)];
             copyList.Remove(randomId);
-            Debug.Log(randomId);
+           
             UnitCard card = Instantiate(IDLookupTable.instance.GetCardByID(randomId), button.transform) as UnitCard; //actually have to instantiate the card!
             
             
@@ -80,7 +79,7 @@ public class WorldPlayer : MonoBehaviour
     }
 
     
-    void CreateRewardChoice()
+    public void CreateRewardChoice()
     {
         Debug.Log("reserves");
         CreateReward(DeckHolder.reserveRewardCards);
@@ -106,6 +105,6 @@ public class WorldPlayer : MonoBehaviour
         AddToPlayerDeck(id);
         startingPanel.gameObject.SetActive(false);
         //+enable next options on board!
-        WorldManager.UpdateNodes();
+        WorldManager.Instance.UpdateNodes();
     }
 }

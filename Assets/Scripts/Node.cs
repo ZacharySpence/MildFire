@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,58 +10,54 @@ public class Node : MonoBehaviour
     public string specifics;
     public EncounterType encounter;
     public List<Node> linkedNodes;
+    public int ID;
     public bool randomize;
 
-    private void Start()
+
+   public void Setup()
     {
         switch (encounter)
         {
             case EncounterType.Battle:
                 button.onClick.AddListener(() => OnBattleClick());
-                
+
                 break;
             case EncounterType.Random:
                 button.onClick.AddListener(() => OnRandomClick());
-                GetComponent<Image>().sprite = WorldManager.randomSprite;
+                GetComponent<Image>().sprite = WorldManager.Instance.randomSprite;
                 break;
             case EncounterType.Camp:
                 button.onClick.AddListener(() => OnCampClick());
-                GetComponent<Image>().sprite = WorldManager.campSprite;
+                GetComponent<Image>().sprite = WorldManager.Instance.campSprite;
                 break;
             case EncounterType.Elite:
                 button.onClick.AddListener(() => OnEliteBattleClick());
-                GetComponent<Image>().sprite = WorldManager.eliteSprite;
+                GetComponent<Image>().sprite = WorldManager.Instance.eliteSprite;
                 break;
         }
-        foreach(var node in linkedNodes)
-        {
-            Debug.Log("made a linker with" + node.name);
-           var nodeConnector = Instantiate(WorldManager.nodeConnector, WorldManager.connectorBoss);
-            nodeConnector.Setup(GetComponent<RectTransform>(), node.GetComponent<RectTransform>());
-        }
+       
     }
-
     public void OnCampClick()
     {
         Debug.Log("Camp!");
-        WorldManager.MoveNode(this);
+        WorldManager.Instance.MoveNode(this);
 
     }
     public void OnEliteBattleClick()
     {
         Debug.Log("elite battle!");
-        WorldManager.MoveNode(this);
+        WorldManager.Instance.MoveNode(this);
     }
     public void OnRandomClick()
     {
         Debug.Log("random event!");
-        WorldManager.MoveNode(this);    
+        WorldManager.Instance.MoveNode(this);    
     }
     public void OnBattleClick()
     {
         Debug.Log("normal battle!");
         DeckHolder.LoadEnemyDeck(specifics);
-        WorldManager.MoveNode(this);
+        WorldManager.Instance.MoveNode(this);
         SceneManager.LoadScene(1);
 
 
