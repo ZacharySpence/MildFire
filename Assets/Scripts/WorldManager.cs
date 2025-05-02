@@ -6,23 +6,27 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-
+using Random = UnityEngine.Random;
 public class WorldManager : MonoBehaviour
 {
     public static WorldManager Instance;
-    public  int travelNode;
+   
     [Header("Stays on load")]
-    public int currentNodeID;
-    public Sprite battleSprite, randomSprite, campSprite, eliteSprite;   
-    public Dictionary<int, (EncounterType encounter, string specifics)> nodeData = new Dictionary<int, (EncounterType encounter,string specifics)>();
+    int currentNodeID;
+    public Sprite battleSprite, randomSprite, campSprite, eliteSprite, shopSprite, relicSprite, bossSprite;   
+    Dictionary<int, (EncounterType encounter, string specifics)> nodeData = new Dictionary<int, (EncounterType encounter,string specifics)>();
 
     [Header("Resets on load")]
-        public List<Node> nodeList = new List<Node>(); //list of all nodes
-        public Node currentNode; //have this set at start
-        public Node startNode;
-        public NodeVisualConnectorDrawer nodeConnector;
-        public Transform connectorBoss;
-        public GameObject playerToken;
+    List<Node> nodeList = new List<Node>(); //list of all nodes
+    public Node currentNode; //have this set at start
+    Node startNode;
+    NodeVisualConnectorDrawer nodeConnector;
+    Transform connectorBoss;
+    GameObject playerToken;
+
+    [Header("Randomizer")]
+    [SerializeField] List<string> battleList, randomList, eliteList;
+    [SerializeField] List<EncounterType> randomizedEncounters;
     private void Awake()
     {
         if(Instance == null)
@@ -52,6 +56,7 @@ public class WorldManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if(scene.buildIndex == 1) { return; } //don't do any of this with battle scene
         Debug.Log("scene loaded");
         ReattachReferences();
         if (WorldPlayer.gameHasStarted)
@@ -175,14 +180,39 @@ public class WorldManager : MonoBehaviour
 
     public void RandomiseNodes()
     {
-
+        List<string> currentBattleList = new List<string>(battleList);
+        List<string> currentRandomList = new List<string>(randomList);
+        List<string> currentEliteList = new List<string>(eliteList);
+        List<EncounterType> currentRandomizedEncounters = new List<EncounterType>(randomizedEncounters);
         SaveNodes(); //save after making them!
         foreach(var node in nodeList)
         {
             if (node.randomize)
             {
-                Debug.Log("RandomizeThisNode!");
+                node.encounter = currentRandomizedEncounters[Random.Range(0,currentRandomizedEncounters.Count)];
+                currentRandomizedEncounters.Remove(node.encounter);
+
             }
+            switch (node.encounter)
+            {
+                case EncounterType.Battle:
+                    GetRandomElement(currentBattleList,node);                
+                    break;
+                case EncounterType.Random:
+                    GetRandomElement(currentRandomList, node);
+                    break;
+                case EncounterType.Camp:
+                    break;
+                case EncounterType.Shop:
+                    break;
+                case EncounterType.Relic:
+                    //Get from relicList and add the relic into specifics?
+                    break;
+                case EncounterType.Elite:
+                     GetRandomElement(currentEliteList,node);
+                    break;
+            }
+           
             node.Setup();
             foreach (var linked in node.linkedNodes)
             {
@@ -191,11 +221,23 @@ public class WorldManager : MonoBehaviour
                     linked.GetComponent<RectTransform>());
             }
         }
-      
+
+    }
+    
+    void GetRandomElement(List<string> currentList, Node node)
+    {
+        if(currentList.Count <= 0)
+        {
+            Debug.Log("cant get an element for that node!- need more encounters!!");
+            return;
+        }
+        string specific = currentList[Random.Range(0, currentList.Count)];
+        currentList.Remove(specific);
+        node.specifics = specific; 
     }
 
 
-    
+
 }
 
 
@@ -205,5 +247,8 @@ public enum EncounterType
     Battle,
     Random,
     Camp,
-    Elite
+    Shop,
+    Elite,
+    Relic,
+    Boss
 }

@@ -53,7 +53,7 @@ public class WorldPlayer : MonoBehaviour
        // startingPanel.gameObject.SetActive(false); don't need to since going straight into battle!
         gameHasStarted = true;
        
-        WorldManager.Instance. currentNode.OnBattleClick(); //forcibly start 1st battle!
+        WorldManager.Instance.currentNode.OnBattleClick(); //forcibly start 1st battle!
     }
 
     

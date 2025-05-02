@@ -30,12 +30,40 @@ public class Node : MonoBehaviour
                 button.onClick.AddListener(() => OnCampClick());
                 GetComponent<Image>().sprite = WorldManager.Instance.campSprite;
                 break;
+            case EncounterType.Shop:
+                button.onClick.AddListener(() => OnShopClick());
+                GetComponent<Image>().sprite = WorldManager.Instance.shopSprite;
+                break;
+            case EncounterType.Relic:
+                button.onClick.AddListener(() => OnRelicClick());
+                GetComponent<Image>().sprite = WorldManager.Instance.relicSprite;
+                break;
             case EncounterType.Elite:
                 button.onClick.AddListener(() => OnEliteBattleClick());
                 GetComponent<Image>().sprite = WorldManager.Instance.eliteSprite;
                 break;
+            case EncounterType.Boss:
+                button.onClick.AddListener(() => OnBossBattleClick());
+                GetComponent<Image>().sprite = WorldManager.Instance.bossSprite;
+                break;
         }
        
+    }
+
+    public void OnBossBattleClick()
+    {
+        Debug.Log("Boss battle");
+        WorldManager.Instance.MoveNode(this);
+    }
+    public void OnRelicClick()
+    {
+        Debug.Log("relic");
+        WorldManager.Instance.MoveNode(this);
+    }
+    public void OnShopClick()
+    {
+        Debug.Log("Shop!");
+        WorldManager.Instance.MoveNode(this);
     }
     public void OnCampClick()
     {
