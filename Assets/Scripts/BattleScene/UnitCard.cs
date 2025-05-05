@@ -22,11 +22,11 @@ public class UnitCard :CardBase
 
 
 
-    public bool isDead, isBoss,hasCrown, hasDoneTimer;
+    public bool isDead, isBoss,hasCrown, hasDoneTimer, hasDied;
    
     [Header("Stats")]
     public int currentAtkTimer, currentHealth;
-    [SerializeField] int maxAtkTimer, maxHealth;
+    [SerializeField] public int maxAtkTimer, maxHealth;
     //possible add in 'start' with so has start values separate to On which is in-game!
     [SerializeField] StatusEffect shieldOn,snowOn, fireOn, crystalOn, poisonOn, pepperOn, curseOn,reflectOn, hazeOn,bombOn,inkOn,demonizeOn;
                                                                                                            
@@ -94,6 +94,7 @@ public class UnitCard :CardBase
             maxHealth = this.maxHealth,
             isBoss = this.isBoss,
             hasCrown = this.hasCrown,
+            hasDied = this.hasDied,
 
             //+ve effects
             shieldOn = this.shieldOn.value,
@@ -137,6 +138,7 @@ public class UnitCard :CardBase
         this.maxHealth = cardSaveData.maxHealth;
         this.isBoss = cardSaveData.isBoss;
         this.hasCrown = cardSaveData.hasCrown;
+        this.hasDied = cardSaveData.hasDied;
 
         // Apply positive effects
         this.shieldOn.Add(cardSaveData.shieldOn);  // Assuming `shieldOn` is some kind of reference to a bool or value
@@ -154,7 +156,7 @@ public class UnitCard :CardBase
         offStats.Setup(statsData);
         cAttackTimerText.text = $"{currentAtkTimer}x{offStats.currentNumOfAttacks}";
         currentAtkTimer = maxAtkTimer;
-        currentHealth = maxHealth;
+        currentHealth = hasDied?maxHealth/2 :maxHealth; //so if have died before then make it half health
         currentHealthSlider.maxValue = maxHealth;
         ChangeStatus();
         CreateCardDescription();
@@ -260,26 +262,53 @@ public class UnitCard :CardBase
         //Get whether it's player, then find row and closest enemy in row
         int row = fieldIndex % 2;
 
-        if (hasBarrage)
+        if (hasBuffAttack)
         {
-            DoBarrageAnim();
-            foreach (var enemy in Barrage(row,isPlayer))
+            if (hasBarrage)
             {
-                
-                DoAttack(enemy); //do a different coroutine for this one! (maybe barrage attack specific
-                
-                yield return null;
+                DoBarrageAnim();
+                foreach (var ally in Barrage(row, !isPlayer))
+                {
+
+                    DoBuff(ally); //do a different coroutine for this one! (maybe barrage attack specific
+
+                    yield return null;
+                }
+            }
+            else
+            {
+                var ally = FindNearestEnemy(row, !isPlayer); //basically get nearest ally -> if at front then do on self
+                if (ally != null)
+                {
+
+                    yield return StartCoroutine(DoBuffAnim(ally));
+                }
             }
         }
         else
         {
-            var enemy = FindNearestEnemy(row, isPlayer); //top row if it's 0, bottom if it's 1
-            if (enemy != null)
+            if (hasBarrage)
             {
+                DoBarrageAnim();
+                foreach (var enemy in Barrage(row, isPlayer))
+                {
 
-                yield return StartCoroutine(DoAttackAnim(enemy));
+                    DoAttack(enemy); //do a different coroutine for this one! (maybe barrage attack specific
+
+                    yield return null;
+                }
+            }
+            else
+            {
+                var enemy = FindNearestEnemy(row, isPlayer); //top row if it's 0, bottom if it's 1
+                if (enemy != null)
+                {
+
+                    yield return StartCoroutine(DoAttackAnim(enemy));
+                }
             }
         }
+      
         
        
         
@@ -345,6 +374,22 @@ public class UnitCard :CardBase
         {
             TakeDamage(reflectValue);
         }
+    }
+    IEnumerator DoBuffAnim(UnitCard ally)
+    {
+        Debug.Log("doing Buff anim");
+
+
+        DoBuff(ally);
+        yield return null;
+        //do a shake instead of move
+      
+
+    }
+    void DoBuff(UnitCard ally)
+    {
+        ally.ChangeStatus(healthGive, attackGive, numOfAttacksGive, timerGive, snowGive, poisonGive, fireGive, curseGive, shieldGive,
+            reflectGive, hazeGive, inkGive, bombGive, demonizeGive, pepperGive, crystalGive);
     }
 
     //Maybe put buff/dmg together so can have like heal that adds pepper? (got to play around with this!)
@@ -444,6 +489,7 @@ public class UnitCard :CardBase
     {
         Debug.Log($"{name} died");
         isDead = true;
+        
         bool isPlayer = fieldIndex < 6;
        
         BattleManager.Instance.EmptyOutField(fieldIndex,isPlayer);
@@ -456,6 +502,13 @@ public class UnitCard :CardBase
         if (hasSpawnOnDeath)
         {
             BattleManager.Instance.AddInNewSpawns(spawnsOnDeath, isPlayer); //if it's fieldIndex is less than 6 it's a player card!
+        }
+
+        if (isPlayer)
+        {
+            //update this on the player companion!
+            var cardInDeck = IDLookupTable.instance.playerDeck.Find(x => x.baseID == ID);
+            cardInDeck.hasDied = true;
         }
 
     }

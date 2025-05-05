@@ -16,10 +16,7 @@ public class DeckHolder : MonoBehaviour
         string json = File.ReadAllText(Application.persistentDataPath + $"/{name}{id}.json");
         IntListWrapper wrapper = JsonUtility.FromJson<IntListWrapper>(json);
         List<int> loadedInts = wrapper.values;
-        foreach( var num in loadedInts)
-        {
-            Debug.Log(num + ": for start card");
-        }
+        
         CreateReserves(name);
        
 

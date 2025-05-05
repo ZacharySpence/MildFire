@@ -13,7 +13,7 @@ public class OffensiveStats : MonoBehaviour
 
     public void Setup(StatsData data)
     {
-        Debug.Log("Doing offensive setup!");
+        
         attack = data.attack;
         numOfAttacks = data.numOfAttacks;
         

@@ -42,6 +42,7 @@ public class CardSaveData
     public int maxHealth;
     public bool isBoss;
     public bool hasCrown;
+    public bool hasDied;
 
     // --- Runtime Status Flags ---
     public int shieldOn;

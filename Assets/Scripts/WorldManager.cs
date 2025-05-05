@@ -23,6 +23,7 @@ public class WorldManager : MonoBehaviour
     NodeVisualConnectorDrawer nodeConnector;
     Transform connectorBoss;
     GameObject playerToken;
+    
 
     [Header("Randomizer")]
     [SerializeField] List<string> battleList, randomList, eliteList;

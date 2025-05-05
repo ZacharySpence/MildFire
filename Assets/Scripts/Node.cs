@@ -68,6 +68,7 @@ public class Node : MonoBehaviour
     public void OnCampClick()
     {
         Debug.Log("Camp!");
+        UIManager.instance.campfire.SetActive(true);
         WorldManager.Instance.MoveNode(this);
 
     }
