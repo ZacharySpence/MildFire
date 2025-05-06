@@ -50,12 +50,14 @@ public class WorldPlayer : MonoBehaviour
         {
             AddToPlayerDeck(cardID);
         }
-       // startingPanel.gameObject.SetActive(false); don't need to since going straight into battle!
+        
         gameHasStarted = true;
 
         //FOR TESTING:
-        WorldManager.Instance.currentNode.OnCampClick();
-
+        //WorldManager.Instance.currentNode.OnCampClick();
+        WorldManager.Instance.currentNode.specifics = "NessyNighthome";
+        WorldManager.Instance.currentNode.OnEventClick();
+        startingPanel.gameObject.SetActive(false); //don't need to since going straight into battle!
         //FOR ACTUAL:
         //WorldManager.Instance.currentNode.OnBattleClick(); //forcibly start 1st battle!
     }

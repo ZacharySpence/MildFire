@@ -7,10 +7,10 @@ public class IDLookupTable : MonoBehaviour
 {
     public static IDLookupTable instance;
 
-    [SerializeField] List<CardBase> unitCards;//100-199 
-    [SerializeField] List<CardBase> useCards; //200-299
-    [SerializeField] List<CardBase> enemyCards; //300-399
-     public List<CardSaveData> playerDeck = new List<CardSaveData>(); //random numbers 400+ -> this is the players deck!
+    [SerializeField] List<CardBase> unitCards;
+    [SerializeField] List<CardBase> useCards; 
+    [SerializeField] List<CardBase> enemyCards;
+     public List<CardSaveData> playerDeck = new List<CardSaveData>(); 
     Dictionary<int, CardBase> cardLookup;
     private void Awake()
     {
@@ -37,17 +37,6 @@ public class IDLookupTable : MonoBehaviour
 
 
    
-   /* public CardBase GetCardByID(int ID)
-    {
-
-     
-        else
-        {
-            Debug.Log("Card found: " + match.name);
-        }
-        return cardLookup.TryGetValue(ID, out var card) ? card.Clone() : null;
-    }
-    */
     public CardBase GetCardByID(int ID)
     {
         if (ID < 200 || (ID >= 200 && (ID / 100) % 2 == 0))
@@ -64,6 +53,12 @@ public class IDLookupTable : MonoBehaviour
         Debug.LogWarning($"No template card found for ID: {ID}");
         return null;
 
+    }
+
+    public UnitCard GetCompanionCard()
+    {
+       var companions = unitCards.OfType<UnitCard>().Where(x => !x.isBoss && !playerDeck.Any(y => y.baseID == x.ID)).OrderBy(x => Random.value).ToList();
+        return companions[0];//just the first one
     }
     
 }

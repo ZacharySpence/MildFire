@@ -53,10 +53,12 @@ public class Campfire : MonoBehaviour
     public void OnRest(int index)
     {
         choices[index] = 0;
+        //for visuals -> enable rest visual and disable train visual
     }
     public void OnTrain(int index)
     {
         choices[index] = 1;
+        //for visuals -> enable train visual and disable rest visual
     }
     void Rest(int ID)
     {
@@ -83,7 +85,7 @@ public class Campfire : MonoBehaviour
 
     public void OnConfirm()
     {
-        for(int i = 0; i < 4; i++)
+        for(int i = 0; i < units.Count; i++)
         {
             if (choices[i] == 0)
             {

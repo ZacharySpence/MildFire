@@ -22,9 +22,9 @@ public class Node : MonoBehaviour
                 button.onClick.AddListener(() => OnBattleClick());
 
                 break;
-            case EncounterType.Random:
-                button.onClick.AddListener(() => OnRandomClick());
-                GetComponent<Image>().sprite = WorldManager.Instance.randomSprite;
+            case EncounterType.Event:
+                button.onClick.AddListener(() => OnEventClick());
+                GetComponent<Image>().sprite = WorldManager.Instance.eventSprite;
                 break;
             case EncounterType.Camp:
                 button.onClick.AddListener(() => OnCampClick());
@@ -46,10 +46,12 @@ public class Node : MonoBehaviour
                 button.onClick.AddListener(() => OnBossBattleClick());
                 GetComponent<Image>().sprite = WorldManager.Instance.bossSprite;
                 break;
+           
         }
        
     }
 
+   
     public void OnBossBattleClick()
     {
         Debug.Log("Boss battle");
@@ -77,9 +79,10 @@ public class Node : MonoBehaviour
         Debug.Log("elite battle!");
         WorldManager.Instance.MoveNode(this);
     }
-    public void OnRandomClick()
+    public void OnEventClick()
     {
         Debug.Log("random event!");
+        RandomEventManager.instance.LoadEvent(specifics);
         WorldManager.Instance.MoveNode(this);    
     }
     public void OnBattleClick()

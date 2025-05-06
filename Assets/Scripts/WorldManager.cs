@@ -13,7 +13,7 @@ public class WorldManager : MonoBehaviour
    
     [Header("Stays on load")]
     int currentNodeID;
-    public Sprite battleSprite, randomSprite, campSprite, eliteSprite, shopSprite, relicSprite, bossSprite;   
+    public Sprite battleSprite, eventSprite, campSprite, eliteSprite, shopSprite, relicSprite, bossSprite;   
     Dictionary<int, (EncounterType encounter, string specifics)> nodeData = new Dictionary<int, (EncounterType encounter,string specifics)>();
 
     [Header("Resets on load")]
@@ -28,6 +28,11 @@ public class WorldManager : MonoBehaviour
     [Header("Randomizer")]
     [SerializeField] List<string> battleList, randomList, eliteList;
     [SerializeField] List<EncounterType> randomizedEncounters;
+
+    [Header("WorldEffects")]
+    public bool noogleBeefBuff, noogleBeefDebuff, noogleChickenBad, noogleVeggieBad, noogleBlessing, 
+        nessyBlessing, nessyCurse, 
+        omnisciJudgement,omnisciForesight,omnisciChaos,omnisciBlessing;
     private void Awake()
     {
         if(Instance == null)
@@ -199,7 +204,7 @@ public class WorldManager : MonoBehaviour
                 case EncounterType.Battle:
                     GetRandomElement(currentBattleList,node);                
                     break;
-                case EncounterType.Random:
+                case EncounterType.Event:
                     GetRandomElement(currentRandomList, node);
                     break;
                 case EncounterType.Camp:
@@ -246,10 +251,11 @@ public class WorldManager : MonoBehaviour
 public enum EncounterType
 {
     Battle,
-    Random,
+    Event,
     Camp,
     Shop,
     Elite,
     Relic,
-    Boss
+    Boss,
+
 }
