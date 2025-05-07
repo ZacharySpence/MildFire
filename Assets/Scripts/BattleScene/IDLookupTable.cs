@@ -10,8 +10,13 @@ public class IDLookupTable : MonoBehaviour
     [SerializeField] List<CardBase> unitCards;
     [SerializeField] List<CardBase> useCards; 
     [SerializeField] List<CardBase> enemyCards;
-     public List<CardSaveData> playerDeck = new List<CardSaveData>(); 
+    
+    public List<CardSaveData> playerDeck = new List<CardSaveData>();
+    public List<CharmSaveData> charmsInPlayerStorage = new List<CharmSaveData>();
     Dictionary<int, CardBase> cardLookup;
+
+    [Header("For Events")]
+    public List<SkullCharm> skullCharmList;
     private void Awake()
     {
         if(instance == null)

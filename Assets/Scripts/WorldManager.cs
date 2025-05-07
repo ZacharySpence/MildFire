@@ -33,6 +33,7 @@ public class WorldManager : MonoBehaviour
     public bool noogleBeefBuff, noogleBeefDebuff, noogleChickenBad, noogleVeggieBad, noogleBlessing, 
         nessyBlessing, nessyCurse, 
         omnisciJudgement,omnisciForesight,omnisciChaos,omnisciBlessing;
+    public int skullAmount;
     private void Awake()
     {
         if(Instance == null)
