@@ -16,7 +16,7 @@ public class WorldPlayer : MonoBehaviour
     [SerializeField] GameObject startingButtonPrefab;
     [SerializeField] List<int> allLeaderID = new List<int>();
     [SerializeField] PlayerBackpack playerBackpack;
-
+   
     private void Awake()
     {
         if(Instance == null)
@@ -28,6 +28,8 @@ public class WorldPlayer : MonoBehaviour
             Destroy(this);
         }
     }
+
+    
     //gotta change to save my data separate to a prefab!
 
     void AddToPlayerDeck(int id)

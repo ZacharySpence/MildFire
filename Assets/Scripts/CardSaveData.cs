@@ -17,6 +17,7 @@ public class CardSaveData
     public Sprite picture;
     public Sprite background;
     public Sprite border;
+    public int currentCharmAmount;
 
     // --- Give Stats (Powerups) ---
     public int numOfAttacksGive;
