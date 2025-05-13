@@ -85,8 +85,9 @@ public class PlayerBackpack : MonoBehaviour
             OrderCharms();
             var skullCharm = charm.GetComponent<SkullCharm>();
             skullCharm.SetupUsingCharmSaveData(charmSaveData);
+            skullCharm.DisableTooltips();
             charm.GetComponent<Button>().onClick.AddListener(() => OnClickCharm(skullCharm));
-            
+           
         }
     }
 
@@ -95,11 +96,12 @@ public class PlayerBackpack : MonoBehaviour
 
     void AttachCharmToCard(CardSaveData card)
     {
-        //remove from card
+        //remove from storage
         IDLookupTable.instance.charmsInPlayerStorage.Remove(IDLookupTable.instance.charmsInPlayerStorage.Find(x => x.ID == selectedCharm.ID));
         var cardToChange = IDLookupTable.instance.playerDeck.Find(x => x == card);
         cardToChange.currentCharmAmount += 1;
         cardToChange = selectedCharm.ChangeCard(cardToChange);
+        //visually remove charm too!
     }
 
     void OrderCharms()

@@ -137,4 +137,38 @@ MonoBehaviour:
   ID: 0
   healthChange: 2
   attackChange: 0
+  timerChange: 0
+  numOfAttackChange: 0
+  shieldGiveChange: 0
+  snowGiveChange: 0
+  fireGiveChange: 0
+  crystalGiveChange: 0
+  poisonGiveChange: 0
+  pepperGiveChange: 0
+  curseGiveChange: 0
+  reflectGiveChange: 0
+  hazeGiveChange: 0
+  bombGiveChange: 0
+  inkGiveChange: 0
+  demonizeGiveChange: 0
+  shieldOnChange: 0
+  snowOnChange: 0
+  fireOnChange: 0
+  crystalOnChange: 0
+  poisonOnChange: 0
+  pepperOnChange: 0
+  curseOnChange: 0
+  reflectOnChange: 0
+  hazeOnChange: 0
+  bombOnChange: 0
+  inkOnChange: 0
+  demonizeOnChange: 0
+  hasEverburnResistance: 0
+  hasBarrage: 0
   button: {fileID: 7704057374251726363}
+  tooltipPrefab: {fileID: 7499865843149525041, guid: 55e7a83917a11b94cbfa1449e71e9163, type: 3}
+  rightTooltips: []
+  leftTooltips: []
+  rightTooltipPos: {fileID: 0}
+  leftTooltipPos: {fileID: 0}
+  tooltip: {fileID: 0}
