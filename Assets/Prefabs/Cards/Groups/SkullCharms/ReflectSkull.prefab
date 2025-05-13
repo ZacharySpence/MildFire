@@ -44,6 +44,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8514593924391707851, guid: 06359b71849688042bb771e5da06d19e, type: 3}
+      propertyPath: ID
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: -8514593924391707851, guid: 06359b71849688042bb771e5da06d19e, type: 3}
       propertyPath: skullCost
       value: 5
       objectReference: {fileID: 0}

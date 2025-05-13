@@ -1,16 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using UnityEditor.Animations;
-using static UnityEngine.GraphicsBuffer;
-using static UnityEngine.EventSystems.EventTrigger;
-
 
 public class UnitCard :CardBase
 {
@@ -113,6 +108,7 @@ public class UnitCard :CardBase
 
     }
 
+    
     public override void SetupUsingCardSaveData(CardSaveData cardSaveData)
     {// Set all the fields from the save data back to the card
 
@@ -142,9 +138,12 @@ public class UnitCard :CardBase
         this.hasCrown = cardSaveData.hasCrown;
         this.hasDied = cardSaveData.hasDied;
 
-        // Apply positive effects
-        this.shieldOn.Add(cardSaveData.shieldOn);  // Assuming `shieldOn` is some kind of reference to a bool or value
-        this.crystalOn.Add(cardSaveData.crystalOn);
+        //Apply positive effects
+        this.shieldOn.value = cardSaveData.shieldOn;
+        this.crystalOn.value = cardSaveData.crystalOn;
+        this.reflectOn.value = cardSaveData.reflectOn;
+        
+       
         //this.pepperOn.Add(cardSaveData.pepperOn); //Do i need to apply it? maybe not actually?
 
         //Apply special effects
@@ -171,7 +170,7 @@ public class UnitCard :CardBase
     }
 
     public override void CreateCardDescription()
-    {
+    {    
         base.CreateCardDescription();
         //special effects
         if (hasLifesteal){ text.Add($"Heal {offStats.currentAttack} health on hit"); }

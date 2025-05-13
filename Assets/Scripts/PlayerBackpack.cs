@@ -30,6 +30,10 @@ public class PlayerBackpack : MonoBehaviour
         if (selectedCharm != null)
         {
             SelectedCharmFollowCursor();
+            if (Input.GetMouseButtonDown(1))
+            {
+                DeselectCharm();
+            }
         }
        
     }
@@ -151,18 +155,23 @@ public class PlayerBackpack : MonoBehaviour
         Debug.Log("clicked skullCharm");
         if (selectedCharm != null)
         {
-
-            selectedCharm.transform.localPosition = Vector2.zero;//back to parent
-            selectedCharm.button.enabled = true;
-            selectedCharm.GetComponent<Image>().raycastTarget = true;
-            selectedCharm = null;
-            OrderCharms();
+            DeselectCharm();
         }
         selectedCharm = charm;
         selectedCharm.button.enabled = false; //so when clicking doesnt click on it
         selectedCharm.GetComponent<Image>().raycastTarget = false;
-                                              // Re-parent to the canvas
+        // Re-parent to the canvas
         selectedCharm.transform.SetParent(canvas.transform, worldPositionStays: false);
         selectedCharm.transform.SetAsLastSibling();
+    }
+
+    void DeselectCharm()
+    {
+        selectedCharm.transform.SetParent(charmTransform, worldPositionStays: false);
+        selectedCharm.transform.localPosition = Vector2.zero;//back to parent
+        selectedCharm.button.enabled = true;
+        selectedCharm.GetComponent<Image>().raycastTarget = true;
+        selectedCharm = null;
+        OrderCharms();
     }
 }

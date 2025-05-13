@@ -75,7 +75,7 @@ public abstract class CardBase : MonoBehaviour
 
     public virtual void CreateCardDescription()
     {
-        
+        text.Clear(); //so empty it out!
         //left tooltips
         if (shieldGive > 0)       {
             text.Add($"Apply {shieldGive} shield");
