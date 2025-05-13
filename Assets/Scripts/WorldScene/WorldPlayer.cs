@@ -57,7 +57,7 @@ public class WorldPlayer : MonoBehaviour
 
         //FOR TESTING:
         //WorldManager.Instance.currentNode.OnCampClick();
-        WorldManager.Instance.currentNode.specifics = "NessyNighthome";
+        WorldManager.Instance.currentNode.specifics = "SkullGondola";
         WorldManager.Instance.currentNode.OnEventClick();
         startingPanel.gameObject.SetActive(false); //don't need to since going straight into battle!
         //FOR ACTUAL:

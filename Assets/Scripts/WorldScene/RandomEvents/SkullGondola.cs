@@ -7,15 +7,12 @@ using UnityEngine.UI;
 
 public class SkullGondola : MonoBehaviour
 {
-    [SerializeField] GameObject skullCardPrefab, skullCharmPrefab;
-
-   
     [SerializeField] List<Transform> skullCharmsInShop;
     [SerializeField] TextMeshProUGUI greetingText;
     private void OnEnable()
     {
-        var charms = IDLookupTable.instance.skullCharmList.OrderBy(x => Random.value).Take(5).ToList();
-        for (int i =0;i<5;i++)
+        var charms = IDLookupTable.instance.skullCharmList.OrderBy(x => Random.value).Take(Mathf.Min(5,IDLookupTable.instance.skullCharmList.Count)).ToList();
+        for (int i =0;i<charms.Count;i++)
         {               
             var charmI = Instantiate(charms[i], skullCharmsInShop[i]);
             IDLookupTable.instance.skullCharmList.Remove(charms[i]);

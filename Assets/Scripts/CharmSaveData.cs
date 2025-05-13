@@ -7,6 +7,7 @@ public class CharmSaveData : MonoBehaviour
     public int skullCost;
     public int ID;
     public int healthChange, attackChange;
+    public bool hasEverburnResistance;
 
 
    

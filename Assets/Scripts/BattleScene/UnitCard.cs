@@ -29,7 +29,7 @@ public class UnitCard :CardBase
     [SerializeField] public int maxAtkTimer, maxHealth;
     //possible add in 'start' with so has start values separate to On which is in-game!
     [SerializeField] StatusEffect shieldOn,snowOn, fireOn, crystalOn, poisonOn, pepperOn, curseOn,reflectOn, hazeOn,bombOn,inkOn,demonizeOn;
-                                                                                                           
+    public bool hasEverburnResistance;                                                                                                        
    
     [Header("Stat visuals")]
     [SerializeField] TextMeshProUGUI cAttackTimerText;
@@ -106,7 +106,9 @@ public class UnitCard :CardBase
             hasSpawnOnDeath = this.hasSpawnOnDeath,
             spawnsOnDeath = this.spawnsOnDeath,
             hasSelfTargetPosEffects = this.hasSelfTargetPosEffects,
-    };
+            hasEverburnResistance = this.hasEverburnResistance,
+            hasBarrage = this.hasBarrage
+        };
 
 
     }
@@ -150,6 +152,9 @@ public class UnitCard :CardBase
         this.hasSelfTargetPosEffects = cardSaveData.hasSelfTargetPosEffects;
         this.hasSpawnOnDeath = cardSaveData.hasSpawnOnDeath;
         this.spawnsOnDeath = cardSaveData.spawnsOnDeath;
+        this.hasEverburnResistance = cardSaveData.hasEverburnResistance;
+        this.hasBarrage = cardSaveData.hasBarrage;
+
         //Setup rest
         name = nameText;
         offStats = GetComponent<OffensiveStats>();

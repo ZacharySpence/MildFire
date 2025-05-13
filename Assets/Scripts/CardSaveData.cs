@@ -47,8 +47,17 @@ public class CardSaveData
 
     // --- Runtime Status Flags ---
     public int shieldOn;
+    public int snowOn;
+    public int fireOn;
     public int crystalOn;
     public int pepperOn;
+    public int poisonOn;
+    public int curseOn;
+    public int reflectOn;
+    public int hazeOn;
+    public int bombOn;
+    public int inkOn;
+    public int demonizeOn;
 
     // ---Off stats ---
     public int attack;
@@ -59,4 +68,6 @@ public class CardSaveData
     public bool hasSpawnOnDeath;
     public List<int> spawnsOnDeath;
     public bool hasSelfTargetPosEffects;
+    public bool hasEverburnResistance;
+    public bool hasBarrage;
 }

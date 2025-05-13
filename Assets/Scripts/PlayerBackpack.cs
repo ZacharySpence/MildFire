@@ -25,7 +25,11 @@ public class PlayerBackpack : MonoBehaviour
 
     private void Update()
     {
-        SelectedCharmFollowCursor();
+        if (selectedCharm != null)
+        {
+            SelectedCharmFollowCursor();
+        }
+       
     }
     void SelectedCharmFollowCursor()
     {
