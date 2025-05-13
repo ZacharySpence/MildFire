@@ -15,6 +15,8 @@ public class SkullCharm : MonoBehaviour
         shieldOnChange, snowOnChange, fireOnChange, crystalOnChange, poisonOnChange, pepperOnChange, curseOnChange, reflectOnChange,
         hazeOnChange, bombOnChange, inkOnChange, demonizeOnChange;
     public bool hasEverburnResistance, hasBarrage;
+
+    public Sprite skullSprite;
     public Button button;
 
     [Header("UISpecific")]
@@ -31,11 +33,81 @@ public class SkullCharm : MonoBehaviour
     }
     public CharmSaveData CreateCharmSaveData()
     {
-        return null;
+        return new CharmSaveData
+        {
+            ID = this.ID,
+            healthChange = this.healthChange,
+            attackChange = this.attackChange,
+            timerChange = this.timerChange,
+            numOfAttackChange = this.numOfAttackChange,
+            shieldGiveChange = this.shieldGiveChange,
+            snowGiveChange = this.snowGiveChange,
+            fireGiveChange = this.fireGiveChange,
+            crystalGiveChange = this.crystalGiveChange,
+            poisonGiveChange = this.poisonGiveChange,
+            pepperGiveChange = this.pepperGiveChange,
+            curseGiveChange = this.curseGiveChange,
+            reflectGiveChange = this.reflectGiveChange,
+            hazeGiveChange = this.hazeGiveChange,
+            bombGiveChange = this.bombGiveChange,
+            inkGiveChange = this.inkGiveChange,
+            demonizeGiveChange = this.demonizeGiveChange,
+            shieldOnChange = this.shieldOnChange,
+            snowOnChange = this.snowOnChange,
+            fireOnChange = this.fireOnChange,
+            crystalOnChange = this.crystalOnChange,
+            poisonOnChange = this.poisonOnChange,
+            pepperOnChange = this.pepperOnChange,
+            curseOnChange = this.curseOnChange,
+            reflectOnChange = this.reflectOnChange,
+            hazeOnChange = this.hazeOnChange,
+            bombOnChange = this.bombOnChange,
+            inkOnChange = this.inkOnChange,
+            demonizeOnChange = this.demonizeOnChange,
+            hasEverburnResistance = this.hasEverburnResistance,
+            hasBarrage = this.hasBarrage,
+            skullSprite = GetComponent<Image>().sprite,
+
+        };
     }
     public void SetupUsingCharmSaveData(CharmSaveData saveData) 
-    { 
+    {
+        ID = saveData.ID;
+        healthChange = saveData.healthChange;
+        attackChange = saveData.attackChange;
+        timerChange = saveData.timerChange;
+        numOfAttackChange = saveData.numOfAttackChange;
+        shieldGiveChange = saveData.shieldGiveChange;
+        snowGiveChange = saveData.snowGiveChange;
+        fireGiveChange = saveData.fireGiveChange;
+        crystalGiveChange = saveData.crystalGiveChange;
+        poisonGiveChange = saveData.poisonGiveChange;
+        pepperGiveChange = saveData.pepperGiveChange;
+        curseGiveChange = saveData.curseGiveChange;
+        reflectGiveChange = saveData.reflectGiveChange;
+        hazeGiveChange = saveData.hazeGiveChange;
+        bombGiveChange = saveData.bombGiveChange;
+        inkGiveChange = saveData.inkGiveChange;
+        demonizeGiveChange = saveData.demonizeGiveChange;
+        shieldOnChange = saveData.shieldOnChange;
+        snowOnChange = saveData.snowOnChange;
+        fireOnChange = saveData.fireOnChange;
+        crystalOnChange = saveData.crystalOnChange;
+        poisonOnChange = saveData.poisonOnChange;
+        pepperOnChange = saveData.pepperOnChange;
+        curseOnChange = saveData.curseOnChange;
+        reflectOnChange = saveData.reflectOnChange;
+        hazeOnChange = saveData.hazeOnChange;
+        bombOnChange = saveData.bombOnChange;
+        inkOnChange = saveData.inkOnChange;
+        demonizeOnChange = saveData.demonizeOnChange;
+        hasEverburnResistance = saveData.hasEverburnResistance;
+        hasBarrage = saveData.hasBarrage;
+        skullSprite = saveData.skullSprite;
 
+        GetComponent<Image>().sprite = skullSprite;
+        CreateCharmDescription();
+        DisableTooltips();
     }
     public CardSaveData ChangeCard(CardSaveData saveData)
     {
@@ -182,7 +254,7 @@ public class SkullCharm : MonoBehaviour
 
         //DisableTooltips(); //change so enable on hover!
     }
-    public virtual void EnableTooltips()
+    public void EnableTooltips()
     {
         foreach (var tooltip in rightTooltips)
         {
@@ -194,7 +266,7 @@ public class SkullCharm : MonoBehaviour
         }
 
     }
-    public virtual void DisableTooltips()
+    public  void DisableTooltips()
     {
         foreach (var tooltip in rightTooltips)
         {

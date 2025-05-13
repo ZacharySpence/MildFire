@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,7 @@ public class PlayerBackpack : MonoBehaviour
     [SerializeField] GameObject playerDeckPanel, content;
     [SerializeField] GameObject baseUIUnitCard, baseUIUseCard, baseUIUseOffCard, charmUI; //so i am already using the base cards and then adding data so 
     [SerializeField] Transform charmTransform;
+    [SerializeField] Canvas canvas;
     bool hasMadeVisualDeck;
 
     [Header("Interaction")]
@@ -33,14 +35,16 @@ public class PlayerBackpack : MonoBehaviour
     }
     void SelectedCharmFollowCursor()
     {
-        // Get the mouse position in world space
-        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-        // Set the z-position to 0 to keep it on the 2D plane
-        mousePosition.z = 0f;
-
-        // Move the GameObject to the mouse position
-        selectedCharm.transform.position = mousePosition;
+        Vector2 localPoint;
+        RectTransform canvasRect = canvas.GetComponent<RectTransform>();
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            canvasRect,
+            Input.mousePosition,
+            null,
+            out localPoint))
+        {
+            selectedCharm.GetComponent<RectTransform>().localPosition = localPoint;
+        }
     }
 
     public void CreatePlayerVisualDeck()
@@ -49,26 +53,24 @@ public class PlayerBackpack : MonoBehaviour
         List<CardBase> tempDeck = new List<CardBase>();
         foreach (var cardSaveData in IDLookupTable.instance.playerDeck)
         {
-
-
             switch (cardSaveData.cardType)
             {
                 case "UnitCard":
                     var card = Instantiate(baseUIUnitCard, content.transform);
                     card.GetComponentInChildren<UnitCard>().SetupUsingCardSaveData(cardSaveData);
-                    card.GetComponentInChildren<Button>().onClick.AddListener(() => OnClickCard(cardSaveData));
+                    card.GetComponentInChildren<Button>().onClick.AddListener(() => OnClickCard(card,cardSaveData));
                     tempDeck.Add(card.GetComponentInChildren<UnitCard>());
                     break;
                 case "UseCard":
                     card = Instantiate(baseUIUseCard, content.transform);
                     card.GetComponentInChildren<UseCard>().SetupUsingCardSaveData(cardSaveData);
-                    card.GetComponentInChildren<Button>().onClick.AddListener(() => OnClickCard(cardSaveData));
+                    card.GetComponentInChildren<Button>().onClick.AddListener(() => OnClickCard(card,cardSaveData));
                     tempDeck.Add(card.GetComponentInChildren<UseCard>());
                     break;
                 case "UseOffCard":
                     card = Instantiate(baseUIUseOffCard, content.transform);
                     card.GetComponentInChildren<UseOffCard>().SetupUsingCardSaveData(cardSaveData);
-                    card.GetComponentInChildren<Button>().onClick.AddListener(() => OnClickCard(cardSaveData));
+                    card.GetComponentInChildren<Button>().onClick.AddListener(() => OnClickCard(card,cardSaveData));
                     tempDeck.Add(card.GetComponentInChildren<UseOffCard>());
                     break;
             }
@@ -94,14 +96,32 @@ public class PlayerBackpack : MonoBehaviour
 
   
 
-    void AttachCharmToCard(CardSaveData card)
+    void AttachCharmToCard(GameObject card,CardSaveData cardSaveData)
     {
         //remove from storage
         IDLookupTable.instance.charmsInPlayerStorage.Remove(IDLookupTable.instance.charmsInPlayerStorage.Find(x => x.ID == selectedCharm.ID));
-        var cardToChange = IDLookupTable.instance.playerDeck.Find(x => x == card);
+        var cardToChange = IDLookupTable.instance.playerDeck.Find(x => x == cardSaveData);
         cardToChange.currentCharmAmount += 1;
         cardToChange = selectedCharm.ChangeCard(cardToChange);
+        //re-set up the card data!
+        switch (cardToChange.cardType)
+        {
+            case "UnitCard":
+                Debug.Log(card.transform.GetChild(0).name);
+                card.transform.GetChild(0).GetComponent<UnitCard>().SetupUsingCardSaveData(cardToChange);
+                break;
+            case "UseOffCard":
+                card.GetComponentInChildren<UseOffCard>().SetupUsingCardSaveData(cardToChange);
+                break;
+            case "UseCard":
+                card.GetComponentInChildren<UseCard>().SetupUsingCardSaveData(cardToChange);
+                break;
+        }
+       
+        //Also then find the actual card in backpack!
         //visually remove charm too!
+        Destroy(selectedCharm.gameObject);
+        selectedCharm = null;
     }
 
     void OrderCharms()
@@ -114,28 +134,35 @@ public class PlayerBackpack : MonoBehaviour
         OnClickCharm(null); //so just puts charm back where it was
     }
     //For the cards/charms when made
-    void OnClickCard(CardSaveData card)
+    void OnClickCard(GameObject card, CardSaveData cardSaveData)
     {
-        if (selectedCharm != null && card.currentCharmAmount < 3)
+        Debug.Log("clicked backpack card");
+        if (selectedCharm != null && cardSaveData.currentCharmAmount < 3)
         {
-            if(card.cardType == "UseCard" && selectedCharm.healthChange != 0 || selectedCharm.attackChange != 0)
+            if(cardSaveData.cardType == "UseCard" && (selectedCharm.healthChange != 0 || selectedCharm.attackChange != 0))
             {
                 return; //can't attach certain charms to use cards!
             }
-            AttachCharmToCard(card);
+            AttachCharmToCard(card,cardSaveData);
         }
     }
     void OnClickCharm(SkullCharm charm)
     {
+        Debug.Log("clicked skullCharm");
         if (selectedCharm != null)
         {
 
             selectedCharm.transform.localPosition = Vector2.zero;//back to parent
             selectedCharm.button.enabled = true;
+            selectedCharm.GetComponent<Image>().raycastTarget = true;
             selectedCharm = null;
             OrderCharms();
         }
         selectedCharm = charm;
         selectedCharm.button.enabled = false; //so when clicking doesnt click on it
+        selectedCharm.GetComponent<Image>().raycastTarget = false;
+                                              // Re-parent to the canvas
+        selectedCharm.transform.SetParent(canvas.transform, worldPositionStays: false);
+        selectedCharm.transform.SetAsLastSibling();
     }
 }

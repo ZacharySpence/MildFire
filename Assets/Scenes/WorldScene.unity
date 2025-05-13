@@ -528,6 +528,7 @@ MonoBehaviour:
   baseUIUseOffCard: {fileID: 1783559530955379683, guid: e7f03ce433831ae4888661bff832ce65, type: 3}
   charmUI: {fileID: 860544236751639315, guid: 06359b71849688042bb771e5da06d19e, type: 3}
   charmTransform: {fileID: 57288244}
+  canvas: {fileID: 1036144523}
   selectedCharm: {fileID: 0}
 --- !u!1 &13010499
 GameObject:
@@ -1166,9 +1167,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Omniscitent, Assembly-CSharp
-        m_MethodName: SeeAllEvents
+      - m_Target: {fileID: 2113693530}
+        m_TargetAssemblyTypeName: SkullGondola, Assembly-CSharp
+        m_MethodName: Continue
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
