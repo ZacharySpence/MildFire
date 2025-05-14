@@ -22,8 +22,12 @@ public class RandomEventManager : MonoBehaviour
 
     private void OnDisable()
     {
-        chosenEvent.SetActive(false);
-        chosenEvent = null;
+        if(chosenEvent != null)
+        {
+            chosenEvent.SetActive(false);
+            chosenEvent = null;
+        }
+  
     }
     public void LoadEvent(string specifics)
     {

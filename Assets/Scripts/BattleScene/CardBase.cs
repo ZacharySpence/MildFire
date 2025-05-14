@@ -122,7 +122,7 @@ public abstract class CardBase : MonoBehaviour
             text.Add($"Apply {fireGive} fire");
             GameObject tooltip = Instantiate(tooltipPrefab, rightTooltipPos);
             rightTooltips.Add(tooltip);
-            tooltip.GetComponentInChildren<TextMeshProUGUI>().text = desc.RewriteSentence($"Fire fire \n Deals damage every turn \n reduced by snow"); //fire doesn't ever go down!
+            tooltip.GetComponentInChildren<TextMeshProUGUI>().text = desc.RewriteSentence($"Everburn fire \n Deals damage every turn"); //fire doesn't ever go down!
 
         }
         if (poisonGive > 0)

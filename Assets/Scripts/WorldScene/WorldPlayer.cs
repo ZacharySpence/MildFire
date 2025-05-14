@@ -57,11 +57,11 @@ public class WorldPlayer : MonoBehaviour
 
         //FOR TESTING:
         //WorldManager.Instance.currentNode.OnCampClick();
-        WorldManager.Instance.currentNode.specifics = "SkullGondola";
-        WorldManager.Instance.currentNode.OnEventClick();
-        startingPanel.gameObject.SetActive(false); //don't need to since going straight into battle!
+        //WorldManager.Instance.currentNode.specifics = "SkullGondola";
+        //WorldManager.Instance.currentNode.OnEventClick();
+        //startingPanel.gameObject.SetActive(false); //don't need to since going straight into battle!
         //FOR ACTUAL:
-        //WorldManager.Instance.currentNode.OnBattleClick(); //forcibly start 1st battle!
+        WorldManager.Instance.currentNode.OnBattleClick(); //forcibly start 1st battle!
     }
 
     
@@ -94,20 +94,34 @@ public class WorldPlayer : MonoBehaviour
         Debug.Log("items");
         CreateReward(DeckHolder.itemRewardCards);
         Debug.Log("companions");
-        CreateReward(DeckHolder.companionRewardCards);  
+        CreateReward(DeckHolder.companionRewardCards,WorldManager.Instance.nessyCurse);
+        if (WorldManager.Instance.nessyBlessing)
+        {
+            CreateReward(DeckHolder.companionRewardCards);
+        }
     }
-    void CreateReward(List<int> rewardList)
+    void CreateReward(List<int> rewardList, bool nessyCurse = false)
     {
-        
+
         int reward = rewardList[Random.Range(0, rewardList.Count)];
         GameObject button = Instantiate(startingButtonPrefab, startingPanel);
         CardBase card = Instantiate(IDLookupTable.instance.GetCardByID(reward), button.transform);
         card.SetupUsingCardSaveData(card.CreateCardSaveData()); //set it up using its own data
         card.transform.localScale = new Vector2(200f, 300f);
         card.transform.position = Vector2.zero;
-        card.transform.parent.GetComponent<Button>().onClick.AddListener(() => ChooseReward(card.ID));
-    }
 
+        if (nessyCurse)
+        {
+            if (Random.Range(1, 101) > 50)
+            {
+                card.transform.parent.GetComponent<Button>().onClick.AddListener(() => NessySteal(card.gameObject));
+            }
+        }
+        else
+        {
+            card.transform.parent.GetComponent<Button>().onClick.AddListener(() => ChooseReward(card.ID));
+        }
+    }
     void ChooseReward(int id)
     {
         AddToPlayerDeck(id);
@@ -115,4 +129,15 @@ public class WorldPlayer : MonoBehaviour
         //+enable next options on board!
         WorldManager.Instance.UpdateNodes();
     }
+
+    void NessySteal(GameObject card)
+    {
+        Debug.Log("STOLEN BY NESSY");
+        Destroy(card);
+        //play sounds
+        startingPanel.gameObject.SetActive(false);
+        WorldManager.Instance.UpdateNodes();
+    }
+
+
 }

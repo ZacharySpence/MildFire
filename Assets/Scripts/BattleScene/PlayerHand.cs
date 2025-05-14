@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Android;
 
@@ -41,15 +42,26 @@ public class PlayerHand : MonoBehaviour
     void Setup()
     {
         List<CardBase> tempDeck = new List<CardBase>();
-        foreach (var cardData in IDLookupTable.instance.playerDeck)
+        bool crystalBuff = WorldManager.Instance.noogleBeefBuff;
+        bool poisonDebuff = WorldManager.Instance.noogleBeefDebuff;
+        foreach (var cardData in IDLookupTable.instance.playerDeck.ToList()) //so take copy so can change the card data!
         {
             
             switch (cardData.cardType)
             {
                 case "UnitCard":
                     var card = Instantiate(baseUnitCard,transform);
+                    if (crystalBuff)
+                    {
+                        cardData.crystalOn += 1;
+                    }
+                    else if (poisonDebuff)
+                    {
+                        cardData.poisonOn += Random.Range(1, 4); //1-3 poison on start
+                    }
                     card.SetupUsingCardSaveData(cardData);
                     tempDeck.Add(card);
+                    
                     break;
                 case "UseCard":
                     card = Instantiate(baseUseCard,transform);

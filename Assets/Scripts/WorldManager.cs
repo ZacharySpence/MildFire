@@ -137,6 +137,10 @@ public class WorldManager : MonoBehaviour
         UpdateNodes();
         //Give them a choice
         WorldPlayer.Instance.CreateRewardChoice();
+
+        //Remove temp buffs/debuffs
+        noogleBeefBuff = false;
+        noogleBeefDebuff = false;
     }
     public void StartGame()
     {

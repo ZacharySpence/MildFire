@@ -37,7 +37,7 @@ public class NoogleShop : MonoBehaviour
     }
     public void OrderSpicyBeefNoogles()
     {
-        //75% pepper buff (+1-3 pepper to all at start)
+        //75% crystal buff (+1 crystal to start)
         //25% poison debuff (+1-3 poison to all at start) -> put in battleManager
         var rand = Random.Range(1, 101);
         if(rand <=  posBeefChance) 

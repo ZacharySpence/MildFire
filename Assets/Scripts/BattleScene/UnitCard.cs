@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using UnityEditor.Animations;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class UnitCard :CardBase
 {
@@ -142,9 +143,19 @@ public class UnitCard :CardBase
         this.shieldOn.value = cardSaveData.shieldOn;
         this.crystalOn.value = cardSaveData.crystalOn;
         this.reflectOn.value = cardSaveData.reflectOn;
+        this.pepperOn.value = cardSaveData.pepperOn;
         
+        //Apply negative effects
+        this.poisonOn.value = cardSaveData.poisonOn;
+        this.snowOn.value = cardSaveData.snowOn;
+        this.fireOn.value = cardSaveData.fireOn;
+        this.curseOn.value = cardSaveData.curseOn;
+        this.hazeOn.value = cardSaveData.hazeOn;
+        this.bombOn.value = cardSaveData.bombOn;
+        this.inkOn.value = cardSaveData.inkOn;
+        this.demonizeOn.value = cardSaveData.demonizeOn;
        
-        //this.pepperOn.Add(cardSaveData.pepperOn); //Do i need to apply it? maybe not actually?
+       
 
         //Apply special effects
         this.hasLifesteal = cardSaveData.hasLifesteal;
@@ -242,6 +253,7 @@ public class UnitCard :CardBase
         }
         if(poisonOn.value > 0)
         {
+            Debug.Log("poison changing");
             TakeDamage(poisonOn.value,true, false); //ignores shield but not crystal
             poisonOn.Add(-1);
         }
@@ -266,16 +278,24 @@ public class UnitCard :CardBase
         //Get whether it's player, then find row and closest enemy in row
         int row = fieldIndex % 2;
 
-        if (hasBuffAttack)
+        if (hasBuffAttack || hazeOn.value > 0) //so target allies 
         {
             if (hasBarrage)
             {
                 DoBarrageAnim();
                 foreach (var ally in Barrage(row, !isPlayer))
                 {
-
-                    DoBuff(ally); //do a different coroutine for this one! (maybe barrage attack specific
-
+                    if(hazeOn.value > 0)
+                    {
+                        hazeOn.value = Math.Clamp(hazeOn.value - 1, 0, 100);
+                        DoAttack(ally);
+                    }
+                    else
+                    {
+                        DoBuff(ally); //do a different coroutine for this one! (maybe barrage attack specific
+                    }
+                   
+                   
                     yield return null;
                 }
             }
@@ -284,8 +304,15 @@ public class UnitCard :CardBase
                 var ally = FindNearestEnemy(row, !isPlayer); //basically get nearest ally -> if at front then do on self
                 if (ally != null)
                 {
-
-                    yield return StartCoroutine(DoBuffAnim(ally));
+                    if(hazeOn.value > 0)
+                    {
+                        yield return StartCoroutine(DoAttackAnim(ally));
+                    }
+                    else
+                    {
+                        yield return StartCoroutine(DoBuffAnim(ally));
+                    }
+                   
                 }
             }
         }
@@ -365,8 +392,7 @@ public class UnitCard :CardBase
             reflectGive, hazeGive, inkGive, bombGive, demonizeGive);
 
         
-        offStats.ChangeOffStats(-curseOn.value); //increase attack by what curse was (- - it)
-        curseOn.Add(-curseOn.value); //remove all curse after using it!
+      
         //special effects
         if (hasLifesteal)
         {
@@ -377,6 +403,13 @@ public class UnitCard :CardBase
         if (reflectValue > 0) //take reflected damage even if kill enemy
         {
             TakeDamage(reflectValue);
+        }
+        //Status Change
+        offStats.ChangeOffStats(-curseOn.value); //increase attack by what curse was (- - it)
+        curseOn.Add(-curseOn.value); //remove all curse after using it!
+        if (hazeOn.value > 0)
+        {
+            hazeOn.value -= 1;
         }
     }
     IEnumerator DoBuffAnim(UnitCard ally)
@@ -406,13 +439,21 @@ public class UnitCard :CardBase
         //-ve
         snowOn.Add(snowAdded);
         poisonOn.Add(poisonAdded);
-        fireOn.Add(fireAdded);
         hazeOn.Add(hazeAdded);
         inkOn.Add(inkAdded);
         bombOn.Add(bombAdded);
         demonizeOn.Add(demonizeAdded);
         curseOn.Add(curseAdded);
-        
+
+        if (hasEverburnResistance )
+        {
+            fireOn.value = Math.Clamp(fireOn.value + fireAdded, 0, 1);
+            fireOn.Add(0);
+        }
+        else
+        {
+            fireOn.Add(fireAdded);
+        }
 
         //+ve
         shieldOn.Add(shieldAdded);
@@ -671,7 +712,7 @@ public class UnitCard :CardBase
 
 
         snowOn.Add(-snowOn.value);
-        fireOn.Add(-fireOn.value);
+        //fireOn.Add(-fireOn.value); //dont remove fire!
         poisonOn.Add(-poisonOn.value);
         curseOn.Add(-curseOn.value);
         hazeOn.Add(-hazeOn.value);

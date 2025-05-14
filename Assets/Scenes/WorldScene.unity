@@ -10250,13 +10250,13 @@ MonoBehaviour:
   - Elite1
   randomizedEncounters: 010000000100000001000000030000000300000002000000020000000200000004000000030000000400000000000000000000000000000000000000
   noogleBeefBuff: 0
-  noogleBeefDebuff: 0
+  noogleBeefDebuff: 1
   noogleChickenBad: 0
   noogleVeggieBad: 0
   noogleBlessing: 0
-  nessyBlessing: 0
-  nessyCurse: 0
-  omnisciJudgement: 1
+  nessyBlessing: 1
+  nessyCurse: 1
+  omnisciJudgement: 0
   omnisciForesight: 0
   omnisciChaos: 0
   omnisciBlessing: 0

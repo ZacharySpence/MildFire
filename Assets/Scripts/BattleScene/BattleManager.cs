@@ -30,10 +30,15 @@ public class BattleManager : MonoBehaviour
     public GameObject cursorOn;
     [SerializeField] int bellTimer, currentBellTimer;
     public bool willStartGame;
+
+    [Header("BattleSpecifics")]
+    public int fireLevel = 0;
+    int roundNumber = 1;
    
     [Header("References")]
     [SerializeField]PlayerHand playerHand;
     [SerializeField]UnitCard emptyCard;
+    [SerializeField] GameObject thanksForPlayingPanel;
 
     [Header("Hud Visuals")]
     [SerializeField] TextMeshPro waveTimerText, redrawBellText;
@@ -61,6 +66,7 @@ public class BattleManager : MonoBehaviour
     {
         if(level == 1)
         {
+           
             Setup();
 
         }
@@ -156,6 +162,7 @@ public class BattleManager : MonoBehaviour
         enemyDeck = DeckHolder.enemyDeck;
         AddInNewEnemies();
         isBusy = false;
+       
 
     }
     void SelectedCardFollowCursor()
@@ -219,6 +226,11 @@ public class BattleManager : MonoBehaviour
         {
             if(card.ID == -1) { continue; } //ignore blanks
             if (card.isDead) { Destroy(card); continue; } //if it doesn't work is cause destroy is removing from list too early!
+            if (roundNumber % 3 == 0) //every 3 rounds, add 1 fire to all cards on field
+            {
+              
+                card.ChangeStatus(fireAdded: 1); //so actually taking them out of combat means safe from fire?
+            }
             yield return StartCoroutine(card.ReduceTimer()); //Do combat one by one
             
         }
@@ -235,6 +247,8 @@ public class BattleManager : MonoBehaviour
                 Victory();
             }
         }
+        roundNumber++;
+        
         StartNewTurn();
     }
 
@@ -374,8 +388,8 @@ public class BattleManager : MonoBehaviour
         Debug.Log("YOU LOST");
         //do global flag resets!?
         WorldPlayer.gameHasStarted = false;
+        thanksForPlayingPanel.SetActive(true);
         
-        SceneManager.LoadScene(0);//back to travelScene
     }
     void Victory()
     {
