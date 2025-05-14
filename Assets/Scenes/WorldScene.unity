@@ -375,6 +375,54 @@ MonoBehaviour:
   saeButton: {fileID: 942673626}
   sabButton: {fileID: 852853124}
   sdButton: {fileID: 0}
+--- !u!1 &7865759
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7865761}
+  - component: {fileID: 7865760}
+  m_Layer: 0
+  m_Name: CameraScroller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &7865760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7865759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75f3b739bf054c349a62d839342360a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  yMin: 0
+  yMax: 275
+  edgeThreshold: 50
+  scrollSpeed: 200
+--- !u!4 &7865761
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7865759}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.8084002, y: 5.9358544, z: 0.0033891443}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8036684
 GameObject:
   m_ObjectHideFlags: 0
@@ -10254,6 +10302,9 @@ MonoBehaviour:
   noogleChickenBad: 0
   noogleVeggieBad: 0
   noogleBlessing: 0
+  noogleCurse: 0
+  noogleVeggieGood: 0
+  noogleChickenGood: 0
   nessyBlessing: 1
   nessyCurse: 1
   omnisciJudgement: 0
@@ -24795,3 +24846,4 @@ SceneRoots:
   - {fileID: 7916212201332212283}
   - {fileID: 882930098}
   - {fileID: 609089625}
+  - {fileID: 7865761}
