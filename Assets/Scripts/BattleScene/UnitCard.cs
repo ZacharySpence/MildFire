@@ -25,7 +25,7 @@ public class UnitCard :CardBase
     [SerializeField] public int maxAtkTimer, maxHealth;
     //possible add in 'start' with so has start values separate to On which is in-game!
     [SerializeField] StatusEffect shieldOn,snowOn, fireOn, crystalOn, poisonOn, pepperOn, curseOn,reflectOn, hazeOn,bombOn,inkOn,demonizeOn;
-    public bool hasEverburnResistance;                                                                                                        
+    public bool hasEverburnResistance, hasPoisonResistance;                                                                                                        
    
     [Header("Stat visuals")]
     [SerializeField] TextMeshProUGUI cAttackTimerText;
@@ -103,6 +103,7 @@ public class UnitCard :CardBase
             spawnsOnDeath = this.spawnsOnDeath,
             hasSelfTargetPosEffects = this.hasSelfTargetPosEffects,
             hasEverburnResistance = this.hasEverburnResistance,
+            hasPoisonResistance = this.hasPoisonResistance,
             hasBarrage = this.hasBarrage
         };
 
@@ -163,6 +164,7 @@ public class UnitCard :CardBase
         this.hasSpawnOnDeath = cardSaveData.hasSpawnOnDeath;
         this.spawnsOnDeath = cardSaveData.spawnsOnDeath;
         this.hasEverburnResistance = cardSaveData.hasEverburnResistance;
+        this.hasPoisonResistance = cardSaveData.hasPoisonResistance;
         this.hasBarrage = cardSaveData.hasBarrage;
 
         //Setup rest
@@ -437,14 +439,22 @@ public class UnitCard :CardBase
     {
        
         //-ve
-        snowOn.Add(snowAdded);
-        poisonOn.Add(poisonAdded);
+        snowOn.Add(snowAdded);     
         hazeOn.Add(hazeAdded);
         inkOn.Add(inkAdded);
         bombOn.Add(bombAdded);
         demonizeOn.Add(demonizeAdded);
         curseOn.Add(curseAdded);
 
+        if (hasPoisonResistance)
+        {
+            poisonOn.value = Math.Clamp(poisonOn.value + poisonAdded, 0, 1);
+            poisonOn.Add(0);
+        }
+        else
+        {
+            poisonOn.Add(poisonAdded);
+        }
         if (hasEverburnResistance )
         {
             fireOn.value = Math.Clamp(fireOn.value + fireAdded, 0, 1);

@@ -66,6 +66,7 @@ public class NoogleShop : MonoBehaviour
             {
                 companion.hasDied = false;
             }
+            WorldManager.Instance.noogleChickenGood = true;
             chickenPosOutcome.SetActive(true);
            
 
@@ -97,32 +98,43 @@ public class NoogleShop : MonoBehaviour
             {
                 companion.maxHealth += 1;
             }
-            vegPosOutcome.SetActive(true);
-            
+            WorldManager.Instance.noogleVeggieGood = true;
+            vegPosOutcome.SetActive(true);           
         }
         else
         {
-            //nothing
-            vegNegOutcome.SetActive(true);
-             foreach(var companion in companions)
+            foreach(var companion in companions)
             {
                 companion.maxHealth -= 1;
             }
-           
+            vegNegOutcome.SetActive(true);
             WorldManager.Instance.noogleVeggieBad = true;
         }
         //50% +1 health max
-        //50% -1 health max
-
-        
+        //50% -1 health max     
     }
 
     public void Continue()
     {
         //got all 3 plagues (poison, death, famine)
-        if(WorldManager.Instance.noogleBeefDebuff && WorldManager.Instance.noogleChickenBad && WorldManager.Instance.noogleVeggieBad)
+        if(!WorldManager.Instance.noogleBlessing && 
+            WorldManager.Instance.noogleBeefDebuff && WorldManager.Instance.noogleChickenBad && WorldManager.Instance.noogleVeggieBad)
         {
             WorldManager.Instance.noogleBlessing = true;
+            foreach( var card in IDLookupTable.instance.playerDeck.OfType<UnitCard>())
+            {
+                card.hasPoisonResistance = true;
+            }
+        }
+        else if(WorldManager.Instance.noogleCurse &&
+            WorldManager.Instance.noogleBeefBuff && WorldManager.Instance.noogleChickenGood && WorldManager.Instance.noogleVeggieGood)
+        {
+            WorldManager.Instance.noogleCurse = true; //also perma gives poison debuff!
+            foreach(var card in IDLookupTable.instance.playerDeck.OfType<UnitCard>())
+            {
+                card.poisonGive += 1; //everything gives poison now
+                
+            }
         }
         GameObject buttonGO = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject;
 

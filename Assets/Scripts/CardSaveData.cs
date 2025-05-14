@@ -69,5 +69,6 @@ public class CardSaveData
     public List<int> spawnsOnDeath;
     public bool hasSelfTargetPosEffects;
     public bool hasEverburnResistance;
+    public bool hasPoisonResistance;
     public bool hasBarrage;
 }

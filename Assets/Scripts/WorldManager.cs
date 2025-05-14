@@ -30,7 +30,7 @@ public class WorldManager : MonoBehaviour
     [SerializeField] List<EncounterType> randomizedEncounters;
 
     [Header("WorldEffects")]
-    public bool noogleBeefBuff, noogleBeefDebuff, noogleChickenBad, noogleVeggieBad, noogleBlessing, 
+    public bool noogleBeefBuff, noogleBeefDebuff, noogleChickenBad, noogleVeggieBad, noogleBlessing, noogleCurse, noogleVeggieGood, noogleChickenGood,
         nessyBlessing, nessyCurse, 
         omnisciJudgement,omnisciForesight,omnisciChaos,omnisciBlessing;
     public int skullAmount;

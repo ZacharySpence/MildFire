@@ -43,7 +43,7 @@ public class PlayerHand : MonoBehaviour
     {
         List<CardBase> tempDeck = new List<CardBase>();
         bool crystalBuff = WorldManager.Instance.noogleBeefBuff;
-        bool poisonDebuff = WorldManager.Instance.noogleBeefDebuff;
+        bool poisonDebuff = WorldManager.Instance.noogleBeefDebuff || WorldManager.Instance.noogleCurse;
         foreach (var cardData in IDLookupTable.instance.playerDeck.ToList()) //so take copy so can change the card data!
         {
             
