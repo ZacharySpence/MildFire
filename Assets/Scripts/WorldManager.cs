@@ -14,7 +14,7 @@ public class WorldManager : MonoBehaviour
     [Header("Stays on load")]
     int currentNodeID;
     public Sprite battleSprite, eventSprite, campSprite, eliteSprite, shopSprite, relicSprite, bossSprite;   
-    Dictionary<int, (EncounterType encounter, string specifics)> nodeData = new Dictionary<int, (EncounterType encounter,string specifics)>();
+    Dictionary<int, (EncounterType encounter, EncounterData eData)> nodeData = new Dictionary<int, (EncounterType encounter,EncounterData eData)>();
 
     [Header("Resets on load")]
     List<Node> nodeList = new List<Node>(); //list of all nodes
@@ -26,7 +26,7 @@ public class WorldManager : MonoBehaviour
     
 
     [Header("Randomizer")]
-    [SerializeField] List<string> battleList, randomList, eliteList;
+    [SerializeField] List<EncounterData> battleList, randomList, eliteList;
     [SerializeField] List<EncounterType> randomizedEncounters;
 
     [Header("WorldEffects")]
@@ -99,8 +99,11 @@ public class WorldManager : MonoBehaviour
     }
     public void SaveNode(Node node)
     {
-        var nodeTuple = (encounter: node.encounter, specifics: node.specifics);
+        var nodeTuple = (encounter: node.encounter, eData: 
+            new EncounterData { specific = node.specifics,
+                                specificSprite = node.specificSprite }) ;
         nodeData[node.ID] = nodeTuple;
+        Debug.Log("Data:"+nodeData[node.ID].eData.specific);
     }
     public void LoadNodes()
     {
@@ -118,7 +121,9 @@ public class WorldManager : MonoBehaviour
     public void LoadNode(Node node)
     {
         var data = nodeData[node.ID];
-        node.specifics = data.specifics;
+        Debug.Log("Loaded data:" + data.eData.specific);
+        node.specifics = data.eData.specific;
+        node.specificSprite = data.eData.specificSprite;
         node.encounter = data.encounter;
         node.Setup();
     }
@@ -191,11 +196,11 @@ public class WorldManager : MonoBehaviour
 
     public void RandomiseNodes()
     {
-        List<string> currentBattleList = new List<string>(battleList);
-        List<string> currentRandomList = new List<string>(randomList);
-        List<string> currentEliteList = new List<string>(eliteList);
+        List<EncounterData> currentBattleList = new List<EncounterData>(battleList);
+        List<EncounterData> currentRandomList = new List<EncounterData>(randomList);
+        List<EncounterData> currentEliteList = new List<EncounterData>(eliteList);
         List<EncounterType> currentRandomizedEncounters = new List<EncounterType>(randomizedEncounters);
-        SaveNodes(); //save after making them!
+       
         foreach(var node in nodeList)
         {
             if (node.randomize)
@@ -213,8 +218,10 @@ public class WorldManager : MonoBehaviour
                     GetRandomElement(currentRandomList, node);
                     break;
                 case EncounterType.Camp:
+                    //don't need this
                     break;
                 case EncounterType.Shop:
+                    //don't need this
                     break;
                 case EncounterType.Relic:
                     //Get from relicList and add the relic into specifics?
@@ -223,7 +230,7 @@ public class WorldManager : MonoBehaviour
                      GetRandomElement(currentEliteList,node);
                     break;
             }
-           
+            
             node.Setup();
             foreach (var linked in node.linkedNodes)
             {
@@ -232,22 +239,45 @@ public class WorldManager : MonoBehaviour
                     linked.GetComponent<RectTransform>());
             }
         }
+        SaveNodes(); //save after making them!
 
     }
     
-    void GetRandomElement(List<string> currentList, Node node)
+    void GetRandomElement(List<EncounterData> currentList, Node node)
     {
         if(currentList.Count <= 0)
         {
             Debug.Log("cant get an element for that node!- need more encounters!!");
             return;
         }
-        string specific = currentList[Random.Range(0, currentList.Count)];
-        currentList.Remove(specific);
-        node.specifics = specific; 
+        EncounterData eData= currentList[Random.Range(0, currentList.Count)];
+        currentList.Remove(eData);
+        node.specifics = eData.specific;
+        node.specificSprite = eData.specificSprite;
     }
 
-
+    //-FOR EVENTS
+   public void GetOmnisciJudgment()
+    {
+        omnisciJudgement = true;
+        foreach(var node in nodeList)
+        {
+            if(node.encounter == EncounterType.Event)
+            {
+                node.UpdateSprite();
+            }
+        }
+    }
+    public void GetOmnisciForesight()
+    {
+        omnisciForesight = true;
+        foreach(var node in nodeList){
+            if(node.encounter == EncounterType.Battle || node.encounter == EncounterType.Elite)
+            {
+                node.UpdateSprite();
+            }
+        }
+    }
 
 }
 
@@ -263,4 +293,11 @@ public enum EncounterType
     Relic,
     Boss,
 
+}
+
+[Serializable]
+public class EncounterData
+{
+    public string specific;
+    public Sprite specificSprite;
 }

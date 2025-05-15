@@ -10267,37 +10267,64 @@ MonoBehaviour:
   bossSprite: {fileID: 0}
   currentNode: {fileID: 0}
   battleList:
-  - BerryBunch
-  - Bombas
-  - Inkdras
-  - Inkdras
-  - Inkdras
-  - Inkdras
-  - Inkdras
-  - Inkdras
-  - Inkdras
-  - Inkdras
-  - Inkdras
-  - Inkdras
+  - specific: Inkdras
+    specificSprite: {fileID: 21300000, guid: 35c275d6f06b7064995a18e4895a3dd3, type: 3}
+  - specific: BerryBunch
+    specificSprite: {fileID: 21300000, guid: 963c24fd5dc135c46b46fa37033b25f7, type: 3}
+  - specific: Bombas
+    specificSprite: {fileID: 21300000, guid: 3b6f9a56bfb70a948934716fe0521e38, type: 3}
+  - specific: Inkdras
+    specificSprite: {fileID: 21300000, guid: 3b6f9a56bfb70a948934716fe0521e38, type: 3}
+  - specific: Inkdras
+    specificSprite: {fileID: 21300000, guid: 3b6f9a56bfb70a948934716fe0521e38, type: 3}
+  - specific: Inkdras
+    specificSprite: {fileID: 21300000, guid: 3b6f9a56bfb70a948934716fe0521e38, type: 3}
+  - specific: Inkdras
+    specificSprite: {fileID: 21300000, guid: 3b6f9a56bfb70a948934716fe0521e38, type: 3}
+  - specific: Inkdras
+    specificSprite: {fileID: 21300000, guid: 3b6f9a56bfb70a948934716fe0521e38, type: 3}
+  - specific: Inkdras
+    specificSprite: {fileID: 21300000, guid: 3b6f9a56bfb70a948934716fe0521e38, type: 3}
+  - specific: Inkdras
+    specificSprite: {fileID: 21300000, guid: 3b6f9a56bfb70a948934716fe0521e38, type: 3}
+  - specific: Inkdras
+    specificSprite: {fileID: 21300000, guid: 3b6f9a56bfb70a948934716fe0521e38, type: 3}
+  - specific: Inkdras
+    specificSprite: {fileID: 21300000, guid: 3b6f9a56bfb70a948934716fe0521e38, type: 3}
   randomList:
-  - NoogleShop
-  - NessyNighthome
-  - Omniscitent
-  - SkullGondola
-  - Shop
-  - FriendlyFeeder
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - specific: NessyNighthome
+    specificSprite: {fileID: 998955599, guid: fe0d724d8ad7c954483dde0c775c9aa9, type: 3}
+  - specific: SkullGondola
+    specificSprite: {fileID: 1065452535, guid: fe0d724d8ad7c954483dde0c775c9aa9, type: 3}
+  - specific: Omniscitent
+    specificSprite: {fileID: -803493180, guid: fe0d724d8ad7c954483dde0c775c9aa9, type: 3}
+  - specific: NoogleShop
+    specificSprite: {fileID: 2018631260, guid: fe0d724d8ad7c954483dde0c775c9aa9, type: 3}
+  - specific: NoogleShop
+    specificSprite: {fileID: 2018631260, guid: fe0d724d8ad7c954483dde0c775c9aa9, type: 3}
+  - specific: NoogleShop
+    specificSprite: {fileID: 2018631260, guid: fe0d724d8ad7c954483dde0c775c9aa9, type: 3}
+  - specific: NoogleShop
+    specificSprite: {fileID: 2018631260, guid: fe0d724d8ad7c954483dde0c775c9aa9, type: 3}
+  - specific: NoogleShop
+    specificSprite: {fileID: 2018631260, guid: fe0d724d8ad7c954483dde0c775c9aa9, type: 3}
+  - specific: NoogleShop
+    specificSprite: {fileID: 2018631260, guid: fe0d724d8ad7c954483dde0c775c9aa9, type: 3}
+  - specific: NoogleShop
+    specificSprite: {fileID: 2018631260, guid: fe0d724d8ad7c954483dde0c775c9aa9, type: 3}
+  - specific: NoogleShop
+    specificSprite: {fileID: 2018631260, guid: fe0d724d8ad7c954483dde0c775c9aa9, type: 3}
+  - specific: NoogleShop
+    specificSprite: {fileID: 2018631260, guid: fe0d724d8ad7c954483dde0c775c9aa9, type: 3}
   eliteList:
-  - Elite1
-  - Elite1
-  - Elite1
+  - specific: Inkdras
+    specificSprite: {fileID: 526041891, guid: fe0d724d8ad7c954483dde0c775c9aa9, type: 3}
+  - specific: Inkdras
+    specificSprite: {fileID: 526041891, guid: fe0d724d8ad7c954483dde0c775c9aa9, type: 3}
+  - specific: Inkdras
+    specificSprite: {fileID: 526041891, guid: fe0d724d8ad7c954483dde0c775c9aa9, type: 3}
   randomizedEncounters: 010000000100000001000000030000000300000002000000020000000200000004000000030000000400000000000000000000000000000000000000
-  noogleBeefBuff: 0
+  noogleBeefBuff: 1
   noogleBeefDebuff: 1
   noogleChickenBad: 0
   noogleVeggieBad: 0
@@ -10307,9 +10334,9 @@ MonoBehaviour:
   noogleChickenGood: 0
   nessyBlessing: 1
   nessyCurse: 1
-  omnisciJudgement: 0
-  omnisciForesight: 0
-  omnisciChaos: 0
+  omnisciJudgement: 1
+  omnisciForesight: 1
+  omnisciChaos: 1
   omnisciBlessing: 0
   skullAmount: 5
 --- !u!4 &882930098
@@ -15788,7 +15815,7 @@ MonoBehaviour:
   chickenNegOutcome: {fileID: 1139326410}
   vegPosOutcome: {fileID: 525656415}
   vegNegOutcome: {fileID: 2032878841}
-  chickenButton: {fileID: 0}
+  chickenButton: {fileID: 1092395179}
 --- !u!1 &1303168232
 GameObject:
   m_ObjectHideFlags: 0
@@ -24577,6 +24604,11 @@ MonoBehaviour:
   - {fileID: 891776198116206175, guid: ca4fdb34509c5ac42a9761600f855d5d, type: 3}
   - {fileID: 891776198116206175, guid: 1867670fb020bd543b0936e4439da4e5, type: 3}
   - {fileID: 891776198116206175, guid: 6c39f1b51bee0e34f85716405e01b275, type: 3}
+  - {fileID: 891776198116206175, guid: c6fbb1af290de1f43a3feb96705a4967, type: 3}
+  - {fileID: 891776198116206175, guid: addf7a69e1e5675488210cf6cb17c7a3, type: 3}
+  - {fileID: 891776198116206175, guid: 3f8b3af7d2bdd40448e20c833a9f5cc1, type: 3}
+  - {fileID: 891776198116206175, guid: ec5e5ac46293dc348b7451e756c9efb0, type: 3}
+  - {fileID: 891776198116206175, guid: 263739682f0dd4f4496050a6fb83095a, type: 3}
   playerDeck: []
   charmsInPlayerStorage: []
   skullCharmList:

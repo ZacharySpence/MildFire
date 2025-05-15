@@ -90,7 +90,7 @@ public class UseCard : CardBase
                 Debug.Log(card.name);
                 if(card != null)
                 {
-                     Use(card);
+                      Use(card);
                 }
             }
         }

@@ -36,6 +36,9 @@ public class UnitCard :CardBase
     [Header("Animators")]
     [SerializeField] Animator timerAnimator;
     [SerializeField] AnimatorController timerController;
+
+    [Header("Flags")]
+    bool hideTimer;
     
     protected override void Awake()
     {
@@ -178,6 +181,7 @@ public class UnitCard :CardBase
         ChangeStatus();
         CreateCardDescription();
 
+        hideTimer = WorldManager.Instance.omnisciBlessing ? false : WorldManager.Instance.omnisciForesight;
 
 
     }
@@ -196,6 +200,10 @@ public class UnitCard :CardBase
     //Card Auto logic methods
     public IEnumerator ReduceTimer()
     {
+        if(fieldIndex < 6)
+        {
+            hideTimer = false; //so never hide timer for player! Or maybe do who knows
+        }
         hasDoneTimer = false;
         //ANIMATIONS HERE!
         if(snowOn.value > 0)
@@ -230,17 +238,24 @@ public class UnitCard :CardBase
         }
         else if(currentAtkTimer == 1)
         {
-            //colour it red
-            cAttackTimerText.transform.parent.GetComponent<Image>().color = Color.red;
-            timerAnimator.SetBool("atOne", true);
+            //colour it red and animate to go faster
+            if (!hideTimer)
+            {
+                cAttackTimerText.transform.parent.GetComponent<Image>().color = Color.red;
+                timerAnimator.SetBool("atOne", true);
+            }
+            
             BattleManager.Instance.cardFullyFinished = true;
         }
         else
         {
             BattleManager.Instance.cardFullyFinished = true; //always gets to here or the == 1 thanks to the recursive the top!
         }
-        cAttackTimerText.text = $"{currentAtkTimer}x{offStats.currentNumOfAttacks}";
-        //Have certain status effects change here (the ones that update after attacking if there is)
+        if (!hideTimer)
+        {
+            cAttackTimerText.text = $"{currentAtkTimer}x{offStats.currentNumOfAttacks}";
+        }
+       
     }
   
 

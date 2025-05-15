@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ViewOnClick : MonoBehaviour
 {
-    [SerializeField] bool isDiscard, isDrawDeck;
+    [SerializeField] bool isDiscard, isDrawDeck,isConsume;
     public void OnClick()
     {
         if (isDiscard)
@@ -14,6 +14,10 @@ public class ViewOnClick : MonoBehaviour
         else if (isDrawDeck)
         {
             PlayerHand.Instance.ViewDeck();
+        }
+        else if (isConsume)
+        {
+            PlayerHand.Instance.ViewConsume();
         }
         else
         {

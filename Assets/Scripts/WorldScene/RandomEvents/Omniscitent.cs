@@ -25,7 +25,8 @@ public class Omniscitent : MonoBehaviour
     public void SeeAllEvents()
     {
         //Go through each node in worldManager nodeList and find ones with  EncounterType.Event then change sprite to actual based on event specific
-        WorldManager.Instance.omnisciJudgement = true;
+        
+        WorldManager.Instance.GetOmnisciJudgment();
         seeAllEventsOutcome.SetActive(true);
     }
 
@@ -33,7 +34,8 @@ public class Omniscitent : MonoBehaviour
     {
         //Go through each node in worldManager nodeList and find ones with  EncounterType.Battle or Elite then change sprite to actual based on event specific
 
-        WorldManager.Instance.omnisciForesight = true;
+       
+        WorldManager.Instance.GetOmnisciForesight();
         seeAllBattlesOutcome.SetActive(true);
     }
     public void SeeDeck()

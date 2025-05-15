@@ -24,6 +24,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField] public List<EnemyCards> enemyDeck = new List<EnemyCards>(); //because dont just take x amount, try take whole list, remaining goes to next list
     [SerializeField] int waveTimer, currentWaveTimer;
     bool bossHasSpawned;
+    bool hasOmnisciForesight;
 
     [Header("PlayerSpecifics")]
     public CardBase selectedCard;
@@ -44,7 +45,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField] TextMeshPro waveTimerText, redrawBellText;
 
     [Header("UI Visuals")]
-   public bool discardViewing, deckViewing;
+   public bool discardViewing, deckViewing,consumeViewing;
     public GameObject viewPanel;
     public UnitCard viewCard, uiViewCard;
 
@@ -104,6 +105,11 @@ public class BattleManager : MonoBehaviour
                     discardViewing = false;
                     playerHand.StopViewingDiscard();
                 }
+                else if (consumeViewing)
+                {
+                    consumeViewing = false;
+                    playerHand.StopViewingConsume();    
+                }
                 else
                 {
                     OnDeselect(true);
@@ -162,7 +168,6 @@ public class BattleManager : MonoBehaviour
         enemyDeck = DeckHolder.enemyDeck;
         AddInNewEnemies();
         isBusy = false;
-       
 
     }
     void SelectedCardFollowCursor()
@@ -556,6 +561,9 @@ public class BattleManager : MonoBehaviour
                 //Debug.Log("try using card in empty spot (shouldn't work!");
                
                 break;
+            default:
+                Debug.Log("Trying to use card on something that cant be used on!");
+                break;
 
         }
         if (hasPlayed && isGameStarted)
@@ -598,6 +606,9 @@ public class BattleManager : MonoBehaviour
             case "discard":
                 playerHand.ViewDiscard();
                // Debug.Log("playerHand discard");
+                break;
+            case "consume":
+                playerHand.ViewConsume();
                 break;
             
         }

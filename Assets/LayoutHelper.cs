@@ -13,7 +13,7 @@ public class LayoutHelper : MonoBehaviour
         {
             int row = i / columns;
             int col = i % columns;
-            Vector2 pos = startPos + new Vector2(col * cellSize.x, row * cellSize.y);
+            Vector2 pos = startPos + new Vector2(col * cellSize.x, -row * cellSize.y);
             transform.GetChild(i).position = pos;
         }
     }

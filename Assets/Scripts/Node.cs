@@ -12,7 +12,7 @@ public class Node : MonoBehaviour
     public List<Node> linkedNodes;
     public int ID;
     public bool randomize;
-
+    public Sprite specificSprite;
 
    public void Setup()
     {
@@ -20,11 +20,26 @@ public class Node : MonoBehaviour
         {
             case EncounterType.Battle:
                 button.onClick.AddListener(() => OnBattleClick());
-
+                if(WorldManager.Instance.omnisciForesight)
+                {
+                    UpdateSprite();
+                }
+                else
+                {
+                    GetComponent<Image>().sprite = WorldManager.Instance.battleSprite;
+                }
+                
                 break;
             case EncounterType.Event:
                 button.onClick.AddListener(() => OnEventClick());
-                GetComponent<Image>().sprite = WorldManager.Instance.eventSprite;
+                if (WorldManager.Instance.omnisciJudgement)
+                {
+                    UpdateSprite();
+                }
+                else
+                {
+                    GetComponent<Image>().sprite = WorldManager.Instance.eventSprite;
+                }                
                 break;
             case EncounterType.Camp:
                 button.onClick.AddListener(() => OnCampClick());
@@ -40,7 +55,15 @@ public class Node : MonoBehaviour
                 break;
             case EncounterType.Elite:
                 button.onClick.AddListener(() => OnEliteBattleClick());
-                GetComponent<Image>().sprite = WorldManager.Instance.eliteSprite;
+                if (WorldManager.Instance.omnisciForesight)
+                {
+                    UpdateSprite();
+                }
+                else
+                {
+                    GetComponent<Image>().sprite = WorldManager.Instance.eliteSprite;
+                }
+                
                 break;
             case EncounterType.Boss:
                 button.onClick.AddListener(() => OnBossBattleClick());
@@ -49,8 +72,13 @@ public class Node : MonoBehaviour
            
         }
        
+       
     }
-
+    
+    public void UpdateSprite() 
+    {
+        GetComponent<Image>().sprite = specificSprite;
+    } 
    
     public void OnBossBattleClick()
     {

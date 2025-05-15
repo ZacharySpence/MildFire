@@ -27,9 +27,9 @@ public class NoogleShop : MonoBehaviour
             chickenButton.interactable = true;
         }
 
-        if (WorldManager.Instance.omnisciJudgement)
+        if (!WorldManager.Instance.omnisciBlessing && WorldManager.Instance.omnisciJudgement)
         {
-            //flip the chances!
+            //flip the chances but only if not blessed!
             posBeefChance = 30;
             posChickenChance = 20;
             posVeggieChance = 50;

@@ -12,6 +12,7 @@ public class PlayerHand : MonoBehaviour
     Queue<CardBase> deck;
     [SerializeField] List<CardBase> cardPool = new List<CardBase>(); //cards should only be in card pool IF been discarded and haven't yet been drawn again
     [SerializeField] List<CardBase> discard = new List<CardBase>();
+    [SerializeField] List<CardBase> consume = new List<CardBase>();
     [SerializeField] int cardDrawAmount;
 
     [SerializeField] CardBase baseUnitCard, baseUseCard, baseUseOffCard;
@@ -19,6 +20,8 @@ public class PlayerHand : MonoBehaviour
     //cards have tags
 
     [SerializeField] float spacing = 2.1f;
+    public bool hasBadChaos,hasGoodChaos;
+    public int chanceForConsume;
     [Header("Flags")]
     
     bool setupComplete = false;
@@ -41,6 +44,20 @@ public class PlayerHand : MonoBehaviour
 
     void Setup()
     {
+        
+        hasGoodChaos = WorldManager.Instance.omnisciBlessing;
+        if (hasGoodChaos)
+        {
+            hasBadChaos = false;
+        }
+        else
+        {
+            hasBadChaos = WorldManager.Instance.omnisciChaos;
+            if (WorldManager.Instance.omnisciJudgement && hasGoodChaos)
+            {
+                chanceForConsume = 100 - chanceForConsume; //flip it round
+            }
+        }
         List<CardBase> tempDeck = new List<CardBase>();
         bool crystalBuff = WorldManager.Instance.noogleBeefBuff;
         bool poisonDebuff = WorldManager.Instance.noogleBeefDebuff || WorldManager.Instance.noogleCurse;
@@ -89,12 +106,12 @@ public class PlayerHand : MonoBehaviour
                 }
                 else
                 {
-                    AddToDiscard(card, true);
+                    AddToDiscard(card, true); //with chaos chance to consume at start too! (i like it!)
                 }
             }
             else
             {
-                AddToDiscard(card, true);
+                AddToDiscard(card, true); //with chaos chance to consume at start too! (i like it!)
             }
         }
         //add the rest to a deck
@@ -125,14 +142,23 @@ public class PlayerHand : MonoBehaviour
         {
             copy.Add(card);
         }
-        // Shuffle using Fisher-Yates
-        for (int i = copy.Count - 1; i > 0; i--)
+        
+        if (hasBadChaos || hasGoodChaos)
         {
-            int j = Random.Range(0, i + 1);
-            var temp = copy[i];
-            copy[i] = copy[j];
-            copy[j] = temp;
+            //keep in order if chaotic either way
         }
+        else
+        {
+            // Shuffle using Fisher-Yates
+            for (int i = copy.Count - 1; i > 0; i--)
+            {
+                int j = Random.Range(0, i + 1);
+                var temp = copy[i];
+                copy[i] = copy[j];
+                copy[j] = temp;
+            }
+        }
+        
 
         foreach (var card in copy)
         {
@@ -177,9 +203,36 @@ public class PlayerHand : MonoBehaviour
         }
        
     }
+    public void ViewConsume()
+    {
+        BattleManager.Instance.consumeViewing = true;
+        GameObject viewPanel = BattleManager.Instance.viewPanel;
+        viewPanel.SetActive(true);
+        foreach (var card in consume)
+        {
+
+            card.gameObject.SetActive(true);
+            card.transform.parent = viewPanel.transform;
+        }
+        viewPanel.GetComponent<LayoutHelper>().LayoutCards();
+    }
+    public void StopViewingConsume()
+    {
+        foreach(var card in consume)
+        {
+            card.gameObject.SetActive(false);
+            card.transform.parent = null;
+        }
+    }
 
     public void AddToDiscard(CardBase card, bool inHand) //only things that aren't destroyed get to discard
     {
+        if (hasBadChaos && Random.Range(1,100) < chanceForConsume)
+        {
+            //only consume card if within chance and got bad chaos 
+            AddToConsume(card, inHand);
+            return;
+        }
         card.GetComponent<Collider2D>().enabled = true; //re-enable the collider!
         cardPool.Add(card); //add to card pool
         discard.Add(card); //add also to discard
@@ -190,6 +243,17 @@ public class PlayerHand : MonoBehaviour
             RemoveCardFromHand(card);
         }
         
+    }
+    public void AddToConsume(CardBase card, bool inHand)
+    {
+        //not readded to cardpool so gone forever!
+        consume.Add(card);
+        card.GetComponent<Collider2D>().enabled = true;
+        card.gameObject.SetActive(false);
+        if (inHand)
+        {
+            RemoveCardFromHand(card);
+        }
     }
     public void PressBell()
     {
