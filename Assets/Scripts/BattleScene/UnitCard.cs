@@ -507,7 +507,7 @@ public class UnitCard :CardBase
             if(fireRemaining > 0) //2.1 if more fire than snow overall then
             {
                 //remove all current snow and add fire
-                snowOn.Add(-snowOn.value);
+                
                 if (hasEverburnResistance)
                 {
                     fireOn.value = Math.Clamp(fireOn.value + fireAdded, 0, 1);
@@ -518,6 +518,7 @@ public class UnitCard :CardBase
 
                     fireOn.Add(fireAdded - (snowOn.value+snowAdded));
                 }
+                snowOn.Add(-snowOn.value);
             }
             else //2.2 more snow than fire
             {
