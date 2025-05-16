@@ -10273,7 +10273,7 @@ MonoBehaviour:
     specificSprite: {fileID: 21300000, guid: 963c24fd5dc135c46b46fa37033b25f7, type: 3}
   - specific: Bombas
     specificSprite: {fileID: 21300000, guid: 3b6f9a56bfb70a948934716fe0521e38, type: 3}
-  - specific: Inkdras
+  - specific: Tester
     specificSprite: {fileID: 21300000, guid: 3b6f9a56bfb70a948934716fe0521e38, type: 3}
   - specific: Inkdras
     specificSprite: {fileID: 21300000, guid: 3b6f9a56bfb70a948934716fe0521e38, type: 3}
@@ -10324,19 +10324,19 @@ MonoBehaviour:
   - specific: Inkdras
     specificSprite: {fileID: 526041891, guid: fe0d724d8ad7c954483dde0c775c9aa9, type: 3}
   randomizedEncounters: 010000000100000001000000030000000300000002000000020000000200000004000000030000000400000000000000000000000000000000000000
-  noogleBeefBuff: 1
-  noogleBeefDebuff: 1
+  noogleBeefBuff: 0
+  noogleBeefDebuff: 0
   noogleChickenBad: 0
   noogleVeggieBad: 0
   noogleBlessing: 0
   noogleCurse: 0
   noogleVeggieGood: 0
   noogleChickenGood: 0
-  nessyBlessing: 1
-  nessyCurse: 1
-  omnisciJudgement: 1
-  omnisciForesight: 1
-  omnisciChaos: 1
+  nessyBlessing: 0
+  nessyCurse: 0
+  omnisciJudgement: 0
+  omnisciForesight: 0
+  omnisciChaos: 0
   omnisciBlessing: 0
   skullAmount: 5
 --- !u!4 &882930098
@@ -24584,6 +24584,8 @@ MonoBehaviour:
   - {fileID: 7998208886004615171, guid: 7c773c2ac9fb1704e8b5c78e53d5046e, type: 3}
   - {fileID: 7998208886004615171, guid: 99927b1d7f648344e9e57ed08f68d74f, type: 3}
   - {fileID: 772759497930617427, guid: 190dbeea61d6d7747ab33e3aaa110016, type: 3}
+  - {fileID: 7998208886004615171, guid: 142e3acb56292e0478ac41c390dd0cd0, type: 3}
+  - {fileID: 7998208886004615171, guid: 6b31f05eaa9bcef4e9adf8d5fabe69ed, type: 3}
   useCards:
   - {fileID: 1049397440650188361, guid: b25f5a95696863f46b289261e18f6cb3, type: 3}
   - {fileID: 8629209325369446563, guid: 797c9b827a94e7c42b502759ef6e2e96, type: 3}
@@ -24597,6 +24599,21 @@ MonoBehaviour:
   - {fileID: 8629209325369446563, guid: 201125e1a4b85564399cd5c0d9f784fa, type: 3}
   - {fileID: 8629209325369446563, guid: 27d0e5c9693977f439cda628de04faa1, type: 3}
   - {fileID: 8629209325369446563, guid: 8af71b73c1cc7314f97f14ddee9b41e3, type: 3}
+  - {fileID: 1049397440650188361, guid: 0632676ad103f75438dacdc5ef81eb4e, type: 3}
+  - {fileID: 1049397440650188361, guid: 3f5db69fc8160fb46aac24eb2ddbe59b, type: 3}
+  - {fileID: 1049397440650188361, guid: bf1e14cc275f129478892cee0315cb2c, type: 3}
+  - {fileID: 1049397440650188361, guid: 1c690db2e1d5deb4e8c5406c011863eb, type: 3}
+  - {fileID: 1049397440650188361, guid: d39e85aaa33617247848981e800160bf, type: 3}
+  - {fileID: 1049397440650188361, guid: 453256af81c8bea4295552ffc37c3fc2, type: 3}
+  - {fileID: 1049397440650188361, guid: cb2695b45938b6f4bb322cacb02d4a5c, type: 3}
+  - {fileID: 1049397440650188361, guid: 5841e12ce54f5da4a9ec6687dbabb114, type: 3}
+  - {fileID: 1049397440650188361, guid: f6f917acc0ba2294dae061b96fb31cbb, type: 3}
+  - {fileID: 1049397440650188361, guid: f027a0b02526b334ba83fd853f7cc4c7, type: 3}
+  - {fileID: 1049397440650188361, guid: 97ccf945d330d1c48945d28cd091a20c, type: 3}
+  - {fileID: 1049397440650188361, guid: 0fa8191b9494815429592684ebb0ee56, type: 3}
+  - {fileID: 1049397440650188361, guid: 42b8bd06c14d536449e725d43c34b53a, type: 3}
+  - {fileID: 1049397440650188361, guid: 74e4afb98a64602498eeedc2d245a31b, type: 3}
+  - {fileID: 1049397440650188361, guid: 00772b44a0d1e134399c98572e6650b8, type: 3}
   enemyCards:
   - {fileID: 8858037200905666529, guid: 10755d9a9ebcd954fb2bd63bd5242e1e, type: 3}
   - {fileID: 772759497930617427, guid: 2873e3aa2da19ee44a9aa8e13b4cde50, type: 3}
@@ -24609,6 +24626,7 @@ MonoBehaviour:
   - {fileID: 891776198116206175, guid: 3f8b3af7d2bdd40448e20c833a9f5cc1, type: 3}
   - {fileID: 891776198116206175, guid: ec5e5ac46293dc348b7451e756c9efb0, type: 3}
   - {fileID: 891776198116206175, guid: 263739682f0dd4f4496050a6fb83095a, type: 3}
+  - {fileID: 4157353339907992583, guid: 0e83e684ea30bfb458847aa231544143, type: 3}
   playerDeck: []
   charmsInPlayerStorage: []
   skullCharmList:
@@ -24834,7 +24852,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingPanel: {fileID: 1942201686}
   startingButtonPrefab: {fileID: 3118551996323145290, guid: a78c9cd896fcf9743bf7f61c6b590fff, type: 3}
-  allLeaderID: c80000000401000018010000
+  allLeaderID: c90000000401000018010000
   playerBackpack: {fileID: 8036689}
 --- !u!1 &6430688208769237123
 GameObject:

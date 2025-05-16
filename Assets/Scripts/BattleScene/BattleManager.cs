@@ -211,7 +211,7 @@ public class BattleManager : MonoBehaviour
 
             yield return null;  // Wait for the next frame
         }
-        yield return new WaitForSeconds(0.5f); //to give some time BEFORE next animation!
+       // yield return new WaitForSeconds(0.5f); //to give some time BEFORE next animation!
         cardFullyFinished = false; //reset it for next time!
 
         // Continue once 'isReady' is true
@@ -221,16 +221,17 @@ public class BattleManager : MonoBehaviour
     //Auto-Game
     public IEnumerator EndPlayerTurn() //called by pressing button (refresh bell) OR after playing a card
     {
-        yield return StartCoroutine(WaitForConditionWithTimeout());
+        yield return StartCoroutine(WaitForConditionWithTimeout()); //wait for current card to finish doing its thing 
+            //-> maybe instead make an ActionQueue and then wait until action queue is empty?
         
-        isBusy = true; //stop player pressing stuff
+        
         UnitCard[] merged = enemyField.Concat(playerField).ToArray();
        
         //Count down -> go through all cards in fields (enemies first!)
         foreach (UnitCard card in merged)
         {
             if(card.ID == -1) { continue; } //ignore blanks
-            if (card.isDead) { Destroy(card); continue; } //if it doesn't work is cause destroy is removing from list too early!
+            if (card.isDead) { Destroy(card); continue; } //if it doesn't work i'ts because destroy is removing from list too early!
             if (roundNumber % 3 == 0) //every 3 rounds, add 1 fire to all cards on field
             {
               
@@ -267,6 +268,8 @@ public class BattleManager : MonoBehaviour
     {
         if(currentBellTimer > 0 && isGameStarted)
         {
+            isBusy = true;
+            cardFullyFinished = true; //so no waiting!
             StartCoroutine(EndPlayerTurn());
         }
         currentBellTimer = bellTimer;
@@ -521,6 +524,7 @@ public class BattleManager : MonoBehaviour
         {
             
             OnDeselect();
+            isBusy = true; //stop player pressing stuff
             StartCoroutine(EndPlayerTurn());
         }
         else if (!isGameStarted && willStartGame)
@@ -572,7 +576,7 @@ public class BattleManager : MonoBehaviour
             {
                 OnDeselect();
             }
-            
+            isBusy = true; //stop player pressing stuff
             StartCoroutine(EndPlayerTurn());
         }
     }

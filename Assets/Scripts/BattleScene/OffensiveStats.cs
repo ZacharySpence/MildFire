@@ -26,7 +26,8 @@ public class OffensiveStats : MonoBehaviour
     public void ChangeOffStats(int curseOn=0,int attackAdded=0,int numAttksAdded=0)
     {
         //curse specific
-        currentAttack = currentAttack - curseOn + attackAdded; 
+        attack += attackAdded; //perma change (within battle)
+        currentAttack = attack - curseOn;  //temp change
         cAttackText.text = $"{currentAttack}";
         currentNumOfAttacks += numAttksAdded;       
         cAttackAmountText.text = $"{currentNumOfAttacks}";

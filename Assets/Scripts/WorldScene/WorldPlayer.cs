@@ -60,6 +60,7 @@ public class WorldPlayer : MonoBehaviour
         //WorldManager.Instance.currentNode.specifics = "SkullGondola";
         //WorldManager.Instance.currentNode.OnEventClick();
         //startingPanel.gameObject.SetActive(false); //don't need to since going straight into battle!
+        WorldManager.Instance.currentNode.specifics = "Tester";
         //FOR ACTUAL:
         WorldManager.Instance.currentNode.OnBattleClick(); //forcibly start 1st battle!
     }

@@ -39,6 +39,7 @@ public class UnitCard :CardBase
 
     [Header("Flags")]
     bool hideTimer;
+    bool hasAttacked;
     
     protected override void Awake()
     {
@@ -49,6 +50,9 @@ public class UnitCard :CardBase
         currentHealth = maxHealth;
         currentHealthSlider.maxValue = maxHealth;
         ChangeStatus();
+        //specifics needing to turn off!
+        snowOn.Add(0);
+        fireOn.Add(0);
         if(timerAnimator.runtimeAnimatorController == null)
         {
             timerAnimator.runtimeAnimatorController = timerController;
@@ -200,9 +204,11 @@ public class UnitCard :CardBase
     //Card Auto logic methods
     public IEnumerator ReduceTimer()
     {
+        yield return new WaitForSeconds(.3f); //wait a second before starting?
         if(fieldIndex < 6)
         {
             hideTimer = false; //so never hide timer for player! Or maybe do who knows
+            hideTimer = false; //so never hide timer for player! Or maybe do who knowsc
         }
         hasDoneTimer = false;
         //ANIMATIONS HERE!
@@ -219,7 +225,7 @@ public class UnitCard :CardBase
         }
         yield return StartCoroutine(CheckTimerAtZeroCoroutine());
         
-        DoStatusEffects();
+        DoEndTurnStatusEffectChange();
     }
     IEnumerator CheckTimerAtZeroCoroutine()
     {
@@ -259,14 +265,13 @@ public class UnitCard :CardBase
     }
   
 
-    void DoStatusEffects()
+    void DoEndTurnStatusEffectChange()
     {
         //End turn status change
-        //fire, poison, pepper, curse
+        //fire, poison, ink
         if (fireOn.value > 0)
         {
-            TakeDamage(fireOn.value, false,true); //ignores crystal but not shield
-            fireOn.Add(-1);
+            TakeDamage(fireOn.value, false,true); //ignores crystal but not shield          
         }
         if(poisonOn.value > 0)
         {
@@ -274,15 +279,26 @@ public class UnitCard :CardBase
             TakeDamage(poisonOn.value,true, false); //ignores shield but not crystal
             poisonOn.Add(-1);
         }
-        if(pepperOn.value > 0)
+        if(inkOn.value > 0)
         {
-            pepperOn.Add(-1);
+            inkOn.Add(-1);
         }
-        if(curseOn.value > 0)
+     
+        //Status Change only after attacking
+        if (hasAttacked)
         {
-            curseOn.Add(-1);
-            offStats.ChangeOffStats(curseOn.value);
+          
+            curseOn.Add(-curseOn.value); //remove all curse after using it!
+            pepperOn.Add(-pepperOn.value); //remove all pepper after using it
+            offStats.ChangeOffStats(curseOn.value); //change attack back to what it was before adding pepper/curse
+
+            if (hazeOn.value > 0)
+            {
+                hazeOn.value -= 1;
+            }
+            hasAttacked = false;
         }
+        
     }
     #region Combat
     //Just basic attack row enemy
@@ -297,30 +313,35 @@ public class UnitCard :CardBase
 
         if (hasBuffAttack || hazeOn.value > 0) //so target allies 
         {
-            if (hasBarrage)
+            if (hasBarrage && inkOn.value == 0)
             {
                 DoBarrageAnim();
-                foreach (var ally in Barrage(row, !isPlayer))
+                var allies = Barrage(row, !isPlayer);
+                if(allies.Count > 0)
                 {
-                    if(hazeOn.value > 0)
+                    hasAttacked = true;
+                    foreach (var ally in allies)
                     {
-                        hazeOn.value = Math.Clamp(hazeOn.value - 1, 0, 100);
-                        DoAttack(ally);
+                        if (ally)
+                            if (hazeOn.value > 0)
+                            {
+                                hazeOn.value = Math.Clamp(hazeOn.value - 1, 0, 100);
+                                DoAttack(ally);
+                            }
+                            else
+                            {
+                                DoBuff(ally); //do a different coroutine for this one! (maybe barrage attack specific
+                            }
                     }
-                    else
-                    {
-                        DoBuff(ally); //do a different coroutine for this one! (maybe barrage attack specific
-                    }
-                   
-                   
-                    yield return null;
                 }
+                yield return null;
             }
             else
             {
                 var ally = FindNearestEnemy(row, !isPlayer); //basically get nearest ally -> if at front then do on self
                 if (ally != null)
                 {
+                    hasAttacked = true;
                     if(hazeOn.value > 0)
                     {
                         yield return StartCoroutine(DoAttackAnim(ally));
@@ -335,23 +356,30 @@ public class UnitCard :CardBase
         }
         else
         {
-            if (hasBarrage)
+            if (hasBarrage && inkOn.value == 0)
             {
                 DoBarrageAnim();
-                foreach (var enemy in Barrage(row, isPlayer))
+                var enemies = Barrage(row, isPlayer);
+                if(enemies.Count > 0)
                 {
+                    hasAttacked = true;
+                    foreach (var enemy in enemies)
+                    {
 
-                    DoAttack(enemy); //do a different coroutine for this one! (maybe barrage attack specific
+                        DoAttack(enemy); //do a different coroutine for this one! (maybe barrage attack specific
 
-                    yield return null;
+                        
+                    }
                 }
+                yield return null;
+
             }
             else
             {
                 var enemy = FindNearestEnemy(row, isPlayer); //top row if it's 0, bottom if it's 1
                 if (enemy != null)
                 {
-
+                    hasAttacked = true;
                     yield return StartCoroutine(DoAttackAnim(enemy));
                 }
             }
@@ -377,6 +405,8 @@ public class UnitCard :CardBase
         float moveSpeed = journeyLength / moveDuration;
         float distanceCovered = 0f;
 
+        offStats.ChangeOffStats(pepperOn.value - curseOn.value);//change to reflect pepper addition to attack both logically and visually!
+        yield return new WaitForSeconds(0.5f); //smalle delay BEFORE attacking
         // Move towards the target (stop 10% before target)
         while (distanceCovered < journeyLength * 0.75f)
         {
@@ -399,35 +429,31 @@ public class UnitCard :CardBase
     }
 
     void DoAttack(UnitCard enemy)
-    {
-        
+    {       
         int reflectValue = enemy.reflectOn.value;
-        Debug.Log($"{name} attacked {enemy.name} for {offStats.currentAttack + pepperOn.value - curseOn.value} damage");
-        enemy.TakeDamage(offStats.currentAttack + pepperOn.value - curseOn.value, false, false,
-            healthGive, attackGive, numOfAttacksGive, timerGive,
-            snowGive, poisonGive, fireGive, curseGive, shieldGive,
-            reflectGive, hazeGive, inkGive, bombGive, demonizeGive);
 
         
-      
+        Debug.Log($"{name} attacked {enemy.name} for {offStats.currentAttack} damage");
+        enemy.TakeDamage(offStats.currentAttack, false, false,
+            healthGive, attackGive, numOfAttacksGive, timerGive,
+            snowGive, poisonGive, fireGive, curseGive, shieldGive,
+            reflectGive, hazeGive, inkGive, bombGive, demonizeGive); 
         //special effects
-        if (hasLifesteal)
+        if(inkOn.value == 0) //only do special effects if have no ink on
         {
-            Heal(offStats.currentAttack);
+            if (hasLifesteal)
+            {
+                Heal(offStats.currentAttack);
+            }
         }
+      
 
         //
         if (reflectValue > 0) //take reflected damage even if kill enemy
         {
             TakeDamage(reflectValue);
         }
-        //Status Change
-        offStats.ChangeOffStats(-curseOn.value); //increase attack by what curse was (- - it)
-        curseOn.Add(-curseOn.value); //remove all curse after using it!
-        if (hazeOn.value > 0)
-        {
-            hazeOn.value -= 1;
-        }
+        
     }
     IEnumerator DoBuffAnim(UnitCard ally)
     {
@@ -454,7 +480,7 @@ public class UnitCard :CardBase
     {
        
         //-ve
-        snowOn.Add(snowAdded);     
+       
         hazeOn.Add(hazeAdded);
         inkOn.Add(inkAdded);
         bombOn.Add(bombAdded);
@@ -470,16 +496,37 @@ public class UnitCard :CardBase
         {
             poisonOn.Add(poisonAdded);
         }
-        if (hasEverburnResistance )
-        {
-            fireOn.value = Math.Clamp(fireOn.value + fireAdded, 0, 1);
-            fireOn.Add(0);
-        }
-        else
-        {
-            fireOn.Add(fireAdded);
-        }
 
+        //Snow and fire
+       
+        if (snowAdded > 0 || fireAdded > 0) //1. check if adding fire or snow
+        {
+            //2. check if more fire than snow overall
+            int fireRemaining = (fireOn.value+fireAdded) - (snowOn.value+snowAdded);
+            Debug.Log("FIRE REMAINING:" + fireRemaining);
+            if(fireRemaining > 0) //2.1 if more fire than snow overall then
+            {
+                //remove all current snow and add fire
+                snowOn.Add(-snowOn.value);
+                if (hasEverburnResistance)
+                {
+                    fireOn.value = Math.Clamp(fireOn.value + fireAdded, 0, 1);
+                    fireOn.Add(0);
+                }
+                else
+                {
+
+                    fireOn.Add(fireAdded - (snowOn.value+snowAdded));
+                }
+            }
+            else //2.2 more snow than fire
+            {
+                snowOn.Add(-fireOn.value+snowAdded); // reduce snow by current fire amount then add on extra
+                fireOn.Add(-fireOn.value); //remove all current fire
+            }
+        }
+       
+        //
         //+ve
         shieldOn.Add(shieldAdded);
         reflectOn.Add(reflectAdded);
@@ -509,6 +556,7 @@ public class UnitCard :CardBase
             damage *= 2;
             demonizeOn.Add(-1);
         }
+        damage = Math.Clamp(damage, 0, 1000); //make sure damage is at least 0
         //only check shield/crystal if it actually deals any damage (keep it like that for now)
         if(damage > 0)
         {
@@ -759,7 +807,7 @@ public class StatusEffect
     
     public void Add(int amount)
     {
-        value += amount;
+        value = Math.Clamp(amount+value,0,1000);
         textObject.text = value.ToString();
         textObject.transform.parent.gameObject.SetActive(value > 0);
     }
