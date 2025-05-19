@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using System.Linq;
 using UnityEditor.Animations;
 using static UnityEngine.EventSystems.EventTrigger;
+using static UnityEngine.Rendering.DebugUI.Table;
 
 public class UnitCard :CardBase
 {
@@ -537,7 +538,8 @@ public class UnitCard :CardBase
         //offenseStatSpecific
         offStats.ChangeOffStats(curseOn.value,attackAdded,numAttksAdded);
         currentAtkTimer += timerAdded;
-        if(timerAdded < 0)
+        cAttackTimerText.text = $"{currentAtkTimer}x{offStats.currentNumOfAttacks}"; //just to update the frenzy part!
+        if (timerAdded < 0)
         {
             StartCoroutine(CheckTimerAtZeroCoroutine());
         }
@@ -610,12 +612,43 @@ public class UnitCard :CardBase
         isDead = true;
         
         bool isPlayer = fieldIndex < 6;
-       
-        BattleManager.Instance.EmptyOutField(fieldIndex,isPlayer);
+        bool movedCard = false;
+        //Check if any allies to left of it, if so then for each ally move them -2 
+        UnitCard[] fieldToSearch = isPlayer ? BattleManager.Instance.playerField : BattleManager.Instance.enemyField;
+
+        int startIndex = fieldIndex + 2 - (isPlayer ? 0 : 6);
+        for (int i = startIndex; i < 6; i += 2) //go through own row (AFTER itself
+        {
+                        
+           
+            if (fieldToSearch[i].ID != -1) //card in there
+            {
+                Debug.Log(fieldToSearch[i].fieldIndex + ":" + name);
+                movedCard = true;
+                BattleManager.Instance.MoveCard(i-2, isPlayer, fieldToSearch[i]); //move it back towards left!
+            }
+        }
+
+        //only empty out if didn't move card at all (so no allies to take place!)
+        if (!movedCard)
+        {
+            Debug.Log("NO ALLIES TO MOVE");
+            BattleManager.Instance.EmptyOutField(fieldIndex,isPlayer);
+        }
+
         //For animation: give it a rigidbody (now has gravity), impulse force a little up
         GetComponent<Collider2D>().enabled = false;
-        var rb = gameObject.AddComponent<Rigidbody2D>();
-        rb.AddForce(new Vector2(0.25f, 1f), ForceMode2D.Impulse);
+        if(gameObject.TryGetComponent<Rigidbody2D>(out var rb))
+        {
+            rb.AddForce(new Vector2(0.25f, 1f), ForceMode2D.Impulse);
+        }
+        else
+        {
+            rb = gameObject.AddComponent<Rigidbody2D>();
+            rb.AddForce(new Vector2(0.25f, 1f), ForceMode2D.Impulse);
+        }
+           
+      
 
         //special abilities
         if (hasSpawnOnDeath)

@@ -339,7 +339,24 @@ public class PlayerHand : MonoBehaviour
     void Reshuffle()
     {
         //Debug.Log("Put all discard into deck and reshuffle into new deck queue");
+        Shuffle(discard);
         deck = new Queue<CardBase>(discard); //currently just place back on top ADD IN A SHUFFLE!
         discard.Clear();
+    }
+    // Fisher-Yates Shuffle Algorithm
+    public void Shuffle<T>(List<T> list)
+    {
+        System.Random rng = new System.Random();
+        int n = list.Count;
+
+        // Loop through the list and swap elements
+        while (n > 1)
+        {
+            n--;
+            int k = rng.Next(n + 1);
+            T value = list[k];
+            list[k] = list[n];
+            list[n] = value;
+        }
     }
 }

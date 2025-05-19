@@ -420,13 +420,14 @@ public class BattleManager : MonoBehaviour
         if (card.isBoss) { bossHasSpawned = true; }
         //card.transform.position = fields[index+6].position; //physically place card
     }
-    public void EmptyOutField(int index, bool isPlayerCard)
+    public void EmptyOutField(int index, bool isPlayerCard, bool justReset = false)
     {
       //  Debug.Log($"Index is {index} for {isPlayerCard}");
         fields[index].GetChild(0).gameObject.SetActive(true);
+        
         if (isPlayerCard)
         {
-            if (playerField[index].isBoss) { Defeat(); return; } //so if the unit at that field that dies is the player boss (leader, then defeat)
+            if (playerField[index].isBoss && !justReset) { Defeat(); return; } //so if the unit at that field that dies is the player boss (leader, then defeat)
             playerField[index] = fields[index].GetChild(0).GetComponent<UnitCard>();
         }
         else
@@ -436,7 +437,7 @@ public class BattleManager : MonoBehaviour
     }
     public void PlayerPlaceCardOnEmptyField(int index, UnitCard cardToPlace)
     {
-       // Debug.Log($"placing {cardToPlace.name} at index: {index}");
+        // Debug.Log($"placing {cardToPlace.name} at index: {index}");
         if (playerField[index].GetComponent<CardBase>().ID == -1)
         {
             playerField[index].gameObject.SetActive(false); //hide the empty card (so can just re-enable it later
@@ -445,6 +446,31 @@ public class BattleManager : MonoBehaviour
         playerField[index] = cardToPlace; //logically place card
         cardToPlace.fieldIndex = index;
         cardToPlace.transform.position = fields[index].position; //physically place card
+    }
+    public void MoveCard(int newIndex, bool isPlayer, UnitCard cardToMove)
+    {
+        if (isPlayer)
+        {
+            int index = cardToMove.fieldIndex;
+            fields[index].GetChild(0).gameObject.SetActive(true);
+            playerField[index] = fields[index].GetChild(0).GetComponent<UnitCard>();
+            playerField[newIndex] = cardToMove;
+            cardToMove.fieldIndex = newIndex;
+            cardToMove.transform.position = fields[newIndex].position;
+
+        }
+        else
+        {
+            int index = cardToMove.fieldIndex;
+            Debug.Log("EnemyFieldIndex:" + (cardToMove.fieldIndex - 6));
+            fields[index].GetChild(0).gameObject.SetActive(true);
+            enemyField[index - 6] = fields[index].GetChild(0).GetComponent<UnitCard>();
+            enemyField[newIndex] = cardToMove;
+            cardToMove.fieldIndex = newIndex + 6;
+            cardToMove.transform.position = fields[newIndex+6].position;
+
+        }
+        
     }
     public void PlayerPlaceCardOnFullField(int index, UnitCard cardToPlace)
     {
