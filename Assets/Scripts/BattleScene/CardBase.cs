@@ -221,7 +221,7 @@ public abstract class CardBase : MonoBehaviour
         }
     }
 
-    public virtual bool TryPlaceOnField(int atIndex, bool isPlayerCard = false, UnitCard cardAlreadyThere = null) 
+    public virtual bool TryPlaceOnField(int atIndex, bool isPlayerCard = false, UnitCard cardAlreadyThere = null, bool endCase = true) 
     {
         return false;
     }

@@ -761,14 +761,15 @@ public class UnitCard :CardBase
 
 
     //Good enough for now -> needs to be done via hovering insted of on-click
-    public override bool TryPlaceOnField(int atIndex, bool isPlayerCard = false, UnitCard cardAlreadyThere = null)
+    public override bool TryPlaceOnField(int atIndex, bool isPlayerCard = false, UnitCard cardAlreadyThere = null, bool endCase = true)
     {
         if (cardAlreadyThere != null && cardAlreadyThere.ID != -1) //so not an empty
         {
-            //Debug.Log($"there is a card already here: {cardAlreadyThere.ID}");
+            endCase = false;
+            Debug.Log($"there is a card already here: {cardAlreadyThere.ID}");
             
             //get next index in row
-            int newIndex = atIndex + 2; //Also need to check it other way (so if i try place on 3rd and 2nd has free spot!
+            int newIndex = atIndex + 2;
             if (newIndex >= (isPlayerCard ? 6 : 12))
             {
                 //Debug.Log("reached left most index"); //after hitting left most index
@@ -777,10 +778,16 @@ public class UnitCard :CardBase
             //if it hasn't gone too far then try place the card that's already there on the next spot 
             else
             {
-                //Debug.Log($"Trying to place next card in row at index {newIndex}");
-                if (cardAlreadyThere.TryPlaceOnField(newIndex,isPlayerCard,BattleManager.Instance.playerField[newIndex]))
+                Debug.Log($"Trying to place next card in row at index {newIndex}");
+                if (cardAlreadyThere.TryPlaceOnField(newIndex,isPlayerCard,BattleManager.Instance.playerField[newIndex],endCase))
                 {
-                    BattleManager.Instance.PlayerPlaceCardOnFullField(atIndex, this);
+                    if(atIndex < 2) //so indexes 0 or 1!
+                    {
+                        endCase = true;
+                    }
+                    Debug.Log("Placing on full field");
+                    BattleManager.Instance.PlayerPlaceCardOnFullField(atIndex, this,endCase);
+                   
                     return true;
                 }
                 return false;
@@ -792,7 +799,7 @@ public class UnitCard :CardBase
             if (isPlayerCard && atIndex <= 5 || !isPlayerCard && atIndex >= 6)
             {
                
-                BattleManager.Instance.PlayerPlaceCardOnEmptyField(atIndex, this);
+                BattleManager.Instance.PlayerPlaceCardOnEmptyField(atIndex, this, endCase);
                 return true;
             }
             return false;

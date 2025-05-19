@@ -435,9 +435,11 @@ public class BattleManager : MonoBehaviour
             enemyField[index-6] = fields[index].GetChild(0).GetComponent<UnitCard>();
         }
     }
-    public void PlayerPlaceCardOnEmptyField(int index, UnitCard cardToPlace)
+    public void PlayerPlaceCardOnEmptyField(int index, UnitCard cardToPlace, bool endCase = true)
     {
-        // Debug.Log($"placing {cardToPlace.name} at index: {index}");
+
+
+         Debug.Log($"placing {cardToPlace.name} at index: {index}");
         if (playerField[index].GetComponent<CardBase>().ID == -1)
         {
             playerField[index].gameObject.SetActive(false); //hide the empty card (so can just re-enable it later
@@ -446,7 +448,23 @@ public class BattleManager : MonoBehaviour
         playerField[index] = cardToPlace; //logically place card
         cardToPlace.fieldIndex = index;
         cardToPlace.transform.position = fields[index].position; //physically place card
+        //only automove if this is the last card to place
+        if (endCase)
+        {
+            AutoMovePlayerCardsAfterPlacing(index % 2); //always will be the last card to place 
+        }
     }
+       
+    
+    public void PlayerPlaceCardOnFullField(int index, UnitCard cardToPlace, bool endCase = true)
+    {
+        Debug.Log($"placing {cardToPlace.name} at index: {index}");
+        playerField[index] = cardToPlace; //overwrite and logically place card
+        cardToPlace.fieldIndex = index;
+        cardToPlace.transform.position = fields[index].position; //physically place card
+        
+    }
+        
     public void MoveCard(int newIndex, bool isPlayer, UnitCard cardToMove)
     {
         if (isPlayer)
@@ -467,19 +485,26 @@ public class BattleManager : MonoBehaviour
             enemyField[index - 6] = fields[index].GetChild(0).GetComponent<UnitCard>();
             enemyField[newIndex] = cardToMove;
             cardToMove.fieldIndex = newIndex + 6;
-            cardToMove.transform.position = fields[newIndex+6].position;
+            cardToMove.transform.position = fields[newIndex + 6].position;
 
         }
-        
-    }
-    public void PlayerPlaceCardOnFullField(int index, UnitCard cardToPlace)
-    {
-       // Debug.Log($"placing {cardToPlace.name} at index: {index}");
-        playerField[index] = cardToPlace; //overwrite and logically place card
-        cardToPlace.fieldIndex = index;
-        cardToPlace.transform.position = fields[index].position; //physically place card
+
     }
 
+    public void AutoMovePlayerCardsAfterPlacing(int row)
+    {
+        //After placing card ->
+        //1. move each card to rightmost spots
+        for (int i = row+2; i < 6; i +=2)
+        {
+            //if field has card in it AND field right of it is empty, then move it to said field
+            if (playerField[i].ID != -1 && playerField[i-2].ID == -1)
+            {
+                MoveCard(i - 2, true, playerField[i]);
+            }
+        }
+      
+    }
     //Card/Click actions
 
 
@@ -495,6 +520,7 @@ public class BattleManager : MonoBehaviour
             playerField[index] = fields[index].GetChild(0).GetComponent<UnitCard>();//get the empty child card
             playerField[index].gameObject.SetActive(true); //set it active;
             playerField[index].fieldIndex = index; //logically set it as the empty card
+            AutoMovePlayerCardsAfterPlacing(index % 2);
         }
         selectedCard.GetComponent<Collider2D>().enabled = false; //disable it so cursor no longer hits it
         //lock to cursor
@@ -663,7 +689,17 @@ public class BattleManager : MonoBehaviour
                     if(selectedCard.fieldIndex != -1)
                     {
                         Debug.Log("Place back on field");
-                        selectedCard.transform.position = fields[selectedCard.fieldIndex].position; //physically place card
+                        //if card has automoved onto original spot then gotta do the whole placement
+                        if (playerField[selectedCard.fieldIndex].ID != -1)
+                        {
+                            selectedCard.TryPlaceOnField(selectedCard.fieldIndex, true, playerField[selectedCard.fieldIndex]);
+                        }
+                        //else just place back onto original spot (since kept fieldIndex!
+                        else
+                        {
+                            selectedCard.transform.position = fields[selectedCard.fieldIndex].position; 
+                        }
+                      
                         //PlayerPlaceCardOnEmptyField(selectedCard.fieldIndex, selectedCard as UnitCard);
                     }
                     else
