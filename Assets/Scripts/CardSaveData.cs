@@ -63,6 +63,23 @@ public class CardSaveData
     public int attack;
     public int numOfAttacks;
 
+    //---STATS targets
+    public Targeting healthTarget;
+    public Targeting attackTarget;
+    public Targeting numOfAtkTarget;
+    public Targeting timerTarget;
+    public Targeting shieldTarget;
+    public Targeting snowTarget;
+    public Targeting fireTarget;
+    public Targeting crystalTarget;
+    public Targeting poisonTarget;
+    public Targeting pepperTarget;
+    public Targeting curseTarget;
+    public Targeting reflectTarget;
+    public Targeting hazeTarget;
+    public Targeting bombTarget;
+    public Targeting inkTarget;
+    public Targeting demonizeTarget;
     //---Specials--
     public bool hasLifesteal;
     public bool hasSpawnOnDeath;
@@ -71,4 +88,9 @@ public class CardSaveData
     public bool hasEverburnResistance;
     public bool hasPoisonResistance;
     public bool hasBarrage;
+    public bool hasSmackback;
+    public bool hasReaction;
+    public bool hasLongshot;
+    public bool hasAimless;
+    public bool hasBuffFriendly;
 }

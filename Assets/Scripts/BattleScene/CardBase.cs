@@ -27,11 +27,13 @@ public abstract class CardBase : MonoBehaviour
 
     [Header("Stats")]
     //change numOfAttacks into a 'status effect'
-    [SerializeField] protected int numOfAttacksGive, attackGive, healthGive, timerGive;
+    [SerializeField] protected int numOfAttacksGive;
+    [SerializeField] protected int attackGive, healthGive, timerGive;
     [SerializeField] public int shieldGive, snowGive, fireGive, crystalGive, poisonGive, pepperGive, curseGive, reflectGive, 
         hazeGive, bombGive, inkGive, demonizeGive;
     [Header("Specials")]
-    [SerializeField] protected bool hasBarrage, hasBuffAttack, hasSmackback, hasLifesteal, hasSpawnOnDeath, hasSelfTargetPosEffects; //special ability flags
+    [SerializeField] protected bool hasBarrage;
+    [SerializeField] protected bool hasLifesteal, hasConsume, hasAimless, hasSelfTargetPosEffects; //special ability flags
     [SerializeField] protected List<int> spawnsOnDeath = new List<int>();
     public int charmLimit, currentCharmAmount;
 

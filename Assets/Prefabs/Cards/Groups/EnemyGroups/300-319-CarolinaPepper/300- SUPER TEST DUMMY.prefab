@@ -53,6 +53,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 62658012984666088, guid: 2fafd344cc9f51444803cbef016491cc, type: 3}
+      propertyPath: hasSmackback
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 62658012984666088, guid: 2fafd344cc9f51444803cbef016491cc, type: 3}
       propertyPath: shieldOn.value
       value: 1
       objectReference: {fileID: 0}

@@ -8,7 +8,7 @@ using System.Linq;
 using UnityEditor.Animations;
 using static UnityEngine.EventSystems.EventTrigger;
 using static UnityEngine.Rendering.DebugUI.Table;
-
+using Random = UnityEngine.Random;
 public class UnitCard :CardBase
 {
     [SerializeField] OffensiveStats offStats;
@@ -26,8 +26,14 @@ public class UnitCard :CardBase
     [SerializeField] public int maxAtkTimer, maxHealth;
     //possible add in 'start' with so has start values separate to On which is in-game!
     [SerializeField] StatusEffect shieldOn,snowOn, fireOn, crystalOn, poisonOn, pepperOn, curseOn,reflectOn, hazeOn,bombOn,inkOn,demonizeOn;
-    public bool hasEverburnResistance, hasPoisonResistance;                                                                                                        
-   
+    [Header("UnitSpecific Specials")]
+    public bool hasEverburnResistance;
+    public bool hasPoisonResistance,hasBuffFriendly, hasSmackback, hasLongshot, hasSpawnOnDeath, hasReaction;
+    public Targeting healthTarget, attackTarget, numOfAtkTarget, timerTarget,
+        shieldTarget, snowTarget, fireTarget, crystalTarget, poisonTarget, pepperTarget,
+        curseTarget, reflectTarget, hazeTarget, bombTarget, inkTarget, demonizeTarget;
+
+
     [Header("Stat visuals")]
     [SerializeField] TextMeshProUGUI cAttackTimerText;
     [SerializeField] TextMeshProUGUI cHealthText;
@@ -105,14 +111,36 @@ public class UnitCard :CardBase
             crystalOn = this.crystalOn.value,
             pepperOn = this.pepperOn.value,
 
+            //Stat targets
+            healthTarget = this.healthTarget,
+            attackTarget = this.attackTarget,
+            numOfAtkTarget = this.numOfAtkTarget,
+            timerTarget = this.timerTarget,
+            shieldTarget = this.shieldTarget,
+            snowTarget = this.snowTarget,
+            fireTarget = this.fireTarget,
+            crystalTarget = this.crystalTarget,
+            poisonTarget = this.poisonTarget,
+            pepperTarget = this.pepperTarget,
+            curseTarget = this.curseTarget,
+            reflectTarget = this.reflectTarget,
+            hazeTarget = this.hazeTarget,
+            bombTarget = this.bombTarget,
+            inkTarget = this.inkTarget,
+            demonizeTarget = this.demonizeTarget,
+
             //specialAbilities
             hasLifesteal = this.hasLifesteal,
             hasSpawnOnDeath = this.hasSpawnOnDeath,
             spawnsOnDeath = this.spawnsOnDeath,
-            hasSelfTargetPosEffects = this.hasSelfTargetPosEffects,
             hasEverburnResistance = this.hasEverburnResistance,
             hasPoisonResistance = this.hasPoisonResistance,
-            hasBarrage = this.hasBarrage
+            hasBarrage = this.hasBarrage,
+            hasSmackback = this.hasSmackback,
+            hasReaction = this.hasReaction,
+            hasLongshot = this.hasLongshot,
+            hasAimless = this.hasAimless,
+            hasBuffFriendly = this.hasBuffFriendly
         };
 
 
@@ -163,17 +191,37 @@ public class UnitCard :CardBase
         this.bombOn.value = cardSaveData.bombOn;
         this.inkOn.value = cardSaveData.inkOn;
         this.demonizeOn.value = cardSaveData.demonizeOn;
-       
-       
+
+        //ApplyStatTargets
+        healthTarget = cardSaveData.healthTarget;
+        attackTarget = cardSaveData.attackTarget;
+        numOfAtkTarget = cardSaveData.numOfAtkTarget;
+        timerTarget = cardSaveData.timerTarget;
+        shieldTarget = cardSaveData.shieldTarget;
+        snowTarget = cardSaveData.snowTarget;
+        fireTarget = cardSaveData.fireTarget;
+        crystalTarget = cardSaveData.crystalTarget;
+        poisonTarget = cardSaveData.poisonTarget;
+        pepperTarget = cardSaveData.pepperTarget;
+        curseTarget = cardSaveData.curseTarget;
+        reflectTarget = cardSaveData.reflectTarget;
+        hazeTarget = cardSaveData.hazeTarget;
+        bombTarget = cardSaveData.bombTarget;
+        inkTarget = cardSaveData.inkTarget;
+        demonizeTarget = cardSaveData.demonizeTarget;
 
         //Apply special effects
         this.hasLifesteal = cardSaveData.hasLifesteal;
-        this.hasSelfTargetPosEffects = cardSaveData.hasSelfTargetPosEffects;
         this.hasSpawnOnDeath = cardSaveData.hasSpawnOnDeath;
         this.spawnsOnDeath = cardSaveData.spawnsOnDeath;
         this.hasEverburnResistance = cardSaveData.hasEverburnResistance;
         this.hasPoisonResistance = cardSaveData.hasPoisonResistance;
         this.hasBarrage = cardSaveData.hasBarrage;
+        this.hasSmackback = cardSaveData.hasSmackback;
+        this.hasReaction = cardSaveData.hasReaction;
+        this.hasLongshot = cardSaveData.hasLongshot;
+        this.hasAimless = cardSaveData.hasAimless;
+        this.hasBuffFriendly = cardSaveData.hasBuffFriendly;
 
         //Setup rest
         name = nameText;
@@ -298,13 +346,14 @@ public class UnitCard :CardBase
                 hazeOn.value -= 1;
             }
             hasAttacked = false;
+          
         }
         
     }
     #region Combat
     //Just basic attack row enemy
 
-    IEnumerator TryAttack()
+    public IEnumerator TryAttack()
     {
       
         
@@ -312,7 +361,7 @@ public class UnitCard :CardBase
         //Get whether it's player, then find row and closest enemy in row
         int row = fieldIndex % 2;
 
-        if (hasBuffAttack || hazeOn.value > 0) //so target allies 
+        if (hasBuffFriendly || hazeOn.value > 0) //so target allies 
         {
             if (hasBarrage && inkOn.value == 0)
             {
@@ -335,6 +384,13 @@ public class UnitCard :CardBase
                             }
                     }
                 }
+                Debug.Log("changing status post attack");
+                //so anything self-targeting happens after entire barrage
+                ChangeStatus(healthTarget.self ? healthGive : 0, attackTarget.self ? attackGive : 0, numOfAtkTarget.self ? numOfAttacksGive : 0,
+                timerTarget.self ? timerGive : 0, snowTarget.self ? snowGive : 0, poisonTarget.self ? poisonGive : 0, fireTarget.self ? fireGive : 0,
+                curseTarget.self ? curseGive : 0, shieldTarget.self ? shieldGive : 0, reflectTarget.self ? reflectGive : 0, hazeTarget.self ? hazeGive : 0,
+                inkTarget.self ? inkGive : 0, bombTarget.self ? bombGive : 0, demonizeTarget.self ? demonizeGive : 0, pepperTarget.self ? pepperGive : 0,
+                crystalTarget.self ? crystalGive : 0);
                 yield return null;
             }
             else
@@ -354,6 +410,16 @@ public class UnitCard :CardBase
                    
                 }
             }
+            if (hasAttacked)
+            {
+                Debug.Log("changing status post attack");
+                //so anything self-targeting happens after entire barrage
+                ChangeStatus(healthTarget.self ? healthGive : 0, attackTarget.self ? attackGive : 0, numOfAtkTarget.self ? numOfAttacksGive : 0,
+                timerTarget.self ? timerGive : 0, snowTarget.self ? snowGive : 0, poisonTarget.self ? poisonGive : 0, fireTarget.self ? fireGive : 0,
+                curseTarget.self ? curseGive : 0, shieldTarget.self ? shieldGive : 0, reflectTarget.self ? reflectGive : 0, hazeTarget.self ? hazeGive : 0,
+                inkTarget.self ? inkGive : 0, bombTarget.self ? bombGive : 0, demonizeTarget.self ? demonizeGive : 0, pepperTarget.self ? pepperGive : 0,
+                crystalTarget.self ? crystalGive : 0);
+            }
         }
         else
         {
@@ -368,12 +434,37 @@ public class UnitCard :CardBase
                     {
 
                         DoAttack(enemy); //do a different coroutine for this one! (maybe barrage attack specific
-
                         
+
                     }
                 }
+                Debug.Log("changing status post attack");
+                //so anything self-targeting happens after entire barrage
+                ChangeStatus(healthTarget.self ? healthGive : 0, attackTarget.self ? attackGive : 0, numOfAtkTarget.self ? numOfAttacksGive : 0,
+                timerTarget.self ? timerGive : 0, snowTarget.self ? snowGive : 0, poisonTarget.self ? poisonGive : 0, fireTarget.self ? fireGive : 0,
+                curseTarget.self ? curseGive : 0, shieldTarget.self ? shieldGive : 0, reflectTarget.self ? reflectGive : 0, hazeTarget.self ? hazeGive : 0,
+                inkTarget.self ? inkGive : 0, bombTarget.self ? bombGive : 0, demonizeTarget.self ? demonizeGive : 0, pepperTarget.self ? pepperGive : 0,
+                crystalTarget.self ? crystalGive : 0);
                 yield return null;
 
+            }
+            else if(hasAimless && inkOn.value == 0)
+            {
+                var enemy = ChooseAimlessTarget(isPlayer);
+                if(enemy != null)
+                {
+                    hasAttacked = true;
+                    yield return StartCoroutine(DoAttackAnim(enemy));
+                }
+            }
+            else if(hasLongshot && inkOn.value == 0)
+            {
+                var enemy = FindFurthestEnemy(row, isPlayer); //top row if it's 0, bottom if it's 1
+                if (enemy != null)
+                {
+                    hasAttacked = true;
+                    yield return StartCoroutine(DoAttackAnim(enemy));
+                }
             }
             else
             {
@@ -383,13 +474,17 @@ public class UnitCard :CardBase
                     hasAttacked = true;
                     yield return StartCoroutine(DoAttackAnim(enemy));
                 }
+
             }
+            
         }
       
         
        
         
     }
+
+   
     void DoBarrageAnim()
     {
         Debug.Log("doing barrage Animation");
@@ -435,26 +530,43 @@ public class UnitCard :CardBase
 
         
         Debug.Log($"{name} attacked {enemy.name} for {offStats.currentAttack} damage");
+
         enemy.TakeDamage(offStats.currentAttack, false, false,
-            healthGive, attackGive, numOfAttacksGive, timerGive,
-            snowGive, poisonGive, fireGive, curseGive, shieldGive,
-            reflectGive, hazeGive, inkGive, bombGive, demonizeGive); 
+            healthTarget.other ? healthGive : 0, attackTarget.other ? attackGive : 0, numOfAtkTarget.other ? numOfAttacksGive : 0,
+            timerTarget.other ? timerGive : 0, snowTarget.other ? snowGive : 0, poisonTarget.other ? poisonGive : 0,
+            fireTarget.other ? fireGive : 0, curseTarget.other ? curseGive : 0, shieldTarget.other ? shieldGive : 0,
+            reflectTarget.other ? reflectGive : 0, hazeTarget.other ? hazeGive : 0, inkTarget.other ? inkGive : 0,
+            bombTarget.other ? bombGive : 0, demonizeTarget.other ? demonizeGive:0, pepperTarget.other ? pepperGive:0,
+            crystalTarget.other ? crystalGive:0);
+        
+
+        if (reflectValue > 0) //take reflected damage even if kill enemy
+        {
+            TakeDamage(reflectValue);
+        }
         //special effects
-        if(inkOn.value == 0) //only do special effects if have no ink on
+        if (inkOn.value == 0) //only do special effects if have no ink on
         {
             if (hasLifesteal)
             {
                 Heal(offStats.currentAttack);
             }
+            if (enemy.hasSmackback && !enemy.isDead) //don't smackback if they're dead
+            {
+                enemy.Smackback(this);
+            }
         }
-      
-
-        //
-        if (reflectValue > 0) //take reflected damage even if kill enemy
+        if (!hasBarrage)
         {
-            TakeDamage(reflectValue);
+            //so after attacking get bonus
+            ChangeStatus(healthTarget.self ? healthGive : 0, attackTarget.self ? attackGive : 0, numOfAtkTarget.self ? numOfAttacksGive : 0,
+                    timerTarget.self ? timerGive : 0, snowTarget.self ? snowGive : 0, poisonTarget.self ? poisonGive : 0, fireTarget.self ? fireGive : 0,
+                    curseTarget.self ? curseGive : 0, shieldTarget.self ? shieldGive : 0, reflectTarget.self ? reflectGive : 0, hazeTarget.self ? hazeGive : 0,
+                    inkTarget.self ? inkGive : 0, bombTarget.self ? bombGive : 0, demonizeTarget.self ? demonizeGive : 0, pepperTarget.self ? pepperGive : 0,
+                    crystalTarget.self ? crystalGive : 0);
         }
-        
+
+
     }
     IEnumerator DoBuffAnim(UnitCard ally)
     {
@@ -469,15 +581,21 @@ public class UnitCard :CardBase
     }
     void DoBuff(UnitCard ally)
     {
-        ally.ChangeStatus(healthGive, attackGive, numOfAttacksGive, timerGive, snowGive, poisonGive, fireGive, curseGive, shieldGive,
-            reflectGive, hazeGive, inkGive, bombGive, demonizeGive, pepperGive, crystalGive);
+        ally.ChangeStatus(healthTarget.other ? healthGive : 0, attackTarget.other ? attackGive : 0, numOfAtkTarget.other ? numOfAttacksGive : 0,
+            timerTarget.other ? timerGive : 0, snowTarget.other ? snowGive : 0, poisonTarget.other ? poisonGive : 0,
+            fireTarget.other ? fireGive : 0, curseTarget.other ? curseGive : 0, shieldTarget.other ? shieldGive : 0,
+            reflectTarget.other ? reflectGive : 0, hazeTarget.other ? hazeGive : 0, inkTarget.other ? inkGive : 0,
+            bombTarget.other ? bombGive : 0, demonizeTarget.other ? demonizeGive : 0, pepperTarget.other ? pepperGive : 0,
+            crystalTarget.other ? crystalGive : 0);
     }
 
     //Maybe put buff/dmg together so can have like heal that adds pepper? (got to play around with this!)
-    public void ChangeStatus(int healthAdded = 0,int attackAdded = 0, int numAttksAdded = 0, int timerAdded = 0, 
-        int snowAdded = 0, int poisonAdded = 0, int fireAdded = 0, int curseAdded = 0, int shieldAdded = 0, 
-        int reflectAdded = 0, int hazeAdded = 0, int inkAdded = 0, int bombAdded = 0, int demonizeAdded = 0,
-        int pepperAdded = 0, int crystalAdded = 0)
+    public void ChangeStatus(int healthAdded = 0,int attackAdded = 0, int numAttksAdded = 0, 
+        int timerAdded = 0, int snowAdded = 0, int poisonAdded = 0, 
+        int fireAdded = 0, int curseAdded = 0, int shieldAdded = 0, 
+        int reflectAdded = 0, int hazeAdded = 0, int inkAdded = 0, 
+        int bombAdded = 0, int demonizeAdded = 0,int pepperAdded = 0, 
+        int crystalAdded = 0)
     {
        
         //-ve
@@ -546,10 +664,12 @@ public class UnitCard :CardBase
        
     }
     public void TakeDamage(int damage=0,bool ignoreShield = false,bool ignoreCrystal = false, 
-        int healthAdded = 0, int attackAdded = 0, int numAttksAdded = 0, int timerAdded = 0,
-        int snowAdded = 0, int poisonAdded = 0, int fireAdded = 0, int curseAdded = 0, int shieldAdded = 0,
-        int reflectAdded = 0, int hazeAdded = 0, int inkAdded = 0, int bombAdded = 0, int demonizeAdded = 0,
-        int pepperAdded = 0, int crystalAdded = 0)
+        int healthAdded = 0, int attackAdded = 0, int numAttksAdded = 0, 
+        int timerAdded = 0,int snowAdded = 0, int poisonAdded = 0, 
+        int fireAdded = 0, int curseAdded = 0, int shieldAdded = 0,
+        int reflectAdded = 0, int hazeAdded = 0, int inkAdded = 0, 
+        int bombAdded = 0, int demonizeAdded = 0,int pepperAdded = 0, 
+        int crystalAdded = 0)
     {
         damage += bombOn.value; //add bomb value to damage
 
@@ -591,7 +711,7 @@ public class UnitCard :CardBase
             Die();
             return;
         }
-       
+
 
        
         ChangeStatus(healthAdded,attackAdded,numAttksAdded,timerAdded,
@@ -698,6 +818,33 @@ public class UnitCard :CardBase
         return allUnitsToAttack;
        
     }
+    public void Smackback(UnitCard enemy)
+    {
+        StartCoroutine(DoAttackAnim(enemy));
+       
+    }
+
+    UnitCard ChooseAimlessTarget(bool isPlayer)
+    {
+       
+        List<UnitCard> possibleTargets = new List<UnitCard>();
+        foreach(var target in isPlayer?BattleManager.Instance.enemyField:BattleManager.Instance.playerField)
+        {
+            if(target.ID != -1)
+            {
+                possibleTargets.Add(target);
+            }
+        }
+        if(possibleTargets.Count == 0)
+        {
+            return null;
+        }
+        else
+        {
+            return possibleTargets[Random.Range(0, possibleTargets.Count)]; //get a random target
+        }
+        
+    }
     //--
     public UnitCard FindNearestEnemy(int row,bool isPlayer)
     {
@@ -712,6 +859,28 @@ public class UnitCard :CardBase
         }
         row ^= 1;
         for (int i = row; i < 6; i += 2) //go through other row
+        {
+            if (fieldToSearch[i].ID != -1) //card in there
+            {
+                return fieldToSearch[i];
+            }
+        }
+        return null; //should only return this if nothing to hit
+
+    }
+    public UnitCard FindFurthestEnemy(int row, bool isPlayer)
+    {
+        //if it's player += 2 until hit max in enemyField, else in playerfield
+        UnitCard[] fieldToSearch = isPlayer ? BattleManager.Instance.enemyField : BattleManager.Instance.playerField;
+        for (int i = 4+row; i >= 0; i -= 2) //go through own row starting at rightmost (so 4 for even, 5 for odd
+        {
+            if (fieldToSearch[i].ID != -1) //card in there
+            {
+                return fieldToSearch[i];
+            }
+        }
+        row ^= 1;
+        for (int i = 4+row; i >=0; i -= 2) //go through other row
         {
             if (fieldToSearch[i].ID != -1) //card in there
             {
@@ -852,4 +1021,11 @@ public class StatusEffect
         textObject.text = value.ToString();
         textObject.transform.parent.gameObject.SetActive(value > 0);
     }
+}
+
+[Serializable]
+public class Targeting
+{
+    public bool self;
+    public bool other = true;
 }

@@ -4264,12 +4264,13 @@ MonoBehaviour:
   inkGive: 0
   demonizeGive: 0
   hasBarrage: 0
-  hasBuffAttack: 0
-  hasSmackback: 0
   hasLifesteal: 0
-  hasSpawnOnDeath: 0
+  hasConsume: 0
+  hasAimless: 0
   hasSelfTargetPosEffects: 0
   spawnsOnDeath: 
+  charmLimit: 0
+  currentCharmAmount: 0
   tooltipPrefab: {fileID: 7499865843149525041, guid: 197e8c4e10e9c7345b38184cb1a8e47c, type: 3}
   rightTooltips: []
   leftTooltips: []
@@ -4283,6 +4284,8 @@ MonoBehaviour:
   isDead: 0
   isBoss: 0
   hasCrown: 0
+  hasDoneTimer: 0
+  hasDied: 0
   currentAtkTimer: 0
   currentHealth: 0
   maxAtkTimer: 2
@@ -4323,11 +4326,65 @@ MonoBehaviour:
   demonizeOn:
     value: 0
     textObject: {fileID: 1365681697866294429}
+  hasEverburnResistance: 0
+  hasPoisonResistance: 0
+  hasBuffFriendly: 0
+  hasSmackback: 0
+  hasLongshot: 0
+  hasSpawnOnDeath: 0
+  hasReaction: 0
+  healthTarget:
+    self: 0
+    other: 1
+  attackTarget:
+    self: 0
+    other: 1
+  numOfAtkTarget:
+    self: 0
+    other: 1
+  timerTarget:
+    self: 0
+    other: 1
+  shieldTarget:
+    self: 0
+    other: 1
+  snowTarget:
+    self: 0
+    other: 1
+  fireTarget:
+    self: 0
+    other: 1
+  crystalTarget:
+    self: 0
+    other: 1
+  poisonTarget:
+    self: 0
+    other: 1
+  pepperTarget:
+    self: 0
+    other: 1
+  curseTarget:
+    self: 0
+    other: 1
+  reflectTarget:
+    self: 0
+    other: 1
+  hazeTarget:
+    self: 0
+    other: 1
+  bombTarget:
+    self: 0
+    other: 1
+  inkTarget:
+    self: 0
+    other: 1
+  demonizeTarget:
+    self: 0
+    other: 1
   cAttackTimerText: {fileID: 4660030457441168979}
   cHealthText: {fileID: 3711581529935612794}
   currentHealthSlider: {fileID: 6249752046623921798}
   timerAnimator: {fileID: 6606149431719869808}
-  attackAnimator: {fileID: 0}
   timerController: {fileID: 9100000, guid: 089c97d2594c1da48a516d8c317f2035, type: 2}
 --- !u!114 &2821790397671302436
 MonoBehaviour:

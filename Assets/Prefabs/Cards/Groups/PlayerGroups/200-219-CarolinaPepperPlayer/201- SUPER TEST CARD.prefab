@@ -221,8 +221,16 @@ PrefabInstance:
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6229215848705942096, guid: 98e1fe0a7e51421409a9f16c52b58341, type: 3}
-      propertyPath: hasBarrage
+      propertyPath: attackGive
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6229215848705942096, guid: 98e1fe0a7e51421409a9f16c52b58341, type: 3}
+      propertyPath: hasAimless
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6229215848705942096, guid: 98e1fe0a7e51421409a9f16c52b58341, type: 3}
+      propertyPath: hasBarrage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6229215848705942096, guid: 98e1fe0a7e51421409a9f16c52b58341, type: 3}
       propertyPath: pepperGive
@@ -238,6 +246,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6229215848705942096, guid: 98e1fe0a7e51421409a9f16c52b58341, type: 3}
       propertyPath: crystalGive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6229215848705942096, guid: 98e1fe0a7e51421409a9f16c52b58341, type: 3}
+      propertyPath: hasLongshot
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6229215848705942096, guid: 98e1fe0a7e51421409a9f16c52b58341, type: 3}
+      propertyPath: hasReaction
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6229215848705942096, guid: 98e1fe0a7e51421409a9f16c52b58341, type: 3}
@@ -266,6 +282,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6229215848705942096, guid: 98e1fe0a7e51421409a9f16c52b58341, type: 3}
       propertyPath: hasLifesteal
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6229215848705942096, guid: 98e1fe0a7e51421409a9f16c52b58341, type: 3}
+      propertyPath: hasSmackback
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6229215848705942096, guid: 98e1fe0a7e51421409a9f16c52b58341, type: 3}
@@ -307,6 +327,14 @@ PrefabInstance:
     - target: {fileID: 6229215848705942096, guid: 98e1fe0a7e51421409a9f16c52b58341, type: 3}
       propertyPath: statsData.attack
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6229215848705942096, guid: 98e1fe0a7e51421409a9f16c52b58341, type: 3}
+      propertyPath: attackTarget.self
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6229215848705942096, guid: 98e1fe0a7e51421409a9f16c52b58341, type: 3}
+      propertyPath: attackTarget.other
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6229215848705942096, guid: 98e1fe0a7e51421409a9f16c52b58341, type: 3}
       propertyPath: hasPoisonResistance
