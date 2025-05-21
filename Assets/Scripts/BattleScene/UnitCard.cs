@@ -28,7 +28,7 @@ public class UnitCard :CardBase
     [SerializeField] StatusEffect shieldOn,snowOn, fireOn, crystalOn, poisonOn, pepperOn, curseOn,reflectOn, hazeOn,bombOn,inkOn,demonizeOn;
     [Header("UnitSpecific Specials")]
     public bool hasEverburnResistance;
-    public bool hasPoisonResistance,hasBuffFriendly, hasSmackback, hasLongshot, hasSpawnOnDeath, hasReaction;
+    public bool hasPoisonResistance, hasSmackback, hasLongshot, hasSpawnOnDeath;
     public Targeting healthTarget, attackTarget, numOfAtkTarget, timerTarget,
         shieldTarget, snowTarget, fireTarget, crystalTarget, poisonTarget, pepperTarget,
         curseTarget, reflectTarget, hazeTarget, bombTarget, inkTarget, demonizeTarget;
@@ -137,7 +137,7 @@ public class UnitCard :CardBase
             hasPoisonResistance = this.hasPoisonResistance,
             hasBarrage = this.hasBarrage,
             hasSmackback = this.hasSmackback,
-            hasReaction = this.hasReaction,
+           
             hasLongshot = this.hasLongshot,
             hasAimless = this.hasAimless,
             hasBuffFriendly = this.hasBuffFriendly
@@ -218,7 +218,7 @@ public class UnitCard :CardBase
         this.hasPoisonResistance = cardSaveData.hasPoisonResistance;
         this.hasBarrage = cardSaveData.hasBarrage;
         this.hasSmackback = cardSaveData.hasSmackback;
-        this.hasReaction = cardSaveData.hasReaction;
+        
         this.hasLongshot = cardSaveData.hasLongshot;
         this.hasAimless = cardSaveData.hasAimless;
         this.hasBuffFriendly = cardSaveData.hasBuffFriendly;
@@ -232,7 +232,11 @@ public class UnitCard :CardBase
         currentHealth = hasDied?maxHealth/2 :maxHealth; //so if have died before then make it half health
         currentHealthSlider.maxValue = maxHealth;
         ChangeStatus();
-        CreateCardDescription();
+        if (!manualDescription)
+        {
+            CreateCardDescription();
+        }
+        
 
         hideTimer = WorldManager.Instance.omnisciBlessing ? false : WorldManager.Instance.omnisciForesight;
 
@@ -240,14 +244,131 @@ public class UnitCard :CardBase
     }
 
     public override void CreateCardDescription()
-    {    
-        base.CreateCardDescription();
-        //special effects
-        if (hasLifesteal){ text.Add($"Heal {offStats.currentAttack} health on hit"); }
+    {
+        text.Clear(); //so empty it out!
+        //left tooltips
+        if (shieldGive > 0)
+        {
+       
+            text.Add($"Apply {shieldGive} shield {(shieldTarget.other && hasBuffFriendly ?"to an ally":" ")}{(shieldTarget.self?"to self":"")}");
+            tooltipHandler.hasShield = true;
+        }
+        if (crystalGive > 0)
+            {
+                text.Add($"Apply {crystalGive} crystal {(crystalTarget.other && hasBuffFriendly ?"to an ally":" ")}{(crystalTarget.self?"to self":"")}");
+            tooltipHandler.hasCrystal = true;
+        }
+        if (bombGive > 0)
+        {
+            text.Add($"Apply {bombGive} bomb {(bombTarget.other && hasBuffFriendly ? "to an ally" :" ")}{(bombTarget.self ? "to self" : "")}");
+            tooltipHandler.hasBomb = true;
+        }
+        if (inkGive > 0)
+        {
+            text.Add($"Apply {inkGive} ink {(inkTarget.other && hasBuffFriendly ? "to an ally" :" ")}{(inkTarget.self ? "to self" : "")}");
+            tooltipHandler.hasInk = true;
+        }
+       
+        //right tooltips
+        if (snowGive > 0)
+        {
+            text.Add($"Apply {snowGive} snow {(snowTarget.other && hasBuffFriendly ? "to an ally" : " ")}{(snowTarget.self ? "to self" : "")}");
+            tooltipHandler.hasSnow = true;
+        }
+        if (fireGive > 0)
+        {
+            text.Add($"Apply {fireGive} fire {(fireTarget.other && hasBuffFriendly ? "to an ally" : " ")}{(fireTarget.self ? "to self" : "")}");
+            tooltipHandler.hasFire = true;
+        }
+        if (poisonGive > 0)
+        {
+            text.Add($"Apply {poisonGive} poison {(poisonTarget.other && hasBuffFriendly ? "to an ally" : " ")}{(poisonTarget.self ? "to self" : "")}");
+            tooltipHandler.hasPoison = true;
+        }
+        if (pepperGive > 0)
+        {
+            text.Add($"Apply {pepperGive} pepper");
+            tooltipHandler.hasPepper = true;
+        }
+        if (curseGive > 0)
+        {
+            text.Add($"Apply {curseGive} curse {(curseTarget.other && hasBuffFriendly ? "to an ally" : " ")}{(curseTarget.self ? "to self" : "")}");
+            tooltipHandler.hasCurse = true; }
+        if (demonizeGive > 0)
+        {
+            text.Add($"Apply {demonizeGive} demonize {(demonizeTarget.other && hasBuffFriendly ? "to an ally" : " ")}{(demonizeTarget.self ? "to self" : "")}");
+            tooltipHandler.hasDemonize = true;
+        }
+        if (reflectGive > 0)
+        {
+            text.Add($"Apply {reflectGive} reflect {(reflectTarget.other && hasBuffFriendly ? "to an ally" : " ")}{(reflectTarget.self ? "to self" : "")}");
+            tooltipHandler.hasReflect = true;
+        }
+        if (hazeGive > 0)
+        {
+            text.Add($"Apply {hazeGive} haze {(hazeTarget.other && hasBuffFriendly ? "to an ally" : " ")}{(hazeTarget.self ? "to self" : "")}");
+            tooltipHandler.hasHaze = true;
+        }
+        if (numOfAttacksGive > 0)
+        {
+            text.Add($"Increase {(numOfAtkTarget.other ? (hasBuffFriendly ? "ally" : "target") : "")}{(numOfAtkTarget.self ? "own" : "")} frenzy by {numOfAttacksGive}");
+            tooltipHandler.hasFrenzy = true;
+        }
 
+       
+
+        if (attackGive > 0) { text.Add($"Increase {(attackTarget.other ? (hasBuffFriendly?"ally": "target") : "")}{(attackTarget.self ? "own" : "")} attack by {attackGive} "); }
+        if (healthGive > 0) { text.Add($"Heal {(healthTarget.other ? (hasBuffFriendly ? "ally" : "target") : "")}{(healthTarget.self ? "" : "")} {healthGive} health"); }
+        if (timerGive < 0) { text.Add($"Reduce {(timerTarget.other ? (hasBuffFriendly ? "ally" : "target") : "")}{(timerTarget.self ? "own" : "")} timer by {timerGive}"); } //Specifically make timer negative!
+
+        //Special Abilities
+        if(offStats.currentNumOfAttacks > 1)
+        {
+            text.Add($"<color=yellow>Frenzy</color>");
+            tooltipHandler.hasFrenzy = true;
+        }
+        if (hasBarrage) { 
+            text.Add($"<color=yellow>Barrage</color>");
+            tooltipHandler.hasBarrage = true;
+        }
+        if (hasLifesteal) { text.Add($"<color=yellow>Lifesteal</color>");
+            tooltipHandler.hasLifesteal = true;
+        }
+        if (hasAimless) {
+            text.Add($"<color=yellow>Aimless</color>");
+            tooltipHandler.hasAimless = true;
+        }
+        if (hasConsume) {
+            text.Add($"<color=yellow>Consume</color>");
+            tooltipHandler.hasConsume = true;
+        }
+        if (hasEverburnResistance) {
+            text.Add($"<color=yellow>Everburn Resistance</color>");
+            tooltipHandler.hasEverburnResistance = true; }
+        if (hasLongshot)
+        {
+            text.Add($"<color=yellow>Longshot</color>");
+            tooltipHandler.hasLongshot = true;
+        }
+        if (hasPoisonResistance)
+        {
+            text.Add($"<color=yellow>Poison Resistance</color>");
+            tooltipHandler.hasPoisonResistance = true; }
+        if (hasSmackback)
+        {
+            text.Add($"<color=yellow>Smackback</color>");
+            tooltipHandler.hasSmackback = true;
+        }
+        if (hasSpawnOnDeath)
+        {
+            text.Add($"<color=yellow>Spawn</color>");
+            tooltipHandler.hasSpawnOnDeath = true;
+        }
+        DisableTooltips();
         cardDescription.text = string.Join(" ", text);
         var textList = cardDescription.text.Split(" ").ToList();
         cardDescription.text = desc.CreateDescription(textList);
+        
     }
 
     //Card Auto logic methods
@@ -767,7 +888,8 @@ public class UnitCard :CardBase
             rb = gameObject.AddComponent<Rigidbody2D>();
             rb.AddForce(new Vector2(0.25f, 1f), ForceMode2D.Impulse);
         }
-           
+
+   
       
 
         //special abilities

@@ -89,7 +89,8 @@ public class CardSaveData
     public bool hasPoisonResistance;
     public bool hasBarrage;
     public bool hasSmackback;
-    public bool hasReaction;
+    public bool hasDieReaction;
+    public bool hasAttackReaction;
     public bool hasLongshot;
     public bool hasAimless;
     public bool hasBuffFriendly;

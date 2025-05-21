@@ -33,14 +33,16 @@ public abstract class CardBase : MonoBehaviour
         hazeGive, bombGive, inkGive, demonizeGive;
     [Header("Specials")]
     [SerializeField] protected bool hasBarrage;
-    [SerializeField] protected bool hasLifesteal, hasConsume, hasAimless, hasSelfTargetPosEffects; //special ability flags
+    [SerializeField] protected bool hasLifesteal, hasConsume, hasBuffFriendly, hasAimless, hasSelfTargetPosEffects; //special ability flags
     [SerializeField] protected List<int> spawnsOnDeath = new List<int>();
     public int charmLimit, currentCharmAmount;
 
     [Header("UISpecific")]
-    [SerializeField] GameObject tooltipPrefab;
-    [SerializeField] List<GameObject> rightTooltips,leftTooltips;
-    [SerializeField] RectTransform rightTooltipPos,leftTooltipPos;
+    [SerializeField] protected GameObject tooltipPrefab;
+    [SerializeField] protected List<GameObject> rightTooltips,leftTooltips;
+    [SerializeField] protected RectTransform rightTooltipPos,leftTooltipPos;
+    [SerializeField] protected bool manualDescription;
+    [SerializeField] protected TooltipHandler tooltipHandler;
     public abstract CardSaveData CreateCardSaveData();
     
           
@@ -77,122 +79,92 @@ public abstract class CardBase : MonoBehaviour
 
     public virtual void CreateCardDescription()
     {
+        
         text.Clear(); //so empty it out!
         //left tooltips
         if (shieldGive > 0)       {
             text.Add($"Apply {shieldGive} shield");
-            GameObject tooltip = Instantiate(tooltipPrefab, leftTooltipPos);
-            leftTooltips.Add(tooltip);
-            tooltip.GetComponentInChildren<TextMeshProUGUI>().text = desc.RewriteSentence($"Ice shield \n blocks damage");
+            tooltipHandler.hasShield = true;
         }
         if (crystalGive > 0) { 
             text.Add($"Apply {crystalGive} crystal");
-            GameObject tooltip = Instantiate(tooltipPrefab, leftTooltipPos);
-            leftTooltips.Add(tooltip);
-            tooltip.GetComponentInChildren<TextMeshProUGUI>().text = desc.RewriteSentence($"Crystal crystal \n blocks entire instances of damage");
+            tooltipHandler.hasCrystal = true;
         }     
         if (bombGive > 0) { 
             text.Add($"Apply {bombGive} bomb");
-            GameObject tooltip = Instantiate(tooltipPrefab, leftTooltipPos);
-            leftTooltips.Add(tooltip);
-            tooltip.GetComponentInChildren<TextMeshProUGUI>().text = desc.RewriteSentence($"Bom bomb \n Takes additional damage from all sources \n Does not count down!");
-
+            tooltipHandler.hasBomb = true;
         }
         if (inkGive > 0) { 
             text.Add($"Apply {inkGive} ink");
-            GameObject tooltip = Instantiate(tooltipPrefab, leftTooltipPos);
-            leftTooltips.Add(tooltip);
-            tooltip.GetComponentInChildren<TextMeshProUGUI>().text = desc.RewriteSentence($"Crystal crystal \n Silences effects \n Counts down every turn");
+            tooltipHandler.hasInk = true;
         }
-        while (leftTooltips.Count < 3)
-        {
-            var tooltip = new GameObject($"EmptyTooltip {leftTooltips.Count} for {name}");
 
-            tooltip.transform.parent = leftTooltipPos;
-            leftTooltips.Add(tooltip);
-        }
-        //right tooltips
+//right tooltips
         if (snowGive > 0)
         {
             text.Add($"Apply {snowGive} snow");
-            GameObject tooltip = Instantiate(tooltipPrefab, rightTooltipPos);
-            rightTooltips.Add(tooltip);
-            tooltip.GetComponentInChildren<TextMeshProUGUI>().text = desc.RewriteSentence($"Snow snow \n Freezes Counter timer & Reactions reaction \n Counts down every turn");
-        }
+            tooltipHandler.hasSnow = true;  }
         if (fireGive > 0)
         {
             text.Add($"Apply {fireGive} fire");
-            GameObject tooltip = Instantiate(tooltipPrefab, rightTooltipPos);
-            rightTooltips.Add(tooltip);
-            tooltip.GetComponentInChildren<TextMeshProUGUI>().text = desc.RewriteSentence($"Everburn fire \n Deals damage every turn"); //fire doesn't ever go down!
-
+            tooltipHandler.hasFire = true;
         }
         if (poisonGive > 0)
         {
             text.Add($"Apply {poisonGive} poison");
-            GameObject tooltip = Instantiate(tooltipPrefab, rightTooltipPos);
-            rightTooltips.Add(tooltip);
-            tooltip.GetComponentInChildren<TextMeshProUGUI>().text = desc.RewriteSentence($"Poison poison \n Deals damage every turn \n Counts down every turn");
-        }
+            tooltipHandler.hasPoison = true; }
         if (pepperGive > 0)
         {
             text.Add($"Apply {pepperGive} pepper");
-            GameObject tooltip = Instantiate(tooltipPrefab, rightTooltipPos);
-            rightTooltips.Add(tooltip);
-            tooltip.GetComponentInChildren<TextMeshProUGUI>().text = desc.RewriteSentence($"Pepper pepper \n Temporarily increases attack \n Changes after triggering");
-        }
+            tooltipHandler.hasPepper = true; }
         if (curseGive > 0)
         {
             text.Add($"Apply {curseGive} curse");
-            GameObject tooltip = Instantiate(tooltipPrefab, rightTooltipPos);
-            rightTooltips.Add(tooltip);
-            tooltip.GetComponentInChildren<TextMeshProUGUI>().text = desc.RewriteSentence($"Curse curse \n Temporarily reduces attack \n Clears after triggering");
-        }
+            tooltipHandler.hasCurse = true; }
         if (demonizeGive > 0) { 
             text.Add($"Apply {demonizeGive} demonize");
-            GameObject tooltip = Instantiate(tooltipPrefab, rightTooltipPos);
-            rightTooltips.Add(tooltip);
-            tooltip.GetComponentInChildren<TextMeshProUGUI>().text = desc.RewriteSentence($"Demonize demonize \n Doubles damage taken \n Counts down after taking damage");
+            tooltipHandler.hasDemonize = true;
         }
         if (reflectGive > 0)
         {
             text.Add($"Apply {reflectGive} reflect");
-            GameObject tooltip = Instantiate(tooltipPrefab, rightTooltipPos);
-            rightTooltips.Add(tooltip);
-            tooltip.GetComponentInChildren<TextMeshProUGUI>().text = desc.RewriteSentence($"Teeth reflect \n Deals damage to attackers");
-
+            tooltipHandler.hasReflect = true;
         }
         if (hazeGive > 0)
         {
             text.Add($"Apply {hazeGive} haze");
-            GameObject tooltip = Instantiate(tooltipPrefab, rightTooltipPos);
-            rightTooltips.Add(tooltip);
-            tooltip.GetComponentInChildren<TextMeshProUGUI>().text = desc.RewriteSentence($"Haze haze \n When attacking hit a random ally instead \n Counts down after each attack");
-
+            tooltipHandler.hasHaze = true;
         }
         if (numOfAttacksGive > 0) { 
             text.Add($"Get frenzy {numOfAttacksGive}");
-            GameObject tooltip = Instantiate(tooltipPrefab, rightTooltipPos);
-            rightTooltips.Add(tooltip);
-            tooltip.GetComponentInChildren<TextMeshProUGUI>().text = desc.RewriteSentence($"Frenzy numOfAttacks \n Triggers multiple times");
+            tooltipHandler.hasFrenzy = true;
+        }
 
-        }
-        while (rightTooltips.Count < 3) 
-        {
-            var tooltip = new GameObject($"EmptyTooltip {rightTooltips.Count} for {name}");
-            
-            tooltip.transform.parent = rightTooltipPos;
-            rightTooltips.Add(tooltip);
-        }
-        
-        DisableTooltips();
+     
        
         if (attackGive > 0) { text.Add($"Increase attack by {attackGive}"); }
         if (healthGive > 0) { text.Add($"Heal {healthGive} health"); }
         if (timerGive < 0) { text.Add($"Reduce timer by {timerGive}"); } //Specifically make timer negative!
 
         //Special Abilities
-        if (hasBarrage) { text.Add($"<color=yellow>Barrage</color>"); }
+        if (hasBarrage) { text.Add($"<color=yellow>Barrage</color>");
+            tooltipHandler.hasBarrage = true;
+        }
+        if (hasLifesteal) { text.Add($"<color=yellow>Lifesteal</color>");
+            tooltipHandler.hasLifesteal = true;
+        }
+        if (hasConsume)
+        {
+            text.Add($"<color=yellow>Consume</color>");
+            tooltipHandler.hasConsume = true;
+        }
+        if (hasAimless)
+        {
+            text.Add($"<color=yellow>Aimless</color>");
+            tooltipHandler.hasAimless = true;
+        }
+       
+        DisableTooltips();
     }
     public virtual bool TryUse(UnitCard unitToUseOn)
     {
@@ -201,26 +173,14 @@ public abstract class CardBase : MonoBehaviour
 
     public virtual void EnableTooltips()
     {
-       foreach(var tooltip in rightTooltips )
-        {
-            tooltip.SetActive(true);
-        }
-       foreach(var tooltip in leftTooltips)
-        {
-            tooltip.SetActive(true);
-        }
+        leftTooltipPos.gameObject.SetActive(true);
+        rightTooltipPos.gameObject.SetActive(true);
        
     }
     public virtual void DisableTooltips()
     {
-        foreach (var tooltip in rightTooltips)
-        {
-            tooltip.SetActive(false);
-        }
-        foreach (var tooltip in leftTooltips)
-        {
-            tooltip.SetActive(false);
-        }
+        leftTooltipPos.gameObject.SetActive(false);
+        rightTooltipPos.gameObject.SetActive(false);
     }
 
     public virtual bool TryPlaceOnField(int atIndex, bool isPlayerCard = false, UnitCard cardAlreadyThere = null, bool endCase = true) 

@@ -68,8 +68,8 @@ MonoBehaviour:
     m_Unicode: 65534
     m_GlyphIndex: 4
     m_Scale: 1
-    m_Name: resistsnow
-    m_HashCode: -1940718321
+    m_Name: snowRes
+    m_HashCode: 1574125953
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 5
