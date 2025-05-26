@@ -32,12 +32,13 @@ public class UnitCard :CardBase
     public Targeting healthTarget, attackTarget, numOfAtkTarget, timerTarget,
         shieldTarget, snowTarget, fireTarget, crystalTarget, poisonTarget, pepperTarget,
         curseTarget, reflectTarget, hazeTarget, bombTarget, inkTarget, demonizeTarget;
-
+    
 
     [Header("Stat visuals")]
-    [SerializeField] TextMeshProUGUI cAttackTimerText;
+    [SerializeField] TextMeshProUGUI cAttackTimerText   ;
     [SerializeField] TextMeshProUGUI cHealthText;
     [SerializeField] Slider currentHealthSlider;
+    [SerializeField] GameObject poisonRes, everburnRes, smackback;
     //shield = ice (block dmg/fire damage, snow = stop enemy timer (reduced by globalFireLvl) , fire = damage/turn, crystal = total atk block , poison = damage/turn ignoring shield, pepper = bonus atk/turn, curse = -ve bonus atk/turn
 
     [Header("Animators")]
@@ -73,6 +74,9 @@ public class UnitCard :CardBase
             baseID = ID,
             //runtimeID = CardI
             cardType = "UnitCard",
+            manualDescription = this.manualDescription,
+            manualDescriptionText = this.manualDescriptionText,
+
             //cardbase fields
             fieldIndex = fieldIndex,
             presetTag = presetTag,
@@ -151,6 +155,10 @@ public class UnitCard :CardBase
     {// Set all the fields from the save data back to the card
 
         base.SetupUsingCardSaveData(cardSaveData);
+        this.manualDescription = cardSaveData.manualDescription;
+        this.manualDescriptionText = cardSaveData.manualDescriptionText;
+
+
         this.attackGive = cardSaveData.attackGive;
         this.healthGive = cardSaveData.healthGive;
         this.timerGive = cardSaveData.timerGive;
@@ -227,14 +235,37 @@ public class UnitCard :CardBase
         name = nameText;
         offStats = GetComponent<OffensiveStats>();
         offStats.Setup(statsData);
-        cAttackTimerText.text = $"{currentAtkTimer}x{offStats.currentNumOfAttacks}";
+        cAttackTimerText.text = $"{currentAtkTimer}";
+       
         currentAtkTimer = maxAtkTimer;
         currentHealth = hasDied?maxHealth/2 :maxHealth; //so if have died before then make it half health
         currentHealthSlider.maxValue = maxHealth;
+        if (hasPoisonResistance)
+        {
+            poisonRes.SetActive(true);
+        }
+        if (hasEverburnResistance)
+        {
+            everburnRes.SetActive(true);
+        }
+        if (hasSmackback)
+        {
+            smackback.SetActive(true);
+        }
+        if(maxAtkTimer == 0) //so no attack timer
+        {
+            cAttackTimerText.transform.parent.gameObject.SetActive(false);
+        }
         ChangeStatus();
         if (!manualDescription)
         {
-            CreateCardDescription();
+            CreateCardDescription(); //make one from scratch
+        }
+        else
+        {
+           //rework the manual description to include sprites
+            var textList = manualDescriptionText.Split(" ").ToList();
+            cardDescription.text = desc.CreateDescription(textList);
         }
         
 
@@ -429,7 +460,8 @@ public class UnitCard :CardBase
         }
         if (!hideTimer)
         {
-            cAttackTimerText.text = $"{currentAtkTimer}x{offStats.currentNumOfAttacks}";
+            cAttackTimerText.text = $"{currentAtkTimer}";
+            offStats.cAttackAmountText.text = $"x{offStats.currentNumOfAttacks}";
         }
        
     }
@@ -777,7 +809,7 @@ public class UnitCard :CardBase
         //offenseStatSpecific
         offStats.ChangeOffStats(curseOn.value,attackAdded,numAttksAdded);
         currentAtkTimer += timerAdded;
-        cAttackTimerText.text = $"{currentAtkTimer}x{offStats.currentNumOfAttacks}"; //just to update the frenzy part!
+        cAttackTimerText.text = $"{currentAtkTimer}"; //just to update the frenzy part!
         if (timerAdded < 0)
         {
             StartCoroutine(CheckTimerAtZeroCoroutine());

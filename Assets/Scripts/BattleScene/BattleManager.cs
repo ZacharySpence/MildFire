@@ -237,6 +237,10 @@ public class BattleManager : MonoBehaviour
               
                 card.ChangeStatus(fireAdded: 1); //so actually taking them out of combat means safe from fire?
             }
+            if(card.maxAtkTimer == 0) //doesn't have an attack timer (so smackback/reaction only)
+            {
+                continue;
+            }
             yield return StartCoroutine(card.ReduceTimer()); //Do combat one by one
             
         }
@@ -552,7 +556,10 @@ public class BattleManager : MonoBehaviour
                 //Debug.Log("try place card on enemy (shouldnt work!)");
                 break;
             case "discard":
-                selectedCard.TryDiscard();               
+                if(selectedCard.TryGetComponent<UnitCard>(out var unitCard))
+                {
+                    selectedCard.TryDiscard();
+                }                 
                 //Debug.Log("move card back into discard (only for unitCards");
                 break;
             case "emptyCard":

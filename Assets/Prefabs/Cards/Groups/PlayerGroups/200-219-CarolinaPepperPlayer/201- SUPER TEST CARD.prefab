@@ -116,6 +116,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: 201- SUPER TEST CARD
       objectReference: {fileID: 0}
+    - target: {fileID: 4425336328829760005, guid: 98e1fe0a7e51421409a9f16c52b58341, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4425336328829760005, guid: 98e1fe0a7e51421409a9f16c52b58341, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4971256938354952592, guid: 98e1fe0a7e51421409a9f16c52b58341, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -333,6 +341,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6229215848705942096, guid: 98e1fe0a7e51421409a9f16c52b58341, type: 3}
+      propertyPath: manualDescription
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6229215848705942096, guid: 98e1fe0a7e51421409a9f16c52b58341, type: 3}
       propertyPath: attackTarget.other
       value: 0
       objectReference: {fileID: 0}
@@ -345,8 +357,12 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6229215848705942096, guid: 98e1fe0a7e51421409a9f16c52b58341, type: 3}
+      propertyPath: manualDescriptionText
+      value: Whenever carolina attacks they get 5 health and get +1 frenzy
+      objectReference: {fileID: 0}
+    - target: {fileID: 6229215848705942096, guid: 98e1fe0a7e51421409a9f16c52b58341, type: 3}
       propertyPath: statsData.numOfAttacks
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7692226717170814409, guid: 98e1fe0a7e51421409a9f16c52b58341, type: 3}
       propertyPath: m_AnchorMax.y

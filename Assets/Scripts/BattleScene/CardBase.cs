@@ -36,12 +36,14 @@ public abstract class CardBase : MonoBehaviour
     [SerializeField] protected bool hasLifesteal, hasConsume, hasBuffFriendly, hasAimless, hasSelfTargetPosEffects; //special ability flags
     [SerializeField] protected List<int> spawnsOnDeath = new List<int>();
     public int charmLimit, currentCharmAmount;
+   
 
     [Header("UISpecific")]
     [SerializeField] protected GameObject tooltipPrefab;
     [SerializeField] protected List<GameObject> rightTooltips,leftTooltips;
     [SerializeField] protected RectTransform rightTooltipPos,leftTooltipPos;
     [SerializeField] protected bool manualDescription;
+    [SerializeField][TextArea]protected string manualDescriptionText;
     [SerializeField] protected TooltipHandler tooltipHandler;
     public abstract CardSaveData CreateCardSaveData();
     
@@ -57,6 +59,7 @@ public abstract class CardBase : MonoBehaviour
         this.border = cardSaveData.border;
         this.background = cardSaveData.background;
 
+        
         cardName.text = nameText;
         cardPicture.sprite = picture;
         cardBackground.sprite = background;

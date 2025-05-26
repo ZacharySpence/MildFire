@@ -7,6 +7,7 @@ public class UseOffCard : CardBase
 {
     [SerializeField] OffensiveStats offStats;
     public StatsData statsData;
+    bool hasPlayed;
     protected override void Awake()
     {
         base.Awake();
@@ -24,6 +25,8 @@ public class UseOffCard : CardBase
             baseID = ID,
             //runtimeID = CardI
             cardType = "UseOffCard",
+            manualDescription = this.manualDescription,
+            manualDescriptionText = this.manualDescriptionText,
             //cardbase fields
             fieldIndex = fieldIndex,
             presetTag = presetTag,
@@ -64,6 +67,9 @@ public class UseOffCard : CardBase
     {// Set all the fields from the save data back to the card
 
         base.SetupUsingCardSaveData(cardSaveData);
+        this.manualDescription = cardSaveData.manualDescription;
+        this.manualDescriptionText = cardSaveData.manualDescriptionText;
+
         this.attackGive = cardSaveData.attackGive;
         this.healthGive = cardSaveData.healthGive;
         this.timerGive = cardSaveData.timerGive;
@@ -90,9 +96,18 @@ public class UseOffCard : CardBase
         name = nameText;
         offStats = GetComponent<OffensiveStats>();
         offStats.Setup(statsData);
-        
-        CreateCardDescription();
-        
+
+        if (!manualDescription)
+        {
+            CreateCardDescription(); //make one from scratch
+        }
+        else
+        {
+            //rework the manual description to include sprites
+            var textList = manualDescriptionText.Split(" ").ToList();
+            cardDescription.text = desc.CreateDescription(textList);
+        }
+
     }
 
     public override void CreateCardDescription()
@@ -102,7 +117,7 @@ public class UseOffCard : CardBase
         //special effects (specific to offensive only
         if (hasLifesteal)
         {
-            text.Add($"Heal {offStats.currentAttack} health on hit");
+            text.Add($"Heal closest ally {offStats.currentAttack} health on hit");
         }
 
         cardDescription.text = string.Join(" ", text);
@@ -127,22 +142,24 @@ public class UseOffCard : CardBase
         else
         {
             Use(cardToUseOn);
-        }
 
+        }
+        BattleManager.Instance.cardFullyFinished = true;
+        hasPlayed = true;
        
         return true;
     }
 
     private void Use(UnitCard cardToUseOn)
     {
-        if(offStats.currentAttack > 0)
-        {
-            cardToUseOn.TakeDamage(offStats.currentAttack, false, false, healthGive, attackGive, numOfAttacksGive, timerGive,
+       
+        //even if 0 attack cause can change stats!
+        cardToUseOn.TakeDamage(offStats.currentAttack, false, false, healthGive, attackGive, numOfAttacksGive, timerGive,
                         snowGive, poisonGive, fireGive, curseGive, shieldGive,
                         reflectGive, hazeGive, inkGive, bombGive, demonizeGive,
                         pepperGive, crystalGive);
-        }
-        if (hasLifesteal)
+        
+        if (hasLifesteal && offStats.currentAttack > 0)
         {
             LifeSteal(offStats.currentAttack, cardToUseOn);
         }
@@ -151,14 +168,23 @@ public class UseOffCard : CardBase
             offStats.ChangeOffStats(curseGive, attackGive, numOfAttacksGive); //for offensive stats
 
         }
-        BattleManager.Instance.cardFullyFinished = true;
+       
     }
 
     public override bool TryDiscard()
     {
         //HAVE IT PLACED INTO DISCARD
-        PlayerHand.Instance.AddToDiscard(this, true); //got to change this so can't just discard any card
+        if (hasConsume && hasPlayed)
+        {
+            PlayerHand.Instance.AddToConsume(this, true);
+        }
+        else
+        {
+            hasPlayed = false;
+            PlayerHand.Instance.AddToDiscard(this, true); //got to change this so can't just discard any card
+        }
         BattleManager.Instance.selectedCard = null;//just remove it since it should become missing
+        BattleManager.Instance.cardFullyFinished = true;
         return true;
     }
 

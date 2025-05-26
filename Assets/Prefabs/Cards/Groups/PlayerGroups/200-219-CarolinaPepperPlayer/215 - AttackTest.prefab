@@ -29,6 +29,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3295105033796367900, guid: 55fde3f9a724c374e8b9729e63932cce, type: 3}
+      propertyPath: hasLifesteal
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3295105033796367900, guid: 55fde3f9a724c374e8b9729e63932cce, type: 3}
       propertyPath: statsData.attack
       value: 2
       objectReference: {fileID: 0}

@@ -9,7 +9,8 @@ public class CardSaveData
     public int baseID;       // ID from the original card
     public int runtimeID;    // Unique per-session ID (optional)
     public string cardType;  // e.g., "UnitCard", "UseCard", etc.
-
+    public bool manualDescription;
+    public string manualDescriptionText;
     // --- Core CardBase Data ---
     public int fieldIndex;
     public string presetTag;
@@ -94,4 +95,5 @@ public class CardSaveData
     public bool hasLongshot;
     public bool hasAimless;
     public bool hasBuffFriendly;
+    public bool hasConsume;
 }

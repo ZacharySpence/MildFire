@@ -42,7 +42,7 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: 7a528a109ce078c4da774c8b0bb301df, type: 3}
     - target: {fileID: 62658012984666088, guid: 2fafd344cc9f51444803cbef016491cc, type: 3}
       propertyPath: maxAtkTimer
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 62658012984666088, guid: 2fafd344cc9f51444803cbef016491cc, type: 3}
       propertyPath: bombOn.value

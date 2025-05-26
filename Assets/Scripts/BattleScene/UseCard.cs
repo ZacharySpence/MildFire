@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class UseCard : CardBase
 {
+    bool hasPlayed;
     protected override void Awake()
     {
         base.Awake();
@@ -18,6 +19,8 @@ public class UseCard : CardBase
             baseID = ID,
             //runtimeID = CardI
             cardType = "UseCard",
+            manualDescription = this.manualDescription,
+            manualDescriptionText = this.manualDescriptionText,
             //cardbase fields
             fieldIndex = fieldIndex,
             presetTag = presetTag,
@@ -42,6 +45,9 @@ public class UseCard : CardBase
             inkGive = this.inkGive,
             demonizeGive = this.demonizeGive,
             numOfAttacksGive = this.numOfAttacksGive,
+
+            //specials
+            hasConsume = this.hasConsume,
         };
     }
 
@@ -49,6 +55,9 @@ public class UseCard : CardBase
     {// Set all the fields from the save data back to the card
 
         base.SetupUsingCardSaveData(cardSaveData);
+        this.manualDescription = cardSaveData.manualDescription;
+        this.manualDescriptionText = cardSaveData.manualDescriptionText;
+
         this.attackGive = cardSaveData.attackGive;
         this.healthGive = cardSaveData.healthGive;
         this.timerGive = cardSaveData.timerGive;
@@ -66,8 +75,18 @@ public class UseCard : CardBase
         this.demonizeGive = cardSaveData.demonizeGive;
         this.numOfAttacksGive = cardSaveData.numOfAttacksGive;
 
+        this.hasConsume = cardSaveData.hasConsume;
         name = nameText;
-        CreateCardDescription();
+        if (!manualDescription)
+        {
+            CreateCardDescription(); //make one from scratch
+        }
+        else
+        {
+            //rework the manual description to include sprites
+            var textList = manualDescriptionText.Split(" ").ToList();
+            cardDescription.text = desc.CreateDescription(textList);
+        }
 
     }
 
@@ -99,6 +118,8 @@ public class UseCard : CardBase
             Use(cardToUseOn);
         }
 
+        hasPlayed = true;
+       
         return true;
     }
 
@@ -108,16 +129,23 @@ public class UseCard : CardBase
                                     snowGive, poisonGive, fireGive, curseGive, shieldGive,
                                     reflectGive, hazeGive, inkGive, bombGive, demonizeGive,
                                     pepperGive, crystalGive);
-        if(timerGive >= 0) //so not finishing after timer
-        {
-            BattleManager.Instance.cardFullyFinished = true;
-        }
+       
     }
     public override bool TryDiscard()
     {
         //HAVE IT PLACED INTO DISCARD
-        PlayerHand.Instance.AddToDiscard(this, true); //got to change this so can't just discard any card
+        if (hasConsume && hasPlayed) 
+        {
+            PlayerHand.Instance.AddToConsume(this, true);
+        }
+        else
+        {
+            hasPlayed = false;
+            PlayerHand.Instance.AddToDiscard(this, true); //got to change this so can't just discard any card
+        }
+        
         BattleManager.Instance.selectedCard = null;//just remove it since it should become missing
+        BattleManager.Instance.cardFullyFinished = true;
         return true;
     }
 }

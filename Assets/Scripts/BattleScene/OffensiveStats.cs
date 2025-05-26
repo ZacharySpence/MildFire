@@ -9,7 +9,7 @@ public class OffensiveStats : MonoBehaviour
     public int currentNumOfAttacks, currentAttack;
     [HideInInspector] public int  attack,numOfAttacks;
     [Header("OffensiveStatVisual")]
-    [SerializeField] protected TextMeshProUGUI cAttackText,cAttackAmountText;
+    [SerializeField] public TextMeshProUGUI cAttackText,cAttackAmountText;
 
     public void Setup(StatsData data)
     {
@@ -20,7 +20,11 @@ public class OffensiveStats : MonoBehaviour
         currentAttack = attack;
         cAttackText.text = $"{currentAttack}";
         currentNumOfAttacks = numOfAttacks;
-        cAttackAmountText.text = $"{currentNumOfAttacks}";
+        cAttackAmountText.text = $"x{currentNumOfAttacks}";
+        if(currentNumOfAttacks > 1)
+        {
+            cAttackAmountText.transform.parent.gameObject.SetActive(true);
+        }
     }
 
     public void ChangeOffStats(int curseOn=0,int attackAdded=0,int numAttksAdded=0)
@@ -30,7 +34,11 @@ public class OffensiveStats : MonoBehaviour
         currentAttack = attack - curseOn;  //temp change
         cAttackText.text = $"{currentAttack}";
         currentNumOfAttacks += numAttksAdded;       
-        cAttackAmountText.text = $"{currentNumOfAttacks}";
+        cAttackAmountText.text = $"x{currentNumOfAttacks}";
+        if (currentNumOfAttacks > 1)
+        {
+            cAttackAmountText.transform.parent.gameObject.SetActive(true);
+        }
     }
   
 }
