@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 using UnityEngine.Android;
 
@@ -22,6 +23,9 @@ public class PlayerHand : MonoBehaviour
     [SerializeField] float spacing = 2.1f;
     public bool hasBadChaos,hasGoodChaos;
     public int chanceForConsume;
+    [Header("References")]
+    Animator anim;
+
     [Header("Flags")]
     
     bool setupComplete = false;
@@ -35,6 +39,7 @@ public class PlayerHand : MonoBehaviour
         {
             Destroy(Instance);
         }
+        anim = GetComponent<Animator>();
     }
     private void Start()
     {
@@ -246,7 +251,17 @@ public class PlayerHand : MonoBehaviour
     }
     public void AddToConsume(CardBase card, bool inHand)
     {
-        //not readded to cardpool so gone forever!
+        StartCoroutine(ConsumeCard(card,inHand));
+        
+    }
+    IEnumerator ConsumeCard(CardBase card, bool inHand)
+    {
+        //Instantiate the ParticleSystem prefab which plays on awake (ADD IN LATER
+        anim.SetTrigger("Consume");
+        
+        yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).IsName("Consume"));
+        yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
+        //not re-added to cardpool so gone forever!
         consume.Add(card);
         card.GetComponent<Collider2D>().enabled = true;
         card.gameObject.SetActive(false);

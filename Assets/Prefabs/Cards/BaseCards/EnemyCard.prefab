@@ -4325,6 +4325,7 @@ GameObject:
   - component: {fileID: 4743252357212325652}
   - component: {fileID: 8506061138994745486}
   - component: {fileID: 7527708761072437685}
+  - component: {fileID: 4863433694425540092}
   m_Layer: 0
   m_Name: EnemyCard
   m_TagString: Untagged
@@ -4666,6 +4667,27 @@ MonoBehaviour:
   - {fileID: 4763717256983399411}
   - {fileID: 4986061211435370784}
   - {fileID: 8478660163754412488}
+--- !u!95 &4863433694425540092
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7972879672332376476}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9545b3ee6dfdbbd4b9a26d1086dbfc97, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8107308225015566409
 GameObject:
   m_ObjectHideFlags: 0

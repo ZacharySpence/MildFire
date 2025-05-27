@@ -121,11 +121,19 @@ public class PlayerBackpack : MonoBehaviour
                 card.GetComponentInChildren<UseCard>().SetupUsingCardSaveData(cardToChange);
                 break;
         }
-       
+
+        //Add to persistance manager & save
+        PersistanceManager.skullsOnID.Add((selectedCharm.ID, cardToChange.baseID));
+        PersistanceManager.SavePersistence();
+
         //Also then find the actual card in backpack!
+
         //visually remove charm too!
         Destroy(selectedCharm.gameObject);
         selectedCharm = null;
+
+       
+        
     }
 
     void OrderCharms()
@@ -143,10 +151,15 @@ public class PlayerBackpack : MonoBehaviour
         Debug.Log("clicked backpack card");
         if (selectedCharm != null && cardSaveData.currentCharmAmount < 3)
         {
-            if(cardSaveData.cardType == "UseCard" && (selectedCharm.healthChange != 0 || selectedCharm.attackChange != 0))
+            //Make it so only can do on unitCards
+            if(cardSaveData.cardType != "UnitCard")
+            {
+                return;
+            }
+           /* if(cardSaveData.cardType == "UseCard" && (selectedCharm.healthChange != 0 || selectedCharm.attackChange != 0))
             {
                 return; //can't attach certain charms to use cards!
-            }
+            }*/
             AttachCharmToCard(card,cardSaveData);
         }
     }

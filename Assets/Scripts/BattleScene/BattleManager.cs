@@ -35,6 +35,7 @@ public class BattleManager : MonoBehaviour
     [Header("BattleSpecifics")]
     public int fireLevel = 0;
     int roundNumber = 1;
+    int currentBossID;
    
     [Header("References")]
     [SerializeField]PlayerHand playerHand;
@@ -330,8 +331,16 @@ public class BattleManager : MonoBehaviour
             if (enemiesToAdd.cards.Count == 0) { return; }
             if (enemyField[i].ID == -1 ) //so if it's empty
             {
-                PlaceEnemyCardOnEmptyField(i, IDLookupTable.instance.GetCardByID(enemiesToAdd.cards[0]) as UnitCard);
+                var card = IDLookupTable.instance.GetCardByID(enemiesToAdd.cards[0]) as UnitCard;
+                PlaceEnemyCardOnEmptyField(i,card);
+                
+                if (card.isBoss)
+                {
+                    //ALSO check if persistantSkullsID holds id+100 if so then add that skull (always to the boss so supes them up
+                    currentBossID = card.ID; //store the boss ID
+                }
                 enemiesToAdd.cards.RemoveAt(0); //pop the card
+               
             }
         }
 
@@ -393,6 +402,8 @@ public class BattleManager : MonoBehaviour
                 return false;
             }
         }
+        PersistanceManager.unlockedPlayerGroups.Add(currentBossID - 100); //player equiv is -100
+        PersistanceManager.SavePersistence();
         return true;
     }
     void Defeat()

@@ -163,6 +163,7 @@ public class WorldManager : MonoBehaviour
         currentNode.button.interactable = true;
         //give them first choice
         Debug.Log("doing player choice");
+        PersistanceManager.LoadPersistence();
         WorldPlayer.Instance.CreateLeaderChoice();
     }
     public  void UpdateNodes()

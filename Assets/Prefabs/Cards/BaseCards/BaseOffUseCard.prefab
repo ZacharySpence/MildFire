@@ -1341,6 +1341,7 @@ GameObject:
   - component: {fileID: 3295105033796367900}
   - component: {fileID: 2810578824643281708}
   - component: {fileID: 2483505396198871090}
+  - component: {fileID: 2273930782818689108}
   m_Layer: 0
   m_Name: BaseOffUseCard
   m_TagString: Untagged
@@ -1575,6 +1576,27 @@ MonoBehaviour:
   - {fileID: 2529757965877447733}
   - {fileID: 4195037830640898402}
   - {fileID: 6970311934216802845}
+--- !u!95 &2273930782818689108
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7972879672332376476}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9545b3ee6dfdbbd4b9a26d1086dbfc97, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7973684326679956919
 GameObject:
   m_ObjectHideFlags: 0

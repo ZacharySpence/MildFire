@@ -14,7 +14,6 @@ public class WorldPlayer : MonoBehaviour
     public static bool gameHasStarted; //persistent across scenes ->> need to save this to then load if loading game
     [SerializeField] Transform startingPanel;
     [SerializeField] GameObject startingButtonPrefab;
-    [SerializeField] List<int> allLeaderID = new List<int>();
     [SerializeField] PlayerBackpack playerBackpack;
    
     private void Awake()
@@ -68,7 +67,7 @@ public class WorldPlayer : MonoBehaviour
     
     public void CreateLeaderChoice()
     {
-        List<int> copyList = new List<int>(allLeaderID);
+        List<int> copyList = new List<int>(PersistanceManager.unlockedPlayerGroups);
         int amount = Math.Min(3, copyList.Count);              
         for (int i = 0; i < amount; i++) //so either 3 or the count whichever is smaller
         {

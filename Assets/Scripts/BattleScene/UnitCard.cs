@@ -936,6 +936,7 @@ public class UnitCard :CardBase
             var cardInDeck = IDLookupTable.instance.playerDeck.Find(x => x.baseID == ID);
             cardInDeck.hasDied = true;
         }
+       
 
     }
     #endregion
