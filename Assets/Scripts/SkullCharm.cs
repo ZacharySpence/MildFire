@@ -111,7 +111,7 @@ public class SkullCharm : MonoBehaviour
     }
     public CardSaveData ChangeCard(CardSaveData saveData)
     {
-        //change the save data then return it!
+        //Basic stats
         saveData.maxHealth += healthChange;
         saveData.attack += attackChange;
 
@@ -119,10 +119,13 @@ public class SkullCharm : MonoBehaviour
 
         saveData.reflectOn += reflectOnChange;
 
+        //special stats
         saveData.hasBarrage = hasBarrage ? true : saveData.hasBarrage;
         saveData.hasEverburnResistance = hasEverburnResistance? true:saveData.hasEverburnResistance; //change it if has or leave it as is!
         return saveData;
     }
+
+  
     public void CreateCharmDescription()
     {
 

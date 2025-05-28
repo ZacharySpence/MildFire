@@ -7,7 +7,7 @@ public class IDLookupTable : MonoBehaviour
 {
     public static IDLookupTable instance;
 
-    [SerializeField] List<CardBase> unitCards;
+    [SerializeField] public List<CardBase> unitCards;
     [SerializeField] List<CardBase> useCards; 
     [SerializeField] List<CardBase> enemyCards;
     
@@ -60,10 +60,18 @@ public class IDLookupTable : MonoBehaviour
 
     }
 
-    public UnitCard GetCompanionCard()
+    public UnitCard GetCompanionCard(int id = 0)
     {
-       var companions = unitCards.OfType<UnitCard>().Where(x => !x.isBoss && !playerDeck.Any(y => y.baseID == x.ID)).OrderBy(x => Random.value).ToList();
-        return companions[0];//just the first one
+        if(id != 0)
+        {
+           return  unitCards.Find(x => x.ID == id) as UnitCard;
+        }
+        else
+        {
+            var companions = unitCards.OfType<UnitCard>().Where(x => !x.isBoss && !playerDeck.Any(y => y.baseID == x.ID)).OrderBy(x => Random.value).ToList();
+            return companions[0];//just the first one
+        }
+        
     }
     
 }

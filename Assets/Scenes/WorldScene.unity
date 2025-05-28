@@ -24852,7 +24852,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingPanel: {fileID: 1942201686}
   startingButtonPrefab: {fileID: 3118551996323145290, guid: a78c9cd896fcf9743bf7f61c6b590fff, type: 3}
-  allLeaderID: c90000000401000018010000
   playerBackpack: {fileID: 8036689}
 --- !u!1 &6430688208769237123
 GameObject:

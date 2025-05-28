@@ -26,6 +26,7 @@ public class WorldPlayer : MonoBehaviour
         {
             Destroy(this);
         }
+        
     }
 
     
@@ -38,6 +39,13 @@ public class WorldPlayer : MonoBehaviour
         var card =  IDLookupTable.instance.GetCardByID(id); //get template of card (reference it)
         
         var saveData = card.CreateCardSaveData();
+
+        //gives them training when adding to deck!
+        if (PersistanceManager.nessyTrainedCompanionsID.Contains(id))
+        {
+            
+            saveData.hasBeenTrained = true;
+        }
 
         IDLookupTable.instance.playerDeck.Add(saveData);
     }

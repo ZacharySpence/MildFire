@@ -11,7 +11,7 @@ using static UnityEngine.Rendering.DebugUI.Table;
 using Random = UnityEngine.Random;
 public class UnitCard :CardBase
 {
-    [SerializeField] OffensiveStats offStats;
+    [SerializeField] public  OffensiveStats offStats;
     public StatsData statsData;
     [SerializeField] Transform parentTransform; //so is it in hand or on field somewhere
     
@@ -20,10 +20,10 @@ public class UnitCard :CardBase
 
 
     public bool isDead, isBoss,hasCrown, hasDoneTimer, hasDied;
-   
+
     [Header("Stats")]
-    public int currentAtkTimer, currentHealth;
-    [SerializeField] public int maxAtkTimer, maxHealth;
+    public int currentAtkTimer;
+    public int currentHealth,maxAtkTimer, maxHealth;
     //possible add in 'start' with so has start values separate to On which is in-game!
     [SerializeField] StatusEffect shieldOn,snowOn, fireOn, crystalOn, poisonOn, pepperOn, curseOn,reflectOn, hazeOn,bombOn,inkOn,demonizeOn;
     [Header("UnitSpecific Specials")]
@@ -32,7 +32,10 @@ public class UnitCard :CardBase
     public Targeting healthTarget, attackTarget, numOfAtkTarget, timerTarget,
         shieldTarget, snowTarget, fireTarget, crystalTarget, poisonTarget, pepperTarget,
         curseTarget, reflectTarget, hazeTarget, bombTarget, inkTarget, demonizeTarget;
-    
+    public int moneyWorth;
+
+    [Header("Extras")]
+    public bool hasBeenTrained;
 
     [Header("Stat visuals")]
     [SerializeField] TextMeshProUGUI cAttackTimerText   ;
@@ -141,10 +144,13 @@ public class UnitCard :CardBase
             hasPoisonResistance = this.hasPoisonResistance,
             hasBarrage = this.hasBarrage,
             hasSmackback = this.hasSmackback,
-           
+
             hasLongshot = this.hasLongshot,
             hasAimless = this.hasAimless,
-            hasBuffFriendly = this.hasBuffFriendly
+            hasBuffFriendly = this.hasBuffFriendly,
+
+            //Extras
+            hasBeenTrained = this.hasBeenTrained,
         };
 
 
@@ -231,6 +237,12 @@ public class UnitCard :CardBase
         this.hasAimless = cardSaveData.hasAimless;
         this.hasBuffFriendly = cardSaveData.hasBuffFriendly;
 
+        //Extras
+        this.hasBeenTrained = cardSaveData.hasBeenTrained;
+        if (this.hasBeenTrained)
+        {
+            Train();
+        }
         //Setup rest
         name = nameText;
         offStats = GetComponent<OffensiveStats>();
@@ -881,10 +893,17 @@ public class UnitCard :CardBase
     }
     void Die()
     {
+        
         Debug.Log($"{name} died");
         isDead = true;
         
         bool isPlayer = fieldIndex < 6;
+
+        if (!isPlayer)
+        {
+            WorldManager.Instance.moneyAmount += moneyWorth;
+        }
+
         bool movedCard = false;
         //Check if any allies to left of it, if so then for each ally move them -2 
         UnitCard[] fieldToSearch = isPlayer ? BattleManager.Instance.playerField : BattleManager.Instance.enemyField;
@@ -1072,6 +1091,13 @@ public class UnitCard :CardBase
         uCard.EnableTooltips();
 
         
+    }
+
+    //NessySpecific
+    public void Train()
+    {
+        maxHealth += 6;
+        statsData.attack += 2;
     }
     //--ON HOVER FEATURES (Move to separate script?)
     public void ViewOnHover()

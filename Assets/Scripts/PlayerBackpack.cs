@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerBackpack : MonoBehaviour
 {
-    [SerializeField] GameObject playerDeckPanel, content;
+    [SerializeField] GameObject playerDeckPanel, content,skullSprite;
     [SerializeField] GameObject baseUIUnitCard, baseUIUseCard, baseUIUseOffCard, charmUI; //so i am already using the base cards and then adding data so 
     [SerializeField] Transform charmTransform;
     [SerializeField] Canvas canvas;
@@ -21,6 +22,11 @@ public class PlayerBackpack : MonoBehaviour
         {
             CreatePlayerVisualDeck();
             CreateVisualCharms();
+        }
+        if (WorldManager.Instance.skullCollectionUnlocked)
+        {
+            skullSprite.SetActive(true);
+            skullSprite.GetComponentInChildren<TextMeshProUGUI>().text = WorldManager.Instance.skullAmount.ToString();
         }
         
     }

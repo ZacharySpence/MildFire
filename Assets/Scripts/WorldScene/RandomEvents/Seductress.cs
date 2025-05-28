@@ -19,7 +19,14 @@ public class Seductress : MonoBehaviour
     private void OnEnable()
     {
         companions = IDLookupTable.instance.playerDeck.Where(x => x.cardType == "UnitCard" && x.isBoss == false).OrderBy(x => Random.value).ToList();
-        sacrifice = companions.Take(1).FirstOrDefault();
+        foreach(var companion in companions)
+        {
+            if (!companion.hasBeenTrained)
+            {
+                sacrifice = companion;
+                break;
+            }
+        }
 
         if (companions.Count() < 1)
         {
@@ -58,18 +65,27 @@ public class Seductress : MonoBehaviour
         }
     
         
-        CreateCompanionCard();
+        CreateTrainedCompanionToGive();
        
     }
 
-    void CreateCompanionCard()
+    void CreateTrainedCompanionToGive()
     {
-        companionToTrade = Instantiate(IDLookupTable.instance.GetCompanionCard(), toyTransform); //actually have to instantiate the card!
-
+        //if first instance then random companion and add to currently trained
+     
+        if(PersistanceManager.nessyCurrentTrainingCompanionsID.Count == 0)
+        {
+            AddTrainedCompanion(IDLookupTable.instance.GetCompanionCard().CreateCardSaveData());
+            
+        }
+        //take from currently training companions
+        var companionToTradeID = PersistanceManager.nessyCurrentTrainingCompanionsID[Random.Range(0, PersistanceManager.nessyCurrentTrainingCompanionsID.Count)];
+        var companionToTrade = IDLookupTable.instance.GetCompanionCard(companionToTradeID);
+        
+        companionToTrade = Instantiate(companionToTrade, toyTransform); //actually have to instantiate the card!
         companionToTrade.hasDied = true;
         //buff companion so it's better than normal (basically trained 4 times?)
-        companionToTrade.maxHealth += 6;
-        companionToTrade.statsData.attack += 2;
+        companionToTrade.Train();
         companionToTrade.SetupUsingCardSaveData(companionToTrade.CreateCardSaveData()); //set it up using its own data
         companionToTrade.transform.localScale = new Vector2(200f, 300f);
         companionToTrade.transform.localPosition = Vector2.zero;
@@ -78,6 +94,7 @@ public class Seductress : MonoBehaviour
     {       
         TradeOneOutcome.GetComponentInChildren<TextMeshProUGUI>().text = TradeOneOutcome.GetComponentInChildren<TextMeshProUGUI>().text.Replace("companion",sacrifice.nameText);
         IDLookupTable.instance.playerDeck.Remove(sacrifice);
+        AddTrainedCompanion(sacrifice);
         //add seductressCompanion
         companionToTrade.hasDied = true;
         IDLookupTable.instance.playerDeck.Add(companionToTrade.CreateCardSaveData());
@@ -94,12 +111,17 @@ public class Seductress : MonoBehaviour
         var sacrifices = companions.Take(amount).ToList();
         var textComp = GiveThreeOutcome.GetComponentInChildren<TextMeshProUGUI>();
         textComp.text = textComp.text.Replace("companion0", sacrifice.nameText);
+
         IDLookupTable.instance.playerDeck.Remove(sacrifice);
+        AddTrainedCompanion(sacrifice);
+
         for (int i=1;i<amount+1;i++)
         {
             var text =textComp.text;
             Debug.Log($"removing {sacrifices[i-1].nameText}");
             IDLookupTable.instance.playerDeck.Remove(sacrifices[i-1]);
+            AddTrainedCompanion(sacrifices[i - 1]);
+
             if (text.Contains($"companion{i}"))
             {
                 textComp.text = text.Replace($"companion{i}", sacrifices[i - 1].nameText);
@@ -131,5 +153,12 @@ public class Seductress : MonoBehaviour
 
         buttonGO.transform.parent.gameObject.SetActive(false); //sets parent of button (which is outcome gameObject) false
         gameObject.SetActive(false);
+    }
+
+    void AddTrainedCompanion(CardSaveData companion)
+    {
+        PersistanceManager.nessyCurrentTrainingCompanionsID.Add(companion.baseID); //add to current
+        PersistanceManager.nessyTrainedCompanionsID.Add(companion.baseID); //add to overall (for boss fight)
+        PersistanceManager.nessyCompanionsGiven++;
     }
 }

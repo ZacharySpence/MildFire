@@ -36,6 +36,8 @@ public class BattleManager : MonoBehaviour
     public int fireLevel = 0;
     int roundNumber = 1;
     int currentBossID;
+    bool skullFight;
+    int skullIDInFight;
    
     [Header("References")]
     [SerializeField]PlayerHand playerHand;
@@ -332,13 +334,26 @@ public class BattleManager : MonoBehaviour
             if (enemyField[i].ID == -1 ) //so if it's empty
             {
                 var card = IDLookupTable.instance.GetCardByID(enemiesToAdd.cards[0]) as UnitCard;
-                PlaceEnemyCardOnEmptyField(i,card);
+               
                 
                 if (card.isBoss)
                 {
-                    //ALSO check if persistantSkullsID holds id+100 if so then add that skull (always to the boss so supes them up
+                    foreach(var skull in PersistanceManager.skullsOnID)
+                    {
+                        //ALSO check if persistantSkullsID holds id+100 if so then add that skull (to make it skull battle!)
+                        if (skull.Item2+100 == card.ID)
+                        {
+                            var saveData = card.CreateCardSaveData();
+                            saveData = IDLookupTable.instance.skullCharmList.Find(x => x.ID == skull.Item1).ChangeCard(saveData);
+                            card.SetupUsingCardSaveData(saveData);
+                            skullIDInFight = skull.Item1;
+                            skullFight = true;
+                        }
+                    }
+                   
                     currentBossID = card.ID; //store the boss ID
                 }
+                PlaceEnemyCardOnEmptyField(i, card);
                 enemiesToAdd.cards.RemoveAt(0); //pop the card
                
             }
@@ -404,6 +419,10 @@ public class BattleManager : MonoBehaviour
         }
         PersistanceManager.unlockedPlayerGroups.Add(currentBossID - 100); //player equiv is -100
         PersistanceManager.SavePersistence();
+        if (skullFight)
+        {
+            PersistanceManager.skullFightsWon.Add(skullIDInFight);
+        }
         return true;
     }
     void Defeat()

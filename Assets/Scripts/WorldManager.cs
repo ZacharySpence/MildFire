@@ -15,6 +15,8 @@ public class WorldManager : MonoBehaviour
     int currentNodeID;
     public Sprite battleSprite, eventSprite, campSprite, eliteSprite, shopSprite, relicSprite, bossSprite;   
     Dictionary<int, (EncounterType encounter, EncounterData eData)> nodeData = new Dictionary<int, (EncounterType encounter,EncounterData eData)>();
+    public bool skullCollectionUnlocked;
+    public int skullAmount, moneyAmount;
 
     [Header("Resets on load")]
     List<Node> nodeList = new List<Node>(); //list of all nodes
@@ -31,9 +33,8 @@ public class WorldManager : MonoBehaviour
 
     [Header("WorldEffects")]
     public bool noogleBeefBuff, noogleBeefDebuff, noogleChickenBad, noogleVeggieBad, noogleBlessing, noogleCurse, noogleVeggieGood, noogleChickenGood,
-        nessyBlessing, nessyCurse, 
-        omnisciJudgement,omnisciForesight,omnisciChaos,omnisciBlessing;
-    public int skullAmount;
+        nessyBlessing, nessyCurse, omnisciJudgement, omnisciForesight, omnisciChaos, omnisciBlessing, skullBlessing;
+    
     private void Awake()
     {
         if(Instance == null)
@@ -66,7 +67,12 @@ public class WorldManager : MonoBehaviour
         if(scene.buildIndex == 1) { return; } //don't do any of this with battle scene
         Debug.Log("scene loaded");
         ReattachReferences();
-        if (WorldPlayer.gameHasStarted)
+        if (PersistanceManager.loadedGame)
+        {
+            LoadGame();
+            
+        }
+        else if (WorldPlayer.gameHasStarted)
         {
            
             RecreateScene();
@@ -77,6 +83,32 @@ public class WorldManager : MonoBehaviour
         }
     }
 
+    void LoadGame()
+    {
+        WorldPlayer.gameHasStarted = true;
+        //Add skulls back to playerHand
+        var skullDict = PersistanceManager.skullsOnID.ToDictionary(tuple => tuple.Item1, tuple => tuple.Item2);
+        foreach (var skullCharm in IDLookupTable.instance.skullCharmList)
+        {
+            if (skullDict.TryGetValue(skullCharm.ID, out int cardID))
+            {
+                skullCharm.ChangeCard(IDLookupTable.instance.playerDeck.Find(x => x.baseID == cardID));
+
+            }
+        }
+        //Recreate the map
+        nodeList.Clear();
+        var nodes = GameObject.FindGameObjectsWithTag("Node"); //collect all the nodes!
+        foreach (var node in nodes)
+        {
+            nodeList.Add(node.GetComponent<Node>());
+        }
+        //--PersistanceManager Load in NodeData & currentNodeID -> need to store sprites as resources so can find via names/ID rather than store in nodeData!
+        LoadNodes();
+        currentNode = GetNode(currentNodeID);
+        playerToken.transform.position = currentNode.transform.position;
+        UpdateNodes();
+    }
     void ReattachReferences()
     {  
       

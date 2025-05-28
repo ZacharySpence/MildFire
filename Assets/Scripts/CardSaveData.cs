@@ -96,4 +96,7 @@ public class CardSaveData
     public bool hasAimless;
     public bool hasBuffFriendly;
     public bool hasConsume;
+
+    //---Extras---
+    public bool hasBeenTrained;
 }

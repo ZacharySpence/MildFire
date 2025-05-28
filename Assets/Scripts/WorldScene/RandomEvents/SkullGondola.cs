@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using UnityEditor.Rendering;
 using UnityEngine;
+using UnityEngine.U2D.IK;
 using UnityEngine.UI;
 
 public class SkullGondola : MonoBehaviour
@@ -12,11 +14,21 @@ public class SkullGondola : MonoBehaviour
     [SerializeField] TextMeshProUGUI playerSkullAmount;
     private void OnEnable()
     {
-        var charms = IDLookupTable.instance.skullCharmList.OrderBy(x => Random.value).Take(Mathf.Min(5,IDLookupTable.instance.skullCharmList.Count)).ToList();
+        if (!WorldManager.Instance.skullCollectionUnlocked)
+        {
+            //also add a dfferent greeting to show unlocking skulls?
+            WorldManager.Instance.skullCollectionUnlocked = true;
+        }
+        //only get charms that ARENT in playerStorage (or have been used as per persistence manager!)
+        IEnumerable<int> charmIDs = IDLookupTable.instance.charmsInPlayerStorage.Select(b => b.ID);
+        IEnumerable<int> skullIDs = PersistanceManager.skullsOnID.Select(t => t.Item1);
+        HashSet<int> idsToRemove = new HashSet<int>(charmIDs.Concat(skullIDs)); 
+        List<SkullCharm> charms = IDLookupTable.instance.skullCharmList.Where(a => !idsToRemove.Contains(a.ID)).ToList();
+
+        charms = charms.OrderBy(x => Random.value).Take(Mathf.Min(5,IDLookupTable.instance.skullCharmList.Count)).ToList();
         for (int i =0;i<charms.Count;i++)
         {               
             var charmI = Instantiate(charms[i], skullCharmsInShop[i]);
-            IDLookupTable.instance.skullCharmList.Remove(charms[i]);
             var specificTransform = skullCharmsInShop[i];
             charmI.GetComponent<Button>().onClick.AddListener(() => OnBuySkullCharm(charmI,specificTransform ));
             skullCharmsInShop[i].GetComponentInChildren<TextMeshProUGUI>().text = $"{charmI.skullCost} skulls"; 
