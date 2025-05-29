@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using TMPro;
@@ -68,7 +69,7 @@ public class BattleManager : MonoBehaviour
 
     private void OnLevelWasLoaded(int level)
     {
-        if(level == 1)
+        if(level == 2)
         {
            
             Setup();
@@ -320,6 +321,7 @@ public class BattleManager : MonoBehaviour
     {
         if (enemyDeck.Count <= 0)
         {
+            Debug.Log("No enemies Left");
             waveTimerText.transform.parent.gameObject.SetActive(false); //get rid of wave timer and don't add in any enemies
             return;
         }
@@ -431,13 +433,19 @@ public class BattleManager : MonoBehaviour
         //do global flag resets!?
         WorldPlayer.gameHasStarted = false;
         thanksForPlayingPanel.SetActive(true);
-        
+        string path = Path.Combine(Application.persistentDataPath, "GameSaveFile.json");
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+            Debug.Log("Save file deleted.");
+        }
+
     }
     void Victory()
     {
         Debug.Log("YOU WON!");
         
-        SceneManager.LoadScene(0);//back to travel scene!
+        SceneManager.LoadScene(1);//back to travel scene!
         
     }
     

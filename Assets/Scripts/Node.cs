@@ -71,6 +71,10 @@ public class Node : MonoBehaviour
                 break;
            
         }
+        if(specificSprite == null)
+        {
+            specificSprite = GetComponent<Image>().sprite; //so if don't have  a specific one just chuck the general as its specific
+        }
        
        
     }
@@ -118,7 +122,7 @@ public class Node : MonoBehaviour
         Debug.Log("normal battle!");
         DeckHolder.LoadEnemyDeck(specifics);
         WorldManager.Instance.MoveNode(this);
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
 
 
     }

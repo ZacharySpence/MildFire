@@ -55,9 +55,10 @@ public class DeckHolder : MonoBehaviour
         enemyDeck.Clear();
         foreach (var intList in wrapper.values)
         {
+            
             EnemyCards enemyCards = new EnemyCards();
             enemyCards.cards = intList.values;
-           // Debug.Log(enemyCards.cards.Count + ": count");
+            Debug.Log(enemyCards.cards.Count + ": count");
             enemyDeck.Add(enemyCards);
         }
         CreateRewardDecks(name);

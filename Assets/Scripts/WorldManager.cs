@@ -14,7 +14,7 @@ public class WorldManager : MonoBehaviour
     [Header("Stays on load")]
     int currentNodeID;
     public Sprite battleSprite, eventSprite, campSprite, eliteSprite, shopSprite, relicSprite, bossSprite;   
-    Dictionary<int, (EncounterType encounter, EncounterData eData)> nodeData = new Dictionary<int, (EncounterType encounter,EncounterData eData)>();
+    public Dictionary<int, (EncounterType encounter, EncounterData eData)> nodeData = new Dictionary<int, (EncounterType encounter,EncounterData eData)>();
     public bool skullCollectionUnlocked;
     public int skullAmount, moneyAmount;
 
@@ -64,7 +64,7 @@ public class WorldManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if(scene.buildIndex == 1) { return; } //don't do any of this with battle scene
+        if (scene.buildIndex != 1){ return; } //don't do any of this with battle scene
         Debug.Log("scene loaded");
         ReattachReferences();
         if (PersistanceManager.loadedGame)
@@ -86,6 +86,7 @@ public class WorldManager : MonoBehaviour
     void LoadGame()
     {
         WorldPlayer.gameHasStarted = true;
+        PersistanceManager.LoadPersistence();
         //Add skulls back to playerHand
         var skullDict = PersistanceManager.skullsOnID.ToDictionary(tuple => tuple.Item1, tuple => tuple.Item2);
         foreach (var skullCharm in IDLookupTable.instance.skullCharmList)
@@ -101,13 +102,37 @@ public class WorldManager : MonoBehaviour
         var nodes = GameObject.FindGameObjectsWithTag("Node"); //collect all the nodes!
         foreach (var node in nodes)
         {
-            nodeList.Add(node.GetComponent<Node>());
+            var nodeComp = node.GetComponent<Node>();
+            
+            var currentNodeData = PersistanceManager.currentGameNodeData.Find(x => x.nodeID == nodeComp.ID);
+            EncounterType encounterType = (EncounterType)Enum.Parse(typeof(EncounterType), currentNodeData.encounterType);
+           
+            nodeData[nodeComp.ID] = (encounterType,
+                new EncounterData { specific = currentNodeData.specific, specificSprite = LoadSprite(encounterType, currentNodeData.spriteName) });
+
+            nodeList.Add(nodeComp);
         }
         //--PersistanceManager Load in NodeData & currentNodeID -> need to store sprites as resources so can find via names/ID rather than store in nodeData!
+        new Dictionary<int, (EncounterType encounter, EncounterData eData)>();
         LoadNodes();
         currentNode = GetNode(currentNodeID);
         playerToken.transform.position = currentNode.transform.position;
         UpdateNodes();
+
+        WorldPlayer.Instance.startingPanel.gameObject.SetActive(false); //forcibly get rid of starting panel
+          
+        
+
+    }
+    Sprite LoadSprite(EncounterType encounterType, string sprite)
+    {
+        switch (encounterType)
+        {
+            case EncounterType.Battle:
+                return Resources.Load<Sprite>($"Characters/{sprite}");
+            default:
+                return Resources.Load<Sprite>($"WorldSprites/{sprite}");
+        }
     }
     void ReattachReferences()
     {  
@@ -195,7 +220,7 @@ public class WorldManager : MonoBehaviour
         currentNode.button.interactable = true;
         //give them first choice
         Debug.Log("doing player choice");
-        PersistanceManager.LoadPersistence();
+        PersistanceManager.LoadPersistence(); //just to make the file in the beginning!
         WorldPlayer.Instance.CreateLeaderChoice();
     }
     public  void UpdateNodes()

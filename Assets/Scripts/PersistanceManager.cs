@@ -1,8 +1,10 @@
 using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
+using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 
 public static class PersistanceManager 
@@ -11,10 +13,11 @@ public static class PersistanceManager
     public static List<int> unlockedPlayerGroups = new List<int>();
     public static List<(int, int)> skullsOnID = new List<(int, int)>();
     public static int skullCount, moneyCount;
-    public static List<(int,bool)> playerCurrentDeck;
-    public static List<int> skullsInPlayerStorage;
+    public static List<(int,bool)> playerCurrentDeck = new List<(int,bool)>();
+    public static List<int> skullsInPlayerStorage = new List<int>();
+   
     //Add in skullCharms in storage.
-    const string SaveKey = "SaveData";
+   
 
 
     [Header("EndGameCounting")]
@@ -23,8 +26,8 @@ public static class PersistanceManager
     public static int poisonSpread;
 
     [Header("NessySpecific")]
-    public static List<int> nessyTrainedCompanionsID; //id,#oftimesTrained
-    public static List<int> nessyCurrentTrainingCompanionsID; //id, #oftimesTrained
+    public static List<int> nessyTrainedCompanionsID = new List<int>(); //id,#oftimesTrained
+    public static List<int> nessyCurrentTrainingCompanionsID = new List<int>(); //id, #oftimesTrained
 
     [Header("MapSpecific")]
     public static int currentNodeID;
@@ -32,8 +35,8 @@ public static class PersistanceManager
 
     [Header("Save&LoadSpecific")]
     public static bool loadedGame;
-    
 
+    const string SaveFileName = "GameSaveFile.json";
     public static void SavePersistence()
     {
         //--Save PlayerSpecific data--
@@ -54,7 +57,7 @@ public static class PersistanceManager
 
         data.skullCount = skullCount;
         data.moneyCount = moneyCount;
-
+   
             //saving current skulls in player storage
         foreach(var skull in IDLookupTable.instance.charmsInPlayerStorage)
         {
@@ -62,6 +65,20 @@ public static class PersistanceManager
         }
 
         //--Save Map data--
+        Debug.Log("Saving Map Data");
+        foreach(var node in WorldManager.Instance.nodeData)
+        {
+            Debug.Log(node.Key);
+            data.currentNodeData.Add(new NodeData
+            {
+                encounterType = node.Value.encounter.ToString(),
+                nodeID = node.Key,
+                specific = node.Value.eData.specific,
+                spriteName = node.Value.eData.specificSprite.name,
+            
+                
+            });
+        }
         data.currentNodeID = WorldManager.Instance.currentNode.ID;
 
         //--Save EndGameCounting data--
@@ -74,26 +91,32 @@ public static class PersistanceManager
         data.nessyCurrentTrainingCompanionsID = nessyCurrentTrainingCompanionsID;
 
 
-        string json = JsonUtility.ToJson(data);
-        PlayerPrefs.SetString(SaveKey, json);
-        PlayerPrefs.Save();
+        string json = JsonUtility.ToJson(data, prettyPrint: true);
+
+        string path = Path.Combine(Application.persistentDataPath, SaveFileName);
+        File.WriteAllText(path, json);
+
+        Debug.Log($"Game saved to: {path}");
     }
 
     //--Only loads into main map (never battle)
     public static void LoadPersistence()
     {
-        if (!PlayerPrefs.HasKey(SaveKey))
+        string path = Path.Combine(Application.persistentDataPath, SaveFileName);
+        if (!File.Exists(path))
         {
-            unlockedPlayerGroups.Add(200); //so if haven't got any saved, auto add leader 200
+            unlockedPlayerGroups.Add(200); // default if no save exists
+            Debug.LogWarning($"Save file not found at {path}, starting fresh.");
             return;
         }
 
-        string json = PlayerPrefs.GetString(SaveKey);
+        string json = File.ReadAllText(path);
         SaveData data = JsonUtility.FromJson<SaveData>(json);
 
         //--Load PlayerSpecific data--
         unlockedPlayerGroups = data.unlockedPlayerGroups;
 
+        
             //store already used skulls
         skullsOnID = new List<(int, int)>();
         foreach (var skull in data.skullsOnID)
@@ -109,7 +132,7 @@ public static class PersistanceManager
         }
         skullCount = data.skullCount;
         moneyCount = data.moneyCount;
-
+       
             //recreate skulls in storage
         foreach(var skullID in data.skullsInPlayerStorage)
         {
@@ -118,6 +141,7 @@ public static class PersistanceManager
         }
 
         //--Load Map data--
+        currentGameNodeData = data.currentNodeData;
         currentNodeID = data.currentNodeID;
 
         //--Load endSpecific data--
@@ -128,6 +152,8 @@ public static class PersistanceManager
         //--Load nessySpecific data--
         nessyTrainedCompanionsID = data.nessyTrainedCompanionsID;
         nessyCurrentTrainingCompanionsID = data.nessyCurrentTrainingCompanionsID;
+
+        Debug.Log($"Game loaded from: {path}");
     }
 
 }
@@ -141,19 +167,21 @@ public class SaveData
     public List<int> unlockedPlayerGroups = new List<int>();
     public List<SkullPersistentData> skullsOnID = new List<SkullPersistentData>(); //skullID,cardID
     public int skullCount, moneyCount;
-    public List<CardData> playerCurrentDeck;
-    public List<int> skullsInPlayerStorage;
-
+    public List<CardData> playerCurrentDeck = new List<CardData>();
+    public List<int> skullsInPlayerStorage = new List<int>();
+  
+    
     [Header("EndGameCounting")]
     public int nessyCompanionsGiven;
     public List<int> skullFightsWon = new List<int>();
     public int poisonSpread;
 
     [Header("NessySpecific")]
-    public List<int> nessyTrainedCompanionsID; //id,#oftimesTrained
-    public List<int> nessyCurrentTrainingCompanionsID; //id, #oftimesTrained
+    public List<int> nessyTrainedCompanionsID = new List<int>(); //id,#oftimesTrained
+    public List<int> nessyCurrentTrainingCompanionsID = new List<int>(); //id, #oftimesTrained
 
     [Header("MapSpecific")]
+    public List<NodeData> currentNodeData = new List<NodeData>();
     public int currentNodeID;
 
 }
@@ -163,7 +191,8 @@ public class NodeData
 {
     public int nodeID;
     public string encounterType;
-    public EncounterData encounterData;
+    public string specific;
+    public string spriteName; 
 }
 
 [System.Serializable]

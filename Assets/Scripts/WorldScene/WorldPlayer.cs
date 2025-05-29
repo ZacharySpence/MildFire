@@ -12,7 +12,8 @@ public class WorldPlayer : MonoBehaviour
 {
     public static WorldPlayer Instance;
     public static bool gameHasStarted; //persistent across scenes ->> need to save this to then load if loading game
-    [SerializeField] Transform startingPanel;
+    public static bool startingPanelOpen;
+    public Transform startingPanel;
     [SerializeField] GameObject startingButtonPrefab;
     [SerializeField] PlayerBackpack playerBackpack;
    
@@ -69,12 +70,14 @@ public class WorldPlayer : MonoBehaviour
         //startingPanel.gameObject.SetActive(false); //don't need to since going straight into battle!
         WorldManager.Instance.currentNode.specifics = "Tester";
         //FOR ACTUAL:
+        startingPanelOpen = false;
         WorldManager.Instance.currentNode.OnBattleClick(); //forcibly start 1st battle!
     }
 
     
     public void CreateLeaderChoice()
     {
+        startingPanelOpen = true;
         List<int> copyList = new List<int>(PersistanceManager.unlockedPlayerGroups);
         int amount = Math.Min(3, copyList.Count);              
         for (int i = 0; i < amount; i++) //so either 3 or the count whichever is smaller
@@ -97,6 +100,7 @@ public class WorldPlayer : MonoBehaviour
     
     public void CreateRewardChoice()
     {
+        startingPanelOpen = true;
         Debug.Log("reserves");
         CreateReward(DeckHolder.reserveRewardCards);
         Debug.Log("items");
@@ -134,6 +138,7 @@ public class WorldPlayer : MonoBehaviour
     {
         AddToPlayerDeck(id);
         startingPanel.gameObject.SetActive(false);
+        startingPanelOpen = false;
         //+enable next options on board!
         WorldManager.Instance.UpdateNodes();
     }

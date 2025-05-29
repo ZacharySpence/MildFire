@@ -902,6 +902,11 @@ public class UnitCard :CardBase
         if (!isPlayer)
         {
             WorldManager.Instance.moneyAmount += moneyWorth;
+            if (WorldManager.Instance.skullCollectionUnlocked)
+            {
+                WorldManager.Instance.skullAmount += 1;
+            }
+          
         }
 
         bool movedCard = false;

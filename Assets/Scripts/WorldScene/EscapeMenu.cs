@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class thanksForPlaying : MonoBehaviour
+public class EscapeMenu : MonoBehaviour
 {
-    public void Restart()
+    public void Settings()
     {
-        SceneManager.LoadScene(1);//back to travelScene
+        //open settings panel
     }
-    public void MainMenu()
+    public void SaveAndExit()
     {
+        PersistanceManager.SavePersistence();
         SceneManager.LoadScene(0);
     }
 }
