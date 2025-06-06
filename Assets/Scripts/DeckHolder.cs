@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System;
+using UnityEngine.Networking;
 
 public class DeckHolder : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class DeckHolder : MonoBehaviour
     public static List<int> companionRewardCards = new List<int>();
     public static List<int> LoadDeck(string name, int id)
     {
-        string json = File.ReadAllText(Application.persistentDataPath + $"/{name}{id}.json");
+        string json = File.ReadAllText(Application.streamingAssetsPath + $"/{name}{id}.json");
         IntListWrapper wrapper = JsonUtility.FromJson<IntListWrapper>(json);
         List<int> loadedInts = wrapper.values;
         
@@ -26,7 +27,7 @@ public class DeckHolder : MonoBehaviour
     public static void CreateReserves(string name = "Leader")
     {
         string json = "";
-        string filePath = Application.persistentDataPath + $"/{name}Group.json";
+        string filePath = Application.streamingAssetsPath + $"/{name}Group.json";
         if (File.Exists(filePath))
         {
             json = File.ReadAllText(filePath);
@@ -34,7 +35,7 @@ public class DeckHolder : MonoBehaviour
         }
         else
         {
-            json = File.ReadAllText(Application.persistentDataPath + $"/LeaderGroup.json");
+            json = File.ReadAllText(Application.streamingAssetsPath + $"/LeaderGroup.json");
         }
         GroupListWrapper reserves = JsonUtility.FromJson<GroupListWrapper>(json);
         reserveRewardCards = reserves.items;
@@ -42,8 +43,10 @@ public class DeckHolder : MonoBehaviour
     }
     public static void LoadEnemyDeck(string name)
     {
-        string path = Path.Combine(Application.persistentDataPath, $"{name}.json");
-        string json = File.ReadAllText(path);
+        string path = Path.Combine(Application.streamingAssetsPath, $"{name}.json");
+        
+        string json = File.ReadAllText(path); //means only Windows/Mac (NOT WEBGL!)
+        
 
         IntListListWrapper wrapper = JsonUtility.FromJson<IntListListWrapper>(json);
         if (wrapper == null || wrapper.values == null)
@@ -66,7 +69,7 @@ public class DeckHolder : MonoBehaviour
     public static void CreateRewardDecks(string name)
     {
         Debug.Log("making reward decks");
-        string json = File.ReadAllText(Application.persistentDataPath + $"/{name}Group.json");
+        string json = File.ReadAllText(Application.streamingAssetsPath + $"/{name}Group.json");
         GroupListWrapper wrapper = JsonUtility.FromJson<GroupListWrapper>(json);
         itemRewardCards = wrapper.items;
         companionRewardCards = wrapper.companions;

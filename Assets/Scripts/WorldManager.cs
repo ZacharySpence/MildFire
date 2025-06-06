@@ -97,6 +97,10 @@ public class WorldManager : MonoBehaviour
 
             }
         }
+
+        //RE-CREATE PLAYER DECK!
+
+        
         //Recreate the map
         nodeList.Clear();
         var nodes = GameObject.FindGameObjectsWithTag("Node"); //collect all the nodes!
@@ -120,7 +124,12 @@ public class WorldManager : MonoBehaviour
         UpdateNodes();
 
         WorldPlayer.Instance.startingPanel.gameObject.SetActive(false); //forcibly get rid of starting panel
-          
+        if(PersistanceManager.hasClicked) //if clicked on node before then click on it again (hasn't reached next autosave (next click/end of battle)
+            //could also save after screen closes in eventManager/Shop/Camp/Relic -> CURRENTLY just have to do it again (which good if you fkd up outcome)
+        {
+            Debug.Log("Have clicked so do battle!");
+            currentNode.OnClick();
+        }
         
 
     }
@@ -130,8 +139,11 @@ public class WorldManager : MonoBehaviour
         {
             case EncounterType.Battle:
                 return Resources.Load<Sprite>($"Characters/{sprite}");
+            case EncounterType.Elite:
+                return Resources.Load<Sprite>($"Characters/{sprite}");
             default:
                 return Resources.Load<Sprite>($"WorldSprites/{sprite}");
+            
         }
     }
     void ReattachReferences()
@@ -207,6 +219,9 @@ public class WorldManager : MonoBehaviour
     public void StartGame()
     {
         Debug.Log("starting game");
+        PersistanceManager.LoadPersistence(); //just to make the file in the beginning!
+        Debug.Log("does this remain: " + PersistanceManager.hasClicked);
+        PersistanceManager.hasClicked = false; //make a method to cherrypick what needs to be reset!
         //Create the map
         nodeList.Clear();
         var nodes = GameObject.FindGameObjectsWithTag("Node"); //collect all the nodes!
@@ -220,7 +235,7 @@ public class WorldManager : MonoBehaviour
         currentNode.button.interactable = true;
         //give them first choice
         Debug.Log("doing player choice");
-        PersistanceManager.LoadPersistence(); //just to make the file in the beginning!
+        
         WorldPlayer.Instance.CreateLeaderChoice();
     }
     public  void UpdateNodes()

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 
@@ -15,7 +16,7 @@ public static class PersistanceManager
     public static int skullCount, moneyCount;
     public static List<(int,bool)> playerCurrentDeck = new List<(int,bool)>();
     public static List<int> skullsInPlayerStorage = new List<int>();
-   
+    public static bool hasClicked;
     //Add in skullCharms in storage.
    
 
@@ -37,8 +38,23 @@ public static class PersistanceManager
     public static bool loadedGame;
 
     const string SaveFileName = "GameSaveFile.json";
+
+    public static void NewGame()
+    {
+        string path = Path.Combine(Application.persistentDataPath, SaveFileName);
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+            Debug.Log("Save file deleted.");
+        }
+        else
+        {
+            Debug.Log("No save file found to delete.");
+        }
+    }
     public static void SavePersistence()
     {
+        Debug.Log("SAVING");
         //--Save PlayerSpecific data--
         SaveData data = new SaveData();
         data.unlockedPlayerGroups = unlockedPlayerGroups;
@@ -64,6 +80,7 @@ public static class PersistanceManager
             data.skullsInPlayerStorage.Add(skull.ID);
         }
 
+        data.hasClicked = hasClicked;
         //--Save Map data--
         Debug.Log("Saving Map Data");
         foreach(var node in WorldManager.Instance.nodeData)
@@ -78,6 +95,7 @@ public static class PersistanceManager
             
                 
             });
+           
         }
         data.currentNodeID = WorldManager.Instance.currentNode.ID;
 
@@ -140,6 +158,7 @@ public static class PersistanceManager
             IDLookupTable.instance.charmsInPlayerStorage.Add(skullCharm.CreateCharmSaveData());
         }
 
+        hasClicked = data.hasClicked;
         //--Load Map data--
         currentGameNodeData = data.currentNodeData;
         currentNodeID = data.currentNodeID;
@@ -169,7 +188,7 @@ public class SaveData
     public int skullCount, moneyCount;
     public List<CardData> playerCurrentDeck = new List<CardData>();
     public List<int> skullsInPlayerStorage = new List<int>();
-  
+    public bool hasClicked;
     
     [Header("EndGameCounting")]
     public int nessyCompanionsGiven;

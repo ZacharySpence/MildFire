@@ -2932,7 +2932,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 0}
   m_FillRect: {fileID: 6611994067177551306}
   m_HandleRect: {fileID: 0}
@@ -4561,6 +4561,8 @@ MonoBehaviour:
   demonizeTarget:
     self: 0
     other: 1
+  moneyWorth: 0
+  hasBeenTrained: 0
   cAttackTimerText: {fileID: 8185514831177742204}
   cHealthText: {fileID: 4310907264923066947}
   currentHealthSlider: {fileID: 5424991692750027453}

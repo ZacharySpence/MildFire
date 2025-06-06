@@ -69,6 +69,10 @@ public class Node : MonoBehaviour
                 button.onClick.AddListener(() => OnBossBattleClick());
                 GetComponent<Image>().sprite = WorldManager.Instance.bossSprite;
                 break;
+            default:
+
+                Debug.LogError(encounter.ToString()+" is not any of the encounter types?");
+                break;
            
         }
         if(specificSprite == null)
@@ -78,7 +82,42 @@ public class Node : MonoBehaviour
        
        
     }
-    
+    public void OnClick()
+    {
+        if(PersistanceManager.hasClicked == false)
+        {
+            //only if it's false then save
+            PersistanceManager.hasClicked = true;
+            PersistanceManager.SavePersistence();
+        }
+        //if it's already true (so loading in, don't save)
+        Debug.Log("STARTING " + specifics);
+        
+        switch (encounter)
+        {
+            case EncounterType.Battle:
+                OnBattleClick();
+                break;
+            case EncounterType.Event:
+                OnEventClick();
+                break;
+            case EncounterType.Camp:
+                OnCampClick();
+                break;
+            case EncounterType.Shop:
+                OnShopClick();
+                break;
+            case EncounterType.Elite:
+                OnEliteBattleClick();
+                break;
+            case EncounterType.Relic:
+                OnRelicClick();
+                break;
+            case EncounterType.Boss:
+                OnBossBattleClick();
+                break;
+        }
+    }
     public void UpdateSprite() 
     {
         GetComponent<Image>().sprite = specificSprite;

@@ -71,7 +71,7 @@ public class WorldPlayer : MonoBehaviour
         WorldManager.Instance.currentNode.specifics = "Tester";
         //FOR ACTUAL:
         startingPanelOpen = false;
-        WorldManager.Instance.currentNode.OnBattleClick(); //forcibly start 1st battle!
+        WorldManager.Instance.currentNode.OnClick(); //forcibly start 1st battle!
     }
 
     

@@ -420,10 +420,12 @@ public class BattleManager : MonoBehaviour
             }
         }
         PersistanceManager.unlockedPlayerGroups.Add(currentBossID - 100); //player equiv is -100
+        PersistanceManager.hasClicked = false; //so don't go back into battle upon load
         PersistanceManager.SavePersistence();
         if (skullFight)
         {
             PersistanceManager.skullFightsWon.Add(skullIDInFight);
+            //also then remove skullID from the persistance skulls used so card doesn't get skull next game? (IMPLEMENT)
         }
         return true;
     }

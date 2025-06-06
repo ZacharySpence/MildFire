@@ -1,0 +1,10 @@
+{
+  "_comment": "Bomba Enemy Encounter deck",
+  "values": [
+    {"values":[501,501,502]},
+    {"values":[501,502,502,503]},
+    {"values":[503,504,503,502,501],
+     "values":[504,502,501,504,500],
+     "values":[501,502,503,504]}
+  ]
+}
